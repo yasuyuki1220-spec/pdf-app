@@ -46,6 +46,9 @@ button{font:inherit;color:var(--fg);cursor:pointer}svg{width:22px;height:22px;st
 #bx .box{max-height:92%;overflow:auto}#bx .st{padding:8px 4px 2px}.cdot{width:34px;height:34px;border-radius:50%;border:2px solid var(--bd);padding:0}.cdot.on{outline:3px solid var(--ac);outline-offset:2px}
 #pcv{display:block;margin:8px auto;touch-action:none;border-radius:10px;background:#222}
 #shp .cdot{width:28px;height:28px}#shp .chip{padding:6px 10px;font-size:13px}
+#pr,#op,#shp{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch}
+#pr>*,#op>*,#shp>*,#op #opg>*{flex:none}
+#ed.kb #op,#ed.kb #shp,#ed.kb #rp,#ed.kb #sb,#ed.kb .dock.ed{display:none!important}
 input[type=range]{accent-color:var(--ac)}
 .col{width:28px;height:28px;border-radius:50%;border:2px solid var(--bd);padding:0}.col.on{outline:2px solid var(--ac);outline-offset:2px}
 .dock.ed{position:static;margin:4px auto calc(10px + env(safe-area-inset-bottom,0px));width:100%}
@@ -460,11 +463,11 @@ function placeEdit(){
   S.transform=`translate(-50%,-50%) rotate(${it.rot+A}deg) scale(${(it.sx||1)/m},${(it.sy||1)/m})`;
   tin._w=tin.offsetWidth;tin._h=tin.offsetHeight}
 function startEdit(it,all){
-  editing=it;sel=it;emode=null;setHint();syncPanel();tin.style.display="block";tin.textContent=it.str;paint();tin.focus();
+  if(!editing)edPrevW=ec.getBoundingClientRect().width;$("ed").classList.add("kb");editing=it;sel=it;emode=null;setHint();syncPanel();tin.style.display="block";tin.textContent=it.str;paint();tin.focus();
   const r=document.createRange();r.selectNodeContents(tin);if(!all)r.collapse(false);const g2=getSelection();g2.removeAllRanges();g2.addRange(r);
-  setTimeout(()=>{if(editing)tin.scrollIntoView({block:"nearest",inline:"nearest"})},350)}
+  setTimeout(focusEdit,350);setTimeout(focusEdit,800)}
 function endEdit(){
-  if(!editing)return;const it=editing;editing=null;tin.style.display="none";tin.blur();
+  if(!editing)return;const it=editing;editing=null;tin.style.display="none";tin.blur();$("ed").classList.remove("kb");if(edPrevW)ec.style.width=Math.max(baseW,edPrevW)+"px";if(edPrevW<=baseW+1){wrap.scrollLeft=0;wrap.scrollTop=0}
   if(!it.str.trim()){cur.items=cur.items.filter(i=>i!==it);sel=null;syncPanel()}paint()}
 tin.oninput=()=>{
   if(!editing)return;editing.str=tin.innerText.replace(/\n$/,"");
@@ -710,4 +713,12 @@ $("shw").oninput=()=>shpSet(h=>h.wd=+$("shw").value);
 
 $("tmi").onclick=async()=>{if(!selR)return;const c=crop(await pageBig(2000)),im=$("tmim");im.src=c.toDataURL("image/png");im.style.display="block";$("tmt").textContent="画像を長押しして、iPhoneの文字認識でコピーすることもできます"};
 if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+
+let edPrevW=0;
+function focusEdit(){
+  if(!editing)return;
+  const w=baseW*2.4;if(ec.getBoundingClientRect().width<w-1)ec.style.width=w+"px";
+  placeEdit();
+  const r=ec.getBoundingClientRect(),A=ang(cur),[u,v]=toDisp(editing.a,editing.b,A),q=wrap.getBoundingClientRect();
+  wrap.scrollLeft+=r.left+u*r.width-(q.left+q.width/2);wrap.scrollTop+=r.top+v*r.height-(q.top+q.height/2)}
 </script></body></html>
