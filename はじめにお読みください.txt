@@ -1,0 +1,12 @@
+【PDFまとめ編集】ホーム画面アプリ(PWA)版 ― iPhoneだけで公開する手順(GitHub Pages・無料)
+
+1. iPhoneの「ファイル」アプリで、このzipをタップして解凍します
+2. Safariで github.com を開き、無料アカウントを作ります
+3. 右上の「＋」→「New repository」。名前は pdf-app、Public を選び「Create repository」
+4. 「uploading an existing file」のリンクを開き、「ファイルを選択」→ 解凍した中身を全部選びます(7個)
+5. 画面下の「Commit changes」を押します
+6. 「Settings」→「Pages」→ Branch を「main」にして「Save」
+7. 1〜2分後に https://(ユーザー名).github.io/pdf-app/ が使えます
+8. そのURLをSafariで開き、共有ボタン →「ホーム画面に追加」
+
+※更新する時は sw.js の VERSION を書き換えて、もう一度アップロードします
