@@ -1,5 +1,5 @@
 // 更新したら VERSION を変えると、利用者の端末にも新しい版が届きます
-const VERSION="pdfapp-v13";
+const VERSION="pdfapp-v14";
 const SHELL=["./","./index.html","./manifest.webmanifest","./icon-192.png","./icon-512.png","./apple-touch-icon.png"];
 const LIBS=["https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js","https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js","https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js","https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js","https://cdn.jsdelivr.net/npm/tesseract.js@5.1.0/dist/tesseract.min.js"];
 self.addEventListener("install",e=>{e.waitUntil((async()=>{const c=await caches.open(VERSION);await c.addAll(SHELL);await Promise.allSettled(LIBS.map(u=>c.add(new Request(u,{mode:"no-cors"}))));self.skipWaiting()})())});
