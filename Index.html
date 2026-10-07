@@ -60,6 +60,7 @@ input[type=range]{accent-color:var(--ac)}
 #ov{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:flex-end;z-index:70}
 #sh{background:var(--card);width:100%;border-radius:22px 22px 0 0;padding:12px 14px calc(14px + env(safe-area-inset-bottom,0px));max-width:620px;margin:0 auto}
 .st{font-size:13px;color:var(--mut);padding:6px 10px}.sr{display:block;width:100%;text-align:left;padding:15px 10px;border:0;border-bottom:1px solid var(--bd);background:none;font-size:16px}.sr:last-child{border:0;color:var(--mut)}
+.tr canvas{width:56px;height:auto;flex:none;background:#fff;border:1px solid var(--bd);border-radius:6px}
 #tpb{display:none;flex-direction:column;flex-wrap:nowrap;align-items:stretch;gap:6px;background:var(--ac2);border-radius:14px;padding:6px 8px;margin:0 0 6px}
 #tpb .r1{display:flex;align-items:center;gap:8px}#tpT{flex:1;text-align:center;font-size:14px;font-weight:700;color:var(--ac);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #tpn{position:relative;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch}#tpn .chip{flex:none;max-width:9em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:6px 10px;font-size:13px;background:var(--card)}#tpn .chip.on{background:var(--ac);color:#fff;border-color:var(--ac)}
@@ -188,7 +189,7 @@ function drawMarks(x,pg,cw,ch,extra){
   const ppp=(A%180==0?cw:ch)/pg.W;
   for(const it of pg.items){if(it===editing)continue;
     const bm=bmOf(it),s=sc(it,pg)*ppp,[u,v]=toDisp(it.a,it.b,A),w=bm.width*s*(it.sx||1),h=bm.height*s*(it.sy||1);
-    x.save();x.translate(u*cw,v*ch);x.rotate((it.rot+A)*PI/180);x.drawImage(bm,-w/2,-h/2,w,h);if(it.field=="input"&&x.canvas.id=="ec"){x.strokeStyle="#f59e0b";x.lineWidth=Math.max(1.5,cw/400);x.setLineDash([8,6]);x.strokeRect(-w/2,-h/2,w,h);x.setLineDash([])}
+    x.save();x.translate(u*cw,v*ch);x.rotate((it.rot+A)*PI/180);x.drawImage(bm,-w/2,-h/2,w,h);if(it.field=="input"&&x.canvas.id=="ec"){x.strokeStyle="#f59e0b";x.lineWidth=Math.max(1.5,cw/400);x.setLineDash([8,6]);x.strokeRect(-w/2,-h/2,w,h);x.setLineDash([]);x.lineWidth=Math.max(4,cw/140);x.beginPath();x.moveTo(-w/2,-h/2);x.lineTo(-w/2,h/2);x.stroke()}
     if(it===sel&&x.canvas.id=="ec"){x.lineWidth=Math.max(2,cw/250);x.strokeStyle=emode=="size"?"#16a34a":emode=="scale"?"#f59e0b":emode=="move"?"#e11d48":"#2563eb";x.setLineDash(emode?[]:[6,4]);x.strokeRect(-w/2,-h/2,w,h);if(emode=="size"||emode=="scale"){x.fillStyle=emode=="size"?"#16a34a":"#f59e0b";x.beginPath();x.arc(w/2,h/2,Math.max(10,cw/30),0,7);x.fill()}}
     x.restore();
   }
@@ -736,7 +737,7 @@ function focusEdit(){
   const w=baseW*2.4;if(ec.getBoundingClientRect().width<w-1)ec.style.width=w+"px";
   placeEdit();
   const r=ec.getBoundingClientRect(),A=ang(cur),[u,v]=toDisp(editing.a,editing.b,A),q=wrap.getBoundingClientRect();
-  wrap.scrollLeft+=r.left+u*r.width-(q.left+q.width/2);wrap.scrollTop+=r.top+v*r.height-(q.top+q.height/2)}
+  wrap.scrollLeft+=r.left+u*r.width-(q.left+q.width*(editing.tf?.22:.5));wrap.scrollTop+=r.top+v*r.height-(q.top+q.height/2)}
 
 function addStroke(st){cur.strokes.push(st);(cur._log=cur._log||[]).push({k:"s",o:st})}
 function addItem(it){cur.items.push(it);(cur._log=cur._log||[]).push({k:"i",o:it})}
@@ -777,13 +778,13 @@ function tdb(op,arg){return new Promise((res,rej)=>{
   q.onsuccess=()=>{const db=q.result,tx=db.transaction("tpl",op=="all"?"readonly":"readwrite"),st=tx.objectStore("tpl");let r;
     if(op=="put")r=st.put(arg);else if(op=="del")r=st.delete(arg);else r=st.getAll();
     tx.oncomplete=()=>{db.close();res(r&&r.result)};tx.onerror=()=>rej(tx.error)}})}
-$("bfd").onclick=()=>{if(sel&&sel.k=="t"){sel.field=sel.field=="input"?undefined:"input";syncPanel();paint();toast(sel.field=="input"?"入力欄にしました(テンプレートの入力欄になります)":"固定テキストに戻しました")}};
+$("bfd").onclick=()=>{if(sel&&sel.k=="t"){sel.field=sel.field=="input"?undefined:"input";syncPanel();paint();toast(sel.field=="input"?"入力欄にしました。文字は入力欄のタイトルにしてください(例:お客様名、スタッフ名)。入力欄の左端が位置の基準です":"固定テキストに戻しました",7000)}};
 let tsList=null;
 function tplSave(selOnly){
   const list=pages.filter(p=>!selOnly||p.sel);
   if(!list.length)return say(selOnly?"保存するページを選択してください":"ページがありません");
   tsList=list;let ni=0,nf=0;list.forEach(p=>p.items.forEach(it=>{if(it.k=="t"){it.field=="input"?ni++:nf++}}));
-  $("tsh").textContent="入力欄 "+ni+"個・固定の文字 "+nf+"個。ペンや画像は、元のPDFに焼き込んで保存します。";
+  $("tsh").textContent="入力欄 "+ni+"個・固定の文字 "+nf+"個。ペンや画像は、元のPDFに焼き込んで保存します。入力欄の左端が文字の開始位置になり、文字が増えると右へ伸びます。";
   $("tsn").value=files[list[0].f].name+"のテンプレート";$("ts").style.display="flex"}
 $("tsx").onclick=()=>{$("ts").style.display="none"};
 $("tsok").onclick=async()=>{
@@ -804,7 +805,7 @@ async function tplList(){
     row.className="tr";tn.className="tn";tn.textContent=r.name;sm.textContent="入力欄 "+r.fields.filter(f=>f.type=="input").length+"・固定 "+r.fields.filter(f=>f.type!="input").length+"・"+(r.pages||1)+"ページ";tn.appendChild(sm);
     b1.className="p";b1.textContent="使う";b1.onclick=()=>tplOpen(r);b2.textContent="削除";
     b2.onclick=()=>sheet("「"+r.name+"」を削除しますか?",[["削除する",async()=>{await tdb("del",r.id);tplList()}]]);
-    row.append(tn,b1,b2);c.appendChild(row)});
+    const th=document.createElement("canvas");row.append(th,tn,b1,b2);c.appendChild(row);tplThumb(r,th)});
   $("tl").style.display="flex"}
 $("tlx").onclick=()=>{$("tl").style.display="none"};
 function tplForm(r){
@@ -844,7 +845,7 @@ function drawTpl(x){
     x.save();x.translate(u*cw,v*ch);x.rotate((f.rot+A)*PI/180);
     x.globalAlpha=.35;x.drawImage(bm,-w/2,-h/2,w,h);x.globalAlpha=1;
     x.fillStyle="rgba(245,158,11,.14)";x.fillRect(-w/2,-h/2,w,h);
-    x.lineWidth=Math.max(2,cw/300);x.strokeStyle="#f59e0b";x.setLineDash([8,6]);x.strokeRect(-w/2,-h/2,w,h);x.setLineDash([]);
+    x.lineWidth=Math.max(2,cw/300);x.strokeStyle="#f59e0b";x.setLineDash([8,6]);x.strokeRect(-w/2,-h/2,w,h);x.setLineDash([]);x.lineWidth=Math.max(4,cw/140);x.beginPath();x.moveTo(-w/2,-h/2);x.lineTo(-w/2,h/2);x.stroke();
     x.fillStyle="#f59e0b";x.beginPath();x.arc(-w/2,-h/2,r,0,7);x.fill();
     x.fillStyle="#fff";x.font="bold "+r*1.2+"px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText(f.n,-w/2,-h/2+r*.05);
     x.restore()}}
@@ -863,12 +864,17 @@ function tplGo(f){
   if(!pages.includes(f.pg))return toast("このページには入力できません");
   const go=()=>{
     tcur=f;setMode("text");
-    let it=tplHas(f)?f.it:null;
+    let it=tplHas(f)?f.it:null,fresh=false;
     if(!it){
-      const th=f.rot*PI/180,d=(76-bmOf(f).width)*f.s/60*f.sx/2;
-      it={k:"t",a:f.a+d*Math.cos(th),b:f.b+d*Math.sin(th)*cur.W/cur.H,str:"",s:f.s,c:f.c,rot:f.rot,sx:f.sx,sy:f.sy,tf:f};
-      addItem(it);f.it=it}
-    sel=it;syncPanel();startEdit(it);tplBar()};
+      it={k:"t",a:f.a,b:f.b,str:"",s:f.s,c:f.c,rot:f.rot,sx:f.sx,sy:f.sy,tf:f};
+      addItem(it);f.it=it;fresh=true}
+    sel=it;syncPanel();startEdit(it);
+    if(fresh){
+      // 入力欄の左端を位置の基準にする:空の入力枠の実寸を測り、枠の左端が入力欄の左端に揃うよう中心をずらす
+      const r=ec.getBoundingClientRect(),A=ang(cur),th=f.rot*PI/180,
+        d=(tin._w*tin._e*f.sx/(A%180==0?r.width:r.height)-bmOf(f).width*f.s/60*f.sx)/2;
+      it.a=f.a+d*Math.cos(th);it.b=f.b+d*Math.sin(th)*cur.W/cur.H;paint()}
+    tplBar()};
   endEdit();
   if(cur===f.pg){go();return}
   commit();openEd(f.pg).then(go)}
@@ -880,6 +886,17 @@ function tplStep(d){
   else{k=ai+d;if(k>=L.length){endEdit();tplBar();return toast("入力が終わりました。右上の「完了」で戻れます")}if(k<0)k=0}
   tplGo(L[k])}
 $("tpN").onclick=()=>tplStep(1);$("tpP").onclick=()=>tplStep(-1);
+async function tplThumb(r,cv){
+  try{
+    const d=await pdfjsLib.getDocument({data:new Uint8Array(r.pdf)}).promise,p=await d.getPage(1),v=p.view,A=p.rotate%360,
+      vp=p.getViewport({scale:150/(A%180==0?v[2]-v[0]:v[3]-v[1])}),x=cv.getContext("2d");
+    cv.width=vp.width;cv.height=vp.height;x.fillStyle="#fff";x.fillRect(0,0,cv.width,cv.height);
+    await p.render({canvasContext:x,viewport:vp}).promise;
+    let n=0;r.fields.forEach(f=>{if(f.type!="input")return;n++;if(f.page)return;
+      const [u,w]=toDisp(f.a,f.b,A),rad=Math.max(6,cv.width/14);
+      x.fillStyle="#f59e0b";x.beginPath();x.arc(u*cv.width,w*cv.height,rad,0,7);x.fill();
+      x.fillStyle="#fff";x.font="bold "+rad*1.3+"px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText(n,u*cv.width,w*cv.height)})
+  }catch(e){}}
 async function tplOpen(r){
   $("tl").style.display="none";
   try{
@@ -892,7 +909,7 @@ async function tplOpen(r){
     pgs.forEach(p=>p.tfAll=all);
     pages.push(...pgs);draw();say("");
     if(!all.length)return say("「"+r.name+"」を追加しました。入力欄はありません");
-    tcur=null;await openEd(all[0].pg);
-    toast("番号の枠をタップするか「次へ」で入力。入力後は「移動」などで位置を直せます",4200)
+    tcur=null;await openEd(all[0].pg);tplGo(all[0]);
+    toast("①から入力 →「次へ」で②へ。入力欄の左端から右へ文字が伸びます",4200)
   }catch(e){say("テンプレートを開けませんでした")}}
 </script></body></html>
