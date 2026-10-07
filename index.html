@@ -49,6 +49,8 @@ button{font:inherit;color:var(--fg);cursor:pointer}svg{width:22px;height:22px;st
 #pr,#op,#shp{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch}
 #pr>*,#op>*,#shp>*,#op #opg>*{flex:none}
 #ed.kb #op,#ed.kb #shp,#ed.kb #rp,#ed.kb #sb,#ed.kb .dock.ed{display:none!important}
+#mhint{display:none;background:var(--ac);color:#fff;border-radius:12px;padding:7px 12px;font-size:13px;font-weight:600;text-align:center;margin:0 0 6px;line-height:1.4}
+.sbar{position:fixed;height:5px;border-radius:3px;background:rgba(0,0,0,.14);z-index:25;opacity:0;transition:opacity .3s;pointer-events:none}.sbar i{display:block;height:100%;background:var(--ac);border-radius:3px}
 input[type=range]{accent-color:var(--ac)}
 .col{width:28px;height:28px;border-radius:50%;border:2px solid var(--bd);padding:0}.col.on{outline:2px solid var(--ac);outline-offset:2px}
 .dock.ed{position:static;margin:4px auto calc(10px + env(safe-area-inset-bottom,0px));width:100%}
@@ -77,8 +79,8 @@ input[type=range]{accent-color:var(--ac)}
 <div id="msg"></div>
 <div id="grid"></div>
 <div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、◀▶で順番を入替、✎で編集</div>
-<input id="fi" type="file" accept="application/pdf,.pdf" multiple hidden>
-<input id="phi" type="file" accept="image/*" multiple hidden>
+<input id="fi" type="file" accept="application/pdf,.pdf,image/*,.tif,.tiff" multiple hidden>
+<input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
 <button class="d pri" id="bAdd"><svg><use href="#i-plus"/></svg>追加</button>
 <button class="d" id="bAll"><svg><use href="#i-all"/></svg>全選択</button>
@@ -90,6 +92,7 @@ input[type=range]{accent-color:var(--ac)}
 
 <div id="ed">
 <div class="top"><button class="tb" id="un"><svg><use href="#i-undo"/></svg>戻る</button><span id="pgl"></span><button class="tb pri" id="ok">完了</button></div>
+<div id="mhint"></div>
 <div class="w" id="wrap"><canvas id="ec"></canvas></div>
 <div class="ctx" id="pr">
 <button class="col on" style="background:#111" data-c="#111111"></button><button class="col" style="background:#e11d48" data-c="#e11d48"></button><button class="col" style="background:#2563eb" data-c="#2563eb"></button><button class="col" style="background:#16a34a" data-c="#16a34a"></button><button class="col" style="background:#f59e0b" data-c="#f59e0b"></button><button class="col" style="background:#fff" data-c="#ffffff"></button>
@@ -114,7 +117,7 @@ input[type=range]{accent-color:var(--ac)}
 <button class="d" id="eMore"><svg><use href="#i-more"/></svg>その他</button>
 </div>
 <div hidden><button id="cl"></button><button id="zi"></button><button id="zo"></button><button id="rt"></button></div>
-<input id="pi" type="file" accept="image/*" hidden><input id="pf" type="file" accept="application/pdf,.pdf,image/*" hidden>
+<input id="pi" type="file" accept="image/*,.tif,.tiff" hidden><input id="pf" type="file" accept="application/pdf,.pdf,image/*,.tif,.tiff" hidden>
 </div>
 <div id="tm"><div class="box"><div class="st" id="tmt"></div><textarea id="tmx" rows="7"></textarea><img id="tmim" alt="" style="display:none;max-width:100%;border-radius:10px;margin-top:8px"><div class="row"><button class="p" id="tmc">コピー</button><button id="tmi">画像で表示</button><button id="tma">画像から認識し直す</button><button id="tmz">閉じる</button></div></div></div>
 <div id="fn"><div class="box"><div class="st">ファイル名(タップして変更できます)</div><input id="fnn" type="text" placeholder="ファイル名"><div class="chips"><button class="chip on" data-f="pdf">PDF</button><button class="chip" data-f="jpg">JPEG画像</button><button class="chip" data-f="png">PNG画像</button></div><div id="fnh"></div><div class="row"><button class="p" id="fnok">書き出して共有</button><button id="fnx">キャンセル</button></div></div></div>
@@ -206,7 +209,7 @@ $("fi").onchange=$("phi").onchange=async e=>{if(e.target.files.length)snap();
   for(const f of e.target.files){
     try{
       say("読み込み中: "+f.name);
-      const bytes=f.type.startsWith("image/")?await imgToPdf(f):new Uint8Array(await f.arrayBuffer());
+      const bytes=(f.type.startsWith("image/")||/\.tiff?$/i.test(f.name))?await imgToPdf(f):new Uint8Array(await f.arrayBuffer());
       if(!bytes){say("");continue}
       const doc=await pdfjsLib.getDocument({data:bytes.slice()}).promise;
       const fi=files.push({name:f.name.replace(/\.[^.]+$/,""),bytes,doc})-1;
@@ -285,21 +288,21 @@ async function runExport(list,name,fmt){
     await deliverFiles(fs,name)
   }catch(err){say("作成に失敗しました。暗号化PDFは非対応です")}}
 // ---- エディタ ----
-function setMode(m){mode=m;emode=null;selR=null;sdrag=null;document.querySelectorAll("[data-m]").forEach(b=>b.classList.toggle("on",b.dataset.m==m));if(m=="pen"||m=="line"){sel=null;syncPanel()}paint()}
+function setMode(m){sbAll();mode=m;emode=null;selR=null;sdrag=null;document.querySelectorAll("[data-m]").forEach(b=>b.classList.toggle("on",b.dataset.m==m));if(m=="pen"||m=="line"){sel=null;syncPanel()}paint()}
 document.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{setMode(b.dataset.m);if(b.dataset.m=="move")toast("画面をなぞって範囲を選びます");if(b.dataset.m=="text"){if(sel&&sel.k=="t")startEdit(sel);else newText(toUnrot(.5,.35,ang(cur)))}});
-function syncPanel(){
+function syncPanel(){sbAll();
   $("op").style.display=sel?"flex":"none";$("pr").style.display=sel&&sel.shape?"none":"";$("shp").style.display=sel&&sel.shape?"flex":"none";if(!sel)return;
   const t=sel.k=="t";$("ex").style.display=$("bmv").style.display=$("bsz").style.display=$("bsc").style.display=t?"":"none";$("bsc").classList.toggle("act",emode=="scale");$("bsh").style.display=sel.shape?"":"none";$("bsh").classList.toggle("act",emode=="shape");$("opg").style.display=sel.shape?"none":"contents";if(sel.shape)shpUI();$("bmv").classList.toggle("act",emode=="move");$("bsz").classList.toggle("act",emode=="size");
   $("sz").value=sel.k=="i"?sel.w*100:sel.s*700-4;$("sx").value=(sel.sx||1)*100;$("sy").value=(sel.sy||1)*100;
 }
-async function openEd(pg){cur=pg;emode=null;ruler={on:false,a:.5,b:.4,deg:0};rotInfo=null;rulerUI();$("pgl").textContent=(pages.indexOf(pg)+1)+" / "+pages.length;sel=null;$("ed").style.display="flex";setMode("pen");await redrawBase()}
+async function openEd(pg){sbAll();cur=pg;emode=null;ruler={on:false,a:.5,b:.4,deg:0};rotInfo=null;rulerUI();$("pgl").textContent=(pages.indexOf(pg)+1)+" / "+pages.length;sel=null;$("ed").style.display="flex";setMode("pen");await redrawBase()}
 const baseCv=document.createElement("canvas");
-async function redrawBase(){selR=null;
+async function redrawBase(){selR=null;if(!cur._base)cur._base=snapOf(cur);
   {const A0=ang(cur),pw=A0%180==0?cur.W:cur.H,ph=A0%180==0?cur.H:cur.W;baseW=Math.max(120,Math.min(wrap.clientWidth-4,(wrap.clientHeight-4)*pw/ph,900))}
   await renderPage(cur,baseCv,Math.min(baseW*2.5,2400),false);
   ec.width=baseCv.width;ec.height=baseCv.height;ec.style.width=baseW+"px";paint();
 }
-function paint(){if(!cur)return;const x=ec.getContext("2d");x.drawImage(baseCv,0,0);drawMarks(x,cur,ec.width,ec.height,st);if(ruler.on)drawRuler(x);drawRot(x);drawHandles(x);if(selR&&mode=="move")drawSel(x);$("sb").style.display=(selR&&mode=="move")?"flex":"none";if(editing)placeEdit()}
+function paint(){if(!cur)return;const x=ec.getContext("2d");x.drawImage(baseCv,0,0);drawMarks(x,cur,ec.width,ec.height,st);if(ruler.on)drawRuler(x);drawRot(x);drawHandles(x);if(selR&&mode=="move")drawSel(x);$("sb").style.display=(selR&&mode=="move")?"flex":"none";if(editing)placeEdit();if(!P.size&&!editing){clearTimeout(cT);cT=setTimeout(commit,450)}}
 function pt(e){const r=ec.getBoundingClientRect();return toUnrot((e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height,ang(cur))}
 function hit(e){
   const r=ec.getBoundingClientRect(),A=ang(cur),px=e.clientX-r.left,py=e.clientY-r.top,ppp=(A%180==0?r.width:r.height)/cur.W;
@@ -319,7 +322,7 @@ function snap(q0,q1){
 const P=new Map();
 function G(){const [a,b]=[...P.values()];return{d:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)||1,an:Math.atan2(b.clientY-a.clientY,b.clientX-a.clientX),mx:(a.clientX+b.clientX)/2,my:(a.clientY+b.clientY)/2}}
 ec.onpointerdown=e=>{
-  ec.setPointerCapture(e.pointerId);P.set(e.pointerId,e);
+  commit();ec.setPointerCapture(e.pointerId);P.set(e.pointerId,e);
   if(P.size==2){pendDesel=false;sdrag=null;clearTimeout(lpT);lpT=null;rz=null;createTap=null;st=null;drag=null;let onItem=false;if(!(ruler.on&&mode=="pen")){const h=hit(e)||hit([...P.values()][0]);if(h){if(h!==sel){sel=h;emode=null;setHint();syncPanel()}onItem=true}}const n=G(),r0=ec.getBoundingClientRect();g={fx:(n.mx-r0.left)/r0.width,fy:(n.my-r0.top)/r0.height,d0:n.d,a0:n.an,pm:n,zw:ec.getBoundingClientRect().width,sz:sel?(sel.k=="i"?sel.w:sel.s):0,rot:sel?sel.rot:0};g.item=onItem;if(ruler.on&&mode=="pen"&&(rdrag||isBody(e))){const m=pt({clientX:n.mx,clientY:n.my});g.ruler=true;g.deg0=ruler.deg;g.off=[ruler.a-m[0],ruler.b-m[1]];rdrag=null}paint();return}
   if(P.size>2)return;
   const q=pt(e);
@@ -333,7 +336,7 @@ ec.onpointerdown=e=>{
     moved=false;tapEdit=false;createTap=null;dp={x:e.clientX,y:e.clientY};
     if(emode=="shape"&&sel&&sel.shape&&(shI=shapeHit(e))>=0){shOff=[q[0]-(sel.a+sel.shape.rel[shI][0]),q[1]-(sel.b+sel.shape.rel[shI][1])]}
     else if((emode=="size"||emode=="scale")&&sel&&sel.k=="t"&&hitHandle(e,sel)){rz=sel;if(emode=="scale"){const L=loc(e,sel);rz0={s:sel.s,d:Math.max(1,Math.hypot(L.lx,L.ly))}}}
-    else if(emode=="move"&&sel&&sel.k=="t"&&(!h||h===sel))drag=[q[0]-sel.a,q[1]-sel.b];
+    else if(emode=="move"&&sel&&sel.k=="t"&&(!h||h===sel)){drag=[q[0]-sel.a,q[1]-sel.b];tapEdit=(h===sel)}
     else if(h){
       if(h!==sel){sel=h;emode=null;setHint()}
       if(h.k=="t"){
@@ -414,7 +417,7 @@ async function addItemFile(f){
 }
 $("pi").onchange=$("pf").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(f)await addItemFile(f)};
 
-function newText(q){const it={k:"t",a:q[0],b:q[1],str:"テキスト",s:.03,c:col,rot:0,sx:1,sy:1};addItem(it);sel=it;syncPanel();paint();startEdit(it,true)}
+function newText(q){const it={k:"t",a:q[0],b:q[1],str:"テキスト",s:.03,c:col,rot:0,sx:1,sy:1};addItem(it);sel=it;syncPanel();emode="move";setHint();syncPanel();paint()}
 $("sx").oninput=()=>{if(sel){sel.sx=+$("sx").value/100;paint()}};
 $("sy").oninput=()=>{if(sel){sel.sy=+$("sy").value/100;paint()}};
 $("cc").oninput=()=>{col=$("cc").value;document.querySelectorAll(".col").forEach(x=>x.classList.remove("on"));if(sel&&sel.k=="t"){sel.c=col;paint()}};
@@ -477,7 +480,10 @@ tin.oninput=()=>{
 document.addEventListener("pointerdown",e=>{if(editing&&!e.target.closest("#tin,.ctx,#op"))endEdit()},true);
 
 let emode=null,lpT=null,lpPt=null,dp=null,rz=null,createTap=null;
-function setHint(){$("pgl").textContent=emode=="move"?"移動モード":emode=="size"?"枠サイズ変更モード":emode=="scale"?"全体拡大モード(比率そのまま)":emode=="shape"?"形変更モード(丸を動かして調整)":(pages.indexOf(cur)+1)+" / "+pages.length}
+function setHint(){
+  $("pgl").textContent=(pages.indexOf(cur)+1)+" / "+pages.length;
+  const T={move:"配置モード:配置後に編集、再配置可能です(ドラッグで移動・タップで入力)",size:"枠サイズ変更モード:右下の緑の丸をドラッグ",scale:"全体拡大モード:右下のオレンジの丸をドラッグ(比率そのまま)",shape:"形変更モード:4つの丸をドラッグして調整"},m=$("mhint");
+  m.textContent=T[emode]||"";m.style.display=emode&&T[emode]?"block":"none"}
 function setEmode(m){emode=m;setHint();syncPanel();paint()}
 function itemMenu(it){
   if(navigator.vibrate)navigator.vibrate(12);
@@ -724,15 +730,34 @@ function focusEdit(){
 
 function addStroke(st){cur.strokes.push(st);(cur._log=cur._log||[]).push({k:"s",o:st})}
 function addItem(it){cur.items.push(it);(cur._log=cur._log||[]).push({k:"i",o:it})}
-function undoLast(){
-  endEdit();const L=cur._log||[];
-  while(L.length){
-    const a=L.pop();
-    if(a.k=="s"){const i=cur.strokes.indexOf(a.o);if(i>=0){cur.strokes.splice(i,1);paint();return}}
-    else{const i=cur.items.indexOf(a.o);if(i>=0){cur.items.splice(i,1);if(sel===a.o){sel=null;emode=null;setHint();syncPanel()}paint();return}}
-  }
-  toast("戻せる操作がありません")}
 function clearText(){
   if(!cur.items.some(i=>i.k=="t"))return toast("消せる文字がありません");
   sheet("このページに追加した文字を全て消しますか?",[["消す",()=>{endEdit();cur.items=cur.items.filter(i=>i.k!="t");if(sel&&sel.k=="t"){sel=null;emode=null;setHint();syncPanel()}paint();toast("文字を全て消しました")}]])}
+
+let cT=null;
+const sigOf=pg=>pg.strokes.length+"|"+pg.items.map(i=>[i.a,i.b,i.rot,i.w,i.s,i.sx,i.sy,i.c,i.str,i.shape?[i.shape.m,i.shape.c,i.shape.wd,i.shape.d,i.shape.rel.join()].join():""].join(",")).join(";");
+function snapOf(pg){return{sig:sigOf(pg),strokes:pg.strokes.slice(),items:pg.items.map(it=>({it,p:{...it,shape:it.shape?{...it.shape,rel:it.shape.rel.map(r=>r.slice())}:undefined}}))}}
+function commit(){
+  if(!cur||editing)return;
+  if(!cur._base){cur._base=snapOf(cur);return}
+  if(sigOf(cur)!==cur._base.sig){(cur._hist=cur._hist||[]).push(cur._base);if(cur._hist.length>80)cur._hist.shift();cur._base=snapOf(cur)}}
+function undoLast(){
+  endEdit();clearTimeout(cT);commit();
+  const h=cur._hist||[];if(!h.length)return toast("戻せる操作がありません");
+  const sn=h.pop();sel=null;emode=null;
+  cur.strokes=sn.strokes.slice();
+  cur.items=sn.items.map(x=>{const p={...x.p};if(!p.shape)delete p.shape;Object.assign(x.it,p);return x.it});
+  cur._base=snapOf(cur);setHint();syncPanel();paint();toast("1つ前に戻しました",1200)}
+// ---- スクロールバー表示(数秒)
+const SB={};
+function sbShow(el,ms=3000){
+  if(!el||el.offsetParent===null&&getComputedStyle(el).position!=="fixed")return;
+  let b=SB[el.id];if(!b){b=SB[el.id]=document.createElement("div");b.className="sbar";b.innerHTML="<i></i>";document.body.appendChild(b)}
+  if(el.scrollWidth<=el.clientWidth+2){b.style.opacity=0;return}
+  const r=el.getBoundingClientRect(),w=r.width-16,th=Math.max(28,w*el.clientWidth/el.scrollWidth),x=(w-th)*(el.scrollLeft/(el.scrollWidth-el.clientWidth));
+  Object.assign(b.style,{left:r.left+8+"px",top:r.bottom-7+"px",width:w+"px",opacity:1});
+  b.firstChild.style.cssText="width:"+th+"px;transform:translateX("+x+"px)";
+  clearTimeout(b._t);b._t=setTimeout(()=>{b.style.opacity=0},ms)}
+function sbAll(){["pr","op","shp"].forEach(id=>setTimeout(()=>sbShow($(id)),220))}
+["pr","op","shp"].forEach(id=>$(id).addEventListener("scroll",()=>sbShow($(id),1800),{passive:true}));
 </script></body></html>
