@@ -48,6 +48,7 @@ button{font:inherit;color:var(--fg);cursor:pointer}svg{width:22px;height:22px;st
 #shp .cdot{width:28px;height:28px}#shp .chip{padding:6px 10px;font-size:13px}
 #szp{display:none;background:var(--ac2);border-radius:14px;padding:8px 12px;margin-top:6px;gap:10px;font-size:12px}#szp label{flex:1;display:flex;flex-direction:column;gap:2px;font-weight:600;min-width:0}#szp input{width:100%;margin:0}#bgz.act{background:var(--ac)!important;color:#fff}
 #mn{position:fixed;inset:0;z-index:80;background:var(--bg);display:none;flex-direction:column;padding-top:env(safe-area-inset-top)}#mn .mh{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;font-size:17px}#mn .mh button{border:0;background:var(--ac);color:#fff;border-radius:12px;padding:8px 16px;font-size:14px}#mn .mb{flex:1;overflow:auto;padding:0 16px 40px;-webkit-overflow-scrolling:touch}#mn h2{font-size:15px;margin:8px 0}#mn h3{font-size:16px;margin:26px 0 8px;color:var(--ac)}#mn .mt{padding-left:22px;line-height:2.1}#mn .mt a,#mn .up{color:var(--ac);text-decoration:underline;cursor:pointer}#mn ul{padding-left:20px;line-height:1.7;font-size:14px}#mn svg.mfig{stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter}#mn .mfig text{stroke:none}#mn svg.mfig{width:100%;max-width:340px;height:auto;display:block;margin:8px auto;background:var(--card);border-radius:14px;box-shadow:var(--sh)}#mn .up{font-size:12px;display:block;text-align:right}
+#cm{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:flex-end;z-index:62}#cm .box{background:var(--card);width:100%;max-width:620px;margin:0 auto;border-radius:22px 22px 0 0;padding:16px;max-height:92%;overflow:auto}#cm .st{padding:4px 2px 10px;font-weight:700}#cm .row{display:flex;gap:8px;margin-top:12px}#cm .row button{border:1px solid var(--bd);background:none;border-radius:12px;padding:12px 16px;font-size:15px}#cm .row .p{background:var(--ac);color:#fff;border:0}.cmr{margin:10px 0}.cmr label{display:block;font-size:12px;color:var(--mut);margin-bottom:4px;font-weight:600}.cmr input{width:100%;font:inherit;font-size:16px;border:1px solid var(--bd);border-radius:12px;padding:10px;background:var(--bg);color:var(--fg)}.cmc{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.cmc button{border:1px solid var(--bd);background:none;border-radius:999px;padding:6px 12px;font-size:13px}#cm details{margin-top:10px;font-size:13px}#cm pre{white-space:pre-wrap;background:var(--bg);padding:8px;border-radius:10px;max-height:160px;overflow:auto;font-size:12px}#fgc,#fpcam{border:1px solid var(--bd);background:var(--card);border-radius:10px;padding:7px 10px;font-size:13px}
 #pr,#op,#shp{flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-x;overscroll-behavior-x:contain;-webkit-user-select:none;user-select:none}#pr button,#op button,#shp button{touch-action:pan-x;-webkit-tap-highlight-color:transparent;transform:none!important;transition:none!important}#pr button:active,#op button:active,#shp button:active{transform:none}
 #ed .dock,#ed .dock *{touch-action:pan-x}
 #pr>*,#op>*,#shp>*,#op #opg>*{flex:none}
@@ -110,10 +111,10 @@ input[type=range]{accent-color:var(--ac)}
 <div id="ed">
 <div class="top"><button class="tb" id="un"><svg><use href="#i-undo"/></svg>戻る</button><span class="pgn"><button class="tb" id="pgP">‹</button><span id="pgl"></span><button class="tb" id="pgN">›</button></span><span style="display:flex;gap:4px"><button class="tb" id="zOut">－</button><button class="tb" id="zIn">＋</button></span><button class="tb pri" id="ok">完了</button></div>
 <div id="mhint"></div>
-<div id="fg"><span class="fl" id="fgl"></span><button id="fgs" class="p">スライド入力</button></div>
+<div id="fg"><span class="fl" id="fgl"></span><button id="fgc">📷 書類から</button><button id="fgs" class="p">スライド入力</button></div>
 <div id="te"><span class="fl">テンプレート編集中</span><button id="teO">番号・順番</button><button id="teA">別名保存</button><button id="teS" class="p">上書き保存</button></div>
 <div class="w" id="wrap"><canvas id="ec"></canvas></div>
-<div id="fp"><div id="fps"></div><div id="fpb"><button id="fpu">▲</button><span id="fpc" style="font-size:12px;font-weight:700"></span><button id="fpd">▼</button><button class="p" id="fpx">完了</button></div></div>
+<div id="fp"><div id="fps"></div><div id="fpb"><button id="fpu">▲</button><span id="fpc" style="font-size:12px;font-weight:700"></span><button id="fpd">▼</button><button id="fpcam">📷</button><button class="p" id="fpx">完了</button></div></div>
 <div class="ctx" id="pr">
 <button class="col on" style="background:#111" data-c="#111111"></button><button class="col" style="background:#e11d48" data-c="#e11d48"></button><button class="col" style="background:#2563eb" data-c="#2563eb"></button><button class="col" style="background:#16a34a" data-c="#16a34a"></button><button class="col" style="background:#f59e0b" data-c="#f59e0b"></button><button class="col" style="background:#fff" data-c="#ffffff"></button>
 <input type="color" id="cc" value="#111111" style="width:28px;height:28px;padding:0;border:0;background:none"><span style="font-size:12px;color:var(--mut)">太さ</span><input id="wd" type="range" min="1" max="14" value="3" style="width:90px">
@@ -151,6 +152,8 @@ input[type=range]{accent-color:var(--ac)}
 <div id="tf"><div class="box"><div class="st" id="tft"></div><div id="tfc"></div><div class="row"><button class="p" id="tfok">作成</button><button id="tfx">キャンセル</button></div></div></div>
 <div id="ts"><div class="box"><div class="st">テンプレートとして保存</div><div id="tsh" style="font-size:13px;color:var(--mut);padding:0 4px 8px;line-height:1.5"></div><input id="tsn" type="text"><div class="row"><button class="p" id="tsok">保存</button><button id="tsx">キャンセル</button></div></div></div>
 <div id="to"><div class="box"><div class="st">入力欄のグループ(A・B・C…)<div style="font-size:12px;font-weight:400;color:var(--mut);line-height:1.5;margin-top:4px">同じ文字(A・A・A)の欄は、別ページでも1回の入力で同時に入ります。各欄の「グループ ▾」で A/B/C を選んで変更。▲▼で入力する順番(A→B→C)を入れ替え。名前タップで画面上のその欄を選べます。</div></div><div id="toc"></div><div class="row"><button class="p" id="tox">閉じる</button></div></div></div>
+<div id="cm"><div class="box"><div class="st" id="cmt"></div><div id="cmb"></div><div class="row"><button class="p" id="cmok">入力欄に入れる</button><button id="cmx">閉じる</button></div></div></div>
+<input id="camIn" type="file" accept="image/*" capture="environment" hidden><input id="camPk" type="file" accept="image/*" hidden>
 <div id="dm"><div class="box"><div class="st">寸法を入力 <small id="dmt" style="font-weight:400;color:var(--mut)">単位:m</small></div><div class="chips" id="dmc"><button class="chip on" data-l="出入口">出入口</button><button class="chip" data-l="道路幅">道路幅</button><button class="chip" data-l="横">横</button><button class="chip" data-l="縦">縦</button><button class="chip" data-l="保管場所">保管場所(文字のみ)</button><button class="chip" data-l="前面道路">前面道路</button><button class="chip" data-l="">名前なし</button></div>
 <div style="display:flex;gap:8px;align-items:center;margin:6px 0"><input id="dmv" type="text" inputmode="decimal" placeholder="例 5.0" autocomplete="off"><b>m</b></div><div class="row"><button class="p" id="dmok">入れる</button><button id="dmx">キャンセル</button></div></div></div>
 <div id="toast"></div>
@@ -467,7 +470,7 @@ function newText(q){const it={k:"t",a:q[0],b:q[1],str:"テキスト",s:.03,c:col
 $("sx").oninput=()=>{if(sel){sel.sx=+$("sx").value/100;paint()}};
 $("sy").oninput=()=>{if(sel){sel.sy=+$("sy").value/100;paint()}};
 $("cc").oninput=()=>{col=$("cc").value;document.querySelectorAll(".col").forEach(x=>x.classList.remove("on"));if(sel&&sel.k=="t"){sel.c=col;paint()}};
-if(window.visualViewport){const fit=()=>{const v=visualViewport;if(v.scale>1.02)return;for(const id of["ed","fn","tm","tf","ts","dm"]){const e=$(id);e.style.top=v.offsetTop+"px";e.style.height=v.height+"px";e.style.bottom="auto"}};visualViewport.addEventListener("resize",fit);visualViewport.addEventListener("scroll",fit)}
+if(window.visualViewport){const fit=()=>{const v=visualViewport;if(v.scale>1.02)return;for(const id of["ed","fn","tm","tf","ts","dm","cm"]){const e=$(id);e.style.top=v.offsetTop+"px";e.style.height=v.height+"px";e.style.bottom="auto"}};visualViewport.addEventListener("resize",fit);visualViewport.addEventListener("scroll",fit)}
 
 let ruler={on:false,a:.5,b:.4,deg:0},rdrag=null,blocked=null,rotInfo=null,rotT=null;
 function rulerUI(){$("rm").textContent="長さ "+15*(ruler.m||1)+"cm";$("eRul").classList.toggle("on",ruler.on);$("rp").style.display=ruler.on?"flex":"none"}
@@ -1084,6 +1087,66 @@ document.addEventListener("keydown",e=>{
 
 $("tmi").onclick=async()=>{if(!selR)return;const c=crop(await pageBig(2000)),im=$("tmim");im.src=c.toDataURL("image/png");im.style.display="block";$("tmt").textContent="画像を長押しして、iPhoneの文字認識でコピーすることもできます"};
 if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+// ---- 書類の撮影 → 文字認識 → 住所・氏名・電話番号を入力欄へ
+const dcCat=l=>{l=(l||"").normalize("NFKC");if(/フリガナ|ふりがな|カナ|ﾌﾘｶﾞﾅ/.test(l))return null;if(/電話|TEL|携帯/i.test(l))return"tel";if(/住所|所在地/.test(l))return"addr";if(/氏名|名前|お名前|申請者|契約者|代表者|芳名/.test(l))return"name";return null};
+function dcParse(raw){
+  const N=String(raw||"").normalize("NFKC"),lines=N.split(/\n+/).map(l=>l.replace(/[ \t　]+/g," ").trim()).filter(Boolean),out={tel:[],addr:[],name:[]};
+  const add=(k,v)=>{v=(v||"").trim();if(v&&!out[k].includes(v))out[k].push(v)},cj=s=>s.replace(/ (?=[^\x00-\x7F])|(?<=[^\x00-\x7F]) /g,"");
+  // 電話番号(099・090・03 など。ハイフンなしも可)
+  const tt=N.replace(/[‐‑‒–—―−]/g,"-").replace(/(\d)\s*[ーｰ]\s*(?=\d)/g,"$1-").replace(/\((?=\d)/g," ").replace(/\)\s*(?=\d)/g,"-"),found=[];
+  const fm=(d,h)=>{const g=d.replace(/\D/g,"");if(h)return h;if(g.length==11)return g.replace(/(\d{3})(\d{4})(\d{4})/,"$1-$2-$3");if(/^0[36]/.test(g))return g.replace(/(\d{2})(\d{4})(\d{4})/,"$1-$2-$3");return g.replace(/(\d{3})(\d{3})(\d{4})/,"$1-$2-$3")};
+  for(const m of tt.matchAll(/(?<![\d-])(0\d{1,4})\s?-\s?(\d{1,4})\s?-\s?(\d{3,4})(?![\d-])/g)){const g=(m[1]+m[2]+m[3]);if(g.length==10||g.length==11)found.push({i:m.index,v:m[1]+"-"+m[2]+"-"+m[3]})}
+  for(const m of tt.matchAll(/(?<![\d-])(0\d{9,10})(?![\d-])/g))found.push({i:m.index,v:fm(m[1])});
+  found.forEach(f=>{const near=tt.slice(Math.max(0,f.i-8),f.i);f.r=(/TEL|Tel|tel|電話|携帯|連絡/.test(near)?0:1)+(/^099/.test(f.v)?0:.5)});
+  found.sort((a,b)=>a.r-b.r||a.i-b.i).forEach(f=>add("tel",f.v));
+  // 住所(〒の近く、◯◯市・◯◯郡を目印に。県は無くてもよい)
+  const cut=s=>s.replace(/\s*(TEL|Tel|tel|電話|FAX|携帯|様|氏名|名前|申請|\d{2,4}-\d{2,4}-\d{3,4}).*$/,"").trim(),pz=/〒?\s*(?<![\d-])\d{3}-\d{4}(?![\d-])/,city=/(?:[一-龥ァ-ヶ]{2,4}[都道府県])?[一-龥ぁ-んァ-ヶ]{1,8}[市郡]/;
+  lines.forEach((l,i)=>{if(!(/〒/.test(l)||pz.test(l)))return;let rest=cut(l.replace(pz,"").replace(/^.*?(住所|所在地)\s*[:：]?/,"")).trim();if(rest.length<4&&lines[i+1])rest=cut(lines[i+1]);if(rest.length>=4)add("addr",cj(rest))});
+  lines.forEach(l=>{const m=l.match(city);if(!m)return;const s=cut(l.slice(m.index));if(s.length>=5&&(/\d/.test(s)||/[町村区]|丁目/.test(s)))add("addr",cj(s))});
+  // 氏名(「氏名・名前・お名前」の横、「◯◯ △△様」の様の前)
+  const lab=/^(氏名|お名前|ご氏名|名前|申請者名?|契約者名?|代表者名?|ご芳名|御氏名|フリガナ|ふりがな|住所|電話|TEL|御|貴|ご|宛)$/;
+  lines.forEach(l=>{const m=l.match(/(?:氏名|お名前|ご氏名|名前|申請者名?|契約者名?|ご芳名)\s*[:：]?\s*(.{1,16})/);if(!m)return;let s=m[1].replace(/(様|フリガナ|ふりがな|住所|電話|TEL|〒|生年月日).*$/,"").replace(/[\d,、。:：()（）]/g,"").trim();const t=s.split(" ").filter(x=>x&&!lab.test(x)).slice(0,2);if(t.length&&t.join("").length>=2)add("name",t.join(" "))});
+  lines.forEach(l=>{const m=l.match(/(.{1,24}?)\s*様/);if(!m)return;const t=m[1].split(/[\s:：、,.。()（）「」]+/).filter(x=>x&&!lab.test(x)&&!/\d/.test(x));if(!t.length)return;const w=t.slice(-2);if(w.length==1&&w[0].length>6)w[0]=w[0].slice(-6);add("name",w.join(" "))});
+  return out}
+
+async function ocrCanvas(c,onPart){
+  if(typeof Tesseract=="undefined")throw{code:"no_ocr",message:"文字認識を読み込めません。通信を確認してください"};
+  onPart("文字認識の準備中…(初回のみ数十秒かかります)");
+  const w=await Tesseract.createWorker("jpn",1,{langPath:"https://cdn.jsdelivr.net/npm/@tesseract.js-data/jpn/4.0.0_best_int",logger:m=>{if(m.status)onPart("文字認識中… "+Math.round((m.progress||0)*100)+"%")}});
+  try{const r=await w.recognize(c);return String(r.data.text||"")}finally{await w.terminate()}}
+
+// ---- カメラで書類を読み取る
+function dcFields(inst){const m={};fillGroups(inst).forEach(g=>{const f=g.list[0].it,k=dcCat(f.lbl);if(k)(m[k]=m[k]||[]).push(g)});return m}
+function camStart(){
+  const inst=fillInst||curInst();if(!inst)return toast("先にテンプレートを呼び出してください");
+  if(!Object.keys(dcFields(inst)).length)return toast("入力欄の名前に「住所」「氏名」「電話」を含むテンプレートで使えます",4200);
+  sheet("書類から読み取り",[["カメラで撮る",()=>{$("camIn").value="";$("camIn").click()}],["写真から選ぶ",()=>{$("camPk").value="";$("camPk").click()}]])}
+async function camPicked(f){
+  if(!f)return;const inst=fillInst||curInst();
+  dcShow("書類を読み込んでいます…",null,inst);
+  try{
+    const im=await loadImg(f),k=Math.min(1,2600/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);
+    const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);
+    const raw=await ocrCanvas(c,m=>{$("cmt").textContent=m});
+    dcShow(raw.trim()?"読み取りました。内容を確認・訂正してください":"文字が読み取れませんでした。明るい場所で真上から撮り直してください",raw,inst)
+  }catch(err){const M={not_granted:"AIの利用が許可されませんでした",no_ocr:"文字認識を読み込めません。通信を確認してください",no_sample:"このビューでは読み取りを使えません",no_images:"このビューでは画像での読み取りができません"};dcShow((M[err&&err.code]||"読み取れませんでした")+(err&&err.code?"("+err.code+")":""),"",inst)}}
+function dcShow(title,raw,inst){
+  $("cmt").textContent=title;const box=$("cmb");box.innerHTML="";$("cm").style.display="flex";if(raw===null)return;
+  const res=dcParse(raw),F=dcFields(inst),names={tel:"電話番号",addr:"住所",name:"氏名"},inputs={};
+  ["name","addr","tel"].forEach(k=>{if(!F[k])return;
+    const w=document.createElement("div");w.className="cmr";const lb=document.createElement("label");lb.textContent=names[k]+(res[k].length?"":"(見つかりません。手で入力できます)");
+    const inp=document.createElement("input");inp.type="text";inp.value=res[k][0]||"";inputs[k]=inp;w.append(lb,inp);
+    if(res[k].length>1){const ch=document.createElement("div");ch.className="cmc";res[k].slice(1,5).forEach(v=>{const b=document.createElement("button");b.textContent=v;b.onclick=()=>{inp.value=v};ch.appendChild(b)});w.appendChild(ch)}
+    box.appendChild(w)});
+  if(raw.trim()){const d=document.createElement("details");d.innerHTML="<summary>読み取った全文を見る</summary>";const p=document.createElement("pre");p.textContent=raw;d.appendChild(p);box.appendChild(d)}
+  $("cmok").style.display=Object.keys(inputs).length?"":"none";
+  $("cmok").onclick=()=>{let n=0;Object.keys(inputs).forEach(k=>{const v=inputs[k].value.trim();if(!v)return;F[k].forEach(g=>{g.list.forEach(x=>{x.it.ph=false;setItemStr(x.it,x.pg,v)});n++})});
+    if(fillInst)[...$("fps").children].forEach((d,i)=>{const inp=d.querySelector("input"),f=fillL[i]&&fillL[i].list[0].it;if(inp&&f)inp.value=f.ph?"":f.str});
+    $("cm").style.display="none";paint();toast(n?n+"か所に入力しました。訂正は入力欄をタップ":"入力する内容がありません",3200)}}
+$("cmx").onclick=()=>{$("cm").style.display="none"};
+$("fgc").onclick=camStart;$("fpcam").onclick=camStart;
+$("camIn").onchange=e=>camPicked(e.target.files[0]);$("camPk").onchange=e=>camPicked(e.target.files[0]);
+
 // ---- 説明書
 (function(){
 const C="#f59e0b",S="style=\"fill:var(--card);stroke:var(--bd)\"",T=(x,y,t,sz=9,a="middle",w=600)=>`<text x="${x}" y="${y}" font-size="${sz}" text-anchor="${a}" font-weight="${w}" style="fill:var(--fg)">${t}</text>`,
@@ -1119,6 +1182,7 @@ const MAN=[
 ["stamp","スタンプと矢印",stamp,["① スタンプを置くと、左下にオレンジの丸が出ます。","② その丸から指をドラッグすると、矢印(←)を伸ばして目的の場所を指せます。","スタンプ本体はドラッグで移動。文字はタップで直せます。"]],
 ["image","写真・画像・PDFを重ねる",null,["編集画面の「追加」から、ファイル(PDF・TIFF)や写真をページに貼れます。貼った直後はドラッグで移動、二本指で拡大縮小。","地図などは「固定」を押すと、触っても動かなくなります(解除は「その他」から)。","「トリミング」で不要な部分を切り取り。"]],
 ["tpl","テンプレート",tpl,["よく使うPDFと入力欄を保存して、何度も呼び出せます。","① 作り方:文字を置いて「入力欄にする」→ ホーム画面の「共有」→「テンプレートに保存」。","② 使い方:「追加」→「テンプレートから」→「使う」。入力欄を順に入力できます。","③ 編集:一覧の「編集」。「番号・順番」でグループ(A・B・C)を設定。同じ文字の欄は別ページでも同時に入力されます。‹ › でページ移動、「上書き保存」で保存。","④ 共有:「共有」でファイルにして相手に送れます。相手は「他の人のテンプレートを取り込む」で読み込みます。"]],
+["camera","書類から自動入力(カメラ)",null,["テンプレートを呼び出した入力画面の「📷」を押すと、カメラで撮った書類から文字を読み取り、住所・氏名・電話番号を入力欄へ自動で入れます(入力欄の名前に「住所」「氏名」「電話」を含むときに使えます)。","電話番号:099・090・03 など、ハイフンの有無にかかわらず探します。","住所:「〒」の近く、「◯◯市」「◯◯郡」を目印に探します(県は無くてもOK)。","氏名:「氏名・名前・お名前」の横、「◯◯ △△様」の様の前を拾います。","読み取り結果は一覧で出るので、直してから「入力欄に入れる」を押します。候補が複数あるときは、下に候補が並びます。","うまく読めないときは、明るい場所で書類を真上から撮ってください。"]],
 ["share","共有・書き出し",null,["ホーム画面の「共有」。ファイル名をタップして自由に変更できます。","形式はPDF、JPEG画像、PNG画像から選べます(複数ページの画像はZIPにまとめます)。"]],
 ["undo","戻す・消す",null,["「戻る」は1動作ずつ取り消し。ページ削除も戻せます。","その他:ペンの全消去/テキストの全消去/範囲選択で作った囲い・斜線の全消去。"]],
 ["pc","パソコンで使うとき",null,["拡大縮小:Ctrl(Mac は ⌘)+ホイール、または Ctrl + / -。Ctrl+0 で元の大きさ。","Ctrl+Z で戻る、Delete で選んだ文字・画像を削除。","拡大してもボタンは動かず、PDFだけが拡大されます。"]]
