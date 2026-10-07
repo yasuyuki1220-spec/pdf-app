@@ -29,7 +29,7 @@ button{font:inherit;color:var(--fg);cursor:pointer}svg{width:22px;height:22px;st
 .d{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;border:0;background:none;font-size:10px;padding:8px 2px;border-radius:16px;color:var(--fg)}
 .d.on{background:var(--ac2);color:var(--ac)}.d.pri{background:var(--ac);color:#fff}
 #ed{position:fixed;inset:0;overflow:hidden;background:var(--bg);z-index:20;display:none;flex-direction:column;padding:env(safe-area-inset-top,0px) 10px 0}
-.top{display:flex;align-items:center;justify-content:space-between;padding:8px 0}#pgl{font-size:13px;color:var(--mut);font-weight:600}
+.top{display:flex;align-items:center;justify-content:space-between;padding:8px 0}#pgl{min-width:44px;text-align:center}.pgn{display:flex;align-items:center;gap:2px}.pgn .tb{padding:6px 12px;font-size:18px;line-height:1}#pgl{font-size:13px;color:var(--mut);font-weight:600}
 .tb{border:0;background:var(--card);border-radius:12px;padding:8px 12px;font-size:14px;display:flex;gap:4px;align-items:center;box-shadow:var(--sh)}.tb svg{width:18px;height:18px}.tb.pri{background:var(--ac);color:#fff}
 #ed .w{position:relative;flex:1;overflow:auto;-webkit-overflow-scrolling:touch;border-radius:12px;background:var(--bd)}
 #ec{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:none;background:#fff;display:block;margin:0 auto}
@@ -47,6 +47,7 @@ button{font:inherit;color:var(--fg);cursor:pointer}svg{width:22px;height:22px;st
 #pcv{display:block;margin:8px auto;touch-action:none;border-radius:10px;background:#222}
 #shp .cdot{width:28px;height:28px}#shp .chip{padding:6px 10px;font-size:13px}
 #szp{display:none;background:var(--ac2);border-radius:14px;padding:8px 12px;margin-top:6px;gap:10px;font-size:12px}#szp label{flex:1;display:flex;flex-direction:column;gap:2px;font-weight:600;min-width:0}#szp input{width:100%;margin:0}#bgz.act{background:var(--ac)!important;color:#fff}
+#mn{position:fixed;inset:0;z-index:80;background:var(--bg);display:none;flex-direction:column;padding-top:env(safe-area-inset-top)}#mn .mh{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;font-size:17px}#mn .mh button{border:0;background:var(--ac);color:#fff;border-radius:12px;padding:8px 16px;font-size:14px}#mn .mb{flex:1;overflow:auto;padding:0 16px 40px;-webkit-overflow-scrolling:touch}#mn h2{font-size:15px;margin:8px 0}#mn h3{font-size:16px;margin:26px 0 8px;color:var(--ac)}#mn .mt{padding-left:22px;line-height:2.1}#mn .mt a,#mn .up{color:var(--ac);text-decoration:underline;cursor:pointer}#mn ul{padding-left:20px;line-height:1.7;font-size:14px}#mn svg.mfig{stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter}#mn .mfig text{stroke:none}#mn svg.mfig{width:100%;max-width:340px;height:auto;display:block;margin:8px auto;background:var(--card);border-radius:14px;box-shadow:var(--sh)}#mn .up{font-size:12px;display:block;text-align:right}
 #pr,#op,#shp{flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-x;overscroll-behavior-x:contain;-webkit-user-select:none;user-select:none}#pr button,#op button,#shp button{touch-action:pan-x;-webkit-tap-highlight-color:transparent;transform:none!important;transition:none!important}#pr button:active,#op button:active,#shp button:active{transform:none}
 #ed .dock,#ed .dock *{touch-action:pan-x}
 #pr>*,#op>*,#shp>*,#op #opg>*{flex:none}
@@ -95,7 +96,7 @@ input[type=range]{accent-color:var(--ac)}
 <div id="msg"></div>
 <div id="grid"></div>
 <div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、◀▶で順番を入替、✎で編集</div>
-<input id="fi" type="file" accept="application/pdf,.pdf,image/*,.tif,.tiff" multiple hidden>
+<input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
 <button class="d pri" id="bAdd"><svg><use href="#i-plus"/></svg>追加</button>
@@ -107,10 +108,10 @@ input[type=range]{accent-color:var(--ac)}
 </div>
 
 <div id="ed">
-<div class="top"><button class="tb" id="un"><svg><use href="#i-undo"/></svg>戻る</button><span id="pgl"></span><span style="display:flex;gap:4px"><button class="tb" id="zOut">－</button><button class="tb" id="zIn">＋</button></span><button class="tb pri" id="ok">完了</button></div>
+<div class="top"><button class="tb" id="un"><svg><use href="#i-undo"/></svg>戻る</button><span class="pgn"><button class="tb" id="pgP">‹</button><span id="pgl"></span><button class="tb" id="pgN">›</button></span><span style="display:flex;gap:4px"><button class="tb" id="zOut">－</button><button class="tb" id="zIn">＋</button></span><button class="tb pri" id="ok">完了</button></div>
 <div id="mhint"></div>
 <div id="fg"><span class="fl" id="fgl"></span><button id="fgs" class="p">スライド入力</button></div>
-<div id="te"><span class="fl">テンプレート編集中</span><button id="teO">番号・順番</button><button id="teS" class="p">保存</button></div>
+<div id="te"><span class="fl">テンプレート編集中</span><button id="teO">番号・順番</button><button id="teA">別名保存</button><button id="teS" class="p">上書き保存</button></div>
 <div class="w" id="wrap"><canvas id="ec"></canvas></div>
 <div id="fp"><div id="fps"></div><div id="fpb"><button id="fpu">▲</button><span id="fpc" style="font-size:12px;font-weight:700"></span><button id="fpd">▼</button><button class="p" id="fpx">完了</button></div></div>
 <div class="ctx" id="pr">
@@ -124,8 +125,8 @@ input[type=range]{accent-color:var(--ac)}
 <button class="cdot" style="background:#e11d48" data-c="#e11d48"></button><button class="cdot" style="background:#111" data-c="#111111"></button><button class="cdot" style="background:#2563eb" data-c="#2563eb"></button><button class="cdot" style="background:#16a34a" data-c="#16a34a"></button><button class="cdot" style="background:#f59e0b" data-c="#f59e0b"></button><button class="cdot" style="background:#fff" data-c="#ffffff"></button>
 <input id="shw" type="range" min="1" max="10" value="4" style="width:70px"><button class="chip" data-sd="0">実線</button><button class="chip" data-sd="1">点線</button>
 <button class="chip" data-s="none">線のみ</button><button class="chip" data-s="hatch">斜線</button><button class="chip" data-s="grid">格子</button><button class="chip" data-s="mosaic">モザイク</button><button class="chip" data-s="fill">塗りつぶし</button></div>
-<div class="ctx" id="sb"><button class="p" id="sT">文字をコピー</button><button class="p" id="sI">画像をコピー</button><button class="p" id="sO">線で囲う</button><button class="p" id="sC">トリミング</button><button id="sP">貼り付け</button><button id="sX">解除</button></div>
-<div class="ctx" id="rp"><span>定規:本体ドラッグで移動・二本指で回転。縁のそばをなぞると縁に沿って線が引けます</span><button id="r0">水平</button><button id="r9">垂直</button><button id="rl2">↺</button><button id="rr2">↻</button><button id="rx">閉じる</button></div>
+<div class="ctx" id="sb"><button class="p" id="sT">文字をコピー</button><button class="p" id="sI">画像をコピー</button><button class="p" id="sO">線で囲う</button><button class="p" id="sS">スタンプ</button><button class="p" id="sC">トリミング</button><button id="sP">貼り付け</button><button id="sX">解除</button></div>
+<div class="ctx" id="rp"><span>定規:本体ドラッグで移動・二本指で回転。縁のそばをなぞると縁に沿って線が引けます</span><button id="rm">長さ</button><button id="r0">水平</button><button id="r9">垂直</button><button id="rl2">↺</button><button id="rr2">↻</button><button id="rx">閉じる</button></div>
 <div class="dock ed">
 <button class="d on" data-m="pen"><svg><use href="#i-pen"/></svg>ペン</button>
 <button class="d" id="eRul"><svg><use href="#i-line"/></svg>定規</button>
@@ -136,7 +137,7 @@ input[type=range]{accent-color:var(--ac)}
 <button class="d" id="eMore"><svg><use href="#i-more"/></svg>その他</button>
 </div>
 <div hidden><button id="cl"></button><button id="zi"></button><button id="zo"></button><button id="rt"></button></div>
-<input id="pi" type="file" accept="image/*,.tif,.tiff" hidden><input id="pf" type="file" accept="application/pdf,.pdf,image/*,.tif,.tiff" hidden>
+<input id="pi" type="file" accept="image/*,.tif,.tiff" hidden><input id="pf" type="file" accept="application/pdf,.pdf,.tif,.tiff" hidden>
 </div>
 <div id="tm"><div class="box"><div class="st" id="tmt"></div><textarea id="tmx" rows="7"></textarea><img id="tmim" alt="" style="display:none;max-width:100%;border-radius:10px;margin-top:8px"><div class="row"><button class="p" id="tmc">コピー</button><button id="tmi">画像で表示</button><button id="tma">画像から認識し直す</button><button id="tmz">閉じる</button></div></div></div>
 <div id="fn"><div class="box"><div class="st">ファイル名(タップして変更できます)</div><input id="fnn" type="text" placeholder="ファイル名"><div class="chips"><button class="chip on" data-f="pdf">PDF</button><button class="chip" data-f="jpg">JPEG画像</button><button class="chip" data-f="png">PNG画像</button></div><div id="fnh"></div><div class="row"><button class="p" id="fnok">書き出して共有</button><button id="fnx">キャンセル</button></div></div></div>
@@ -318,20 +319,25 @@ async function runExport(list,name,fmt){
 function setMode(m){sbAll();mode=m;emode=null;setHint();selR=null;sdrag=null;document.querySelectorAll("[data-m]").forEach(b=>b.classList.toggle("on",b.dataset.m==m));if(m=="pen"||m=="line"){sel=null;syncPanel()}paint()}
 document.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{setMode(b.dataset.m);if(b.dataset.m=="move")toast("画面をなぞって範囲を選びます");if(b.dataset.m=="dim")toast("線をなぞると寸法線になります(水平・垂直に自動で合います)");if(b.dataset.m=="text"){if(sel&&sel.k=="t")startEdit(sel);else newText(toUnrot(.5,.35,ang(cur)))}});
 let szOpen=false;
-function syncPanel(){sbAll();
+let sArm=null,stArr=null;
+function syncPanel(){sbAll();if(sel!==sArm)sArm=null;
   if(!sel||sel.shape)szOpen=false;$("szp").style.display=szOpen?"flex":"none";$("bgz").classList.toggle("act",szOpen);
   $("op").style.display=sel?"flex":"none";$("pr").style.display=sel&&sel.shape?"none":"";$("shp").style.display=sel&&sel.shape?"flex":"none";if(!sel)return;
   const t=sel.k=="t";$("ex").style.display=$("bmv").style.display=$("bsz").style.display=$("bsc").style.display=$("bfd").style.display=$("bac").style.display=t?"":"none";$("bac").textContent="基準:"+({l:"左",c:"中央",r:"右"}[sel.anc||"l"]);$("bfd").textContent=sel.field=="input"?"固定に戻す":"入力欄にする";$("bfd").classList.toggle("act",sel.field=="input");$("bsc").classList.toggle("act",emode=="scale");$("bmv").style.display=(t||(sel.k=="i"&&!sel.shape))?"":"none";$("blk").style.display=(sel.k=="i"&&!sel.shape)?"":"none";$("blk").textContent=sel.lock?"固定解除":"固定";$("bhl").style.display=t?"":"none";$("bhl").classList.toggle("act",!!sel.halo);$("bvd").style.display=(sel.shape&&emode=="shape")?"":"none";$("bsh").style.display=sel.shape?"":"none";$("bsh").classList.toggle("act",emode=="shape");$("opg").style.display=sel.shape?"none":"contents";if(sel.shape)shpUI();$("bmv").classList.toggle("act",emode=="move");$("bsz").classList.toggle("act",emode=="size");
   $("sz").value=sel.k=="i"?sel.w*100:sel.s*700-4;$("sx").value=(sel.sx||1)*100;$("sy").value=(sel.sy||1)*100;
 }
-async function openEd(pg){sbAll();cur=pg;emode=null;ruler={on:false,a:.5,b:.4,deg:0};rotInfo=null;rulerUI();$("pgl").textContent=(pages.indexOf(pg)+1)+" / "+pages.length;sel=null;$("ed").style.display="flex";setMode("pen");await redrawBase()}
+const pgList=()=>tplEdit?tplEdit.pgs:pages;
+function pgLabel(){const L=pgList();$("pgl").textContent=(L.indexOf(cur)+1)+" / "+L.length}
+function goPage(d){if(!cur)return;const L=pgList(),n=L[L.indexOf(cur)+d];if(!n)return toast(d>0?"最後のページです":"最初のページです",1200);endEdit();commit();openEd(n)}
+$("pgP").onclick=()=>goPage(-1);$("pgN").onclick=()=>goPage(1);
+async function openEd(pg){sbAll();cur=pg;emode=null;ruler={on:false,a:.5,b:.4,deg:0};rotInfo=null;rulerUI();pgLabel();sel=null;$("ed").style.display="flex";setMode("pen");await redrawBase()}
 const baseCv=document.createElement("canvas");
 async function redrawBase(){selR=null;if(!cur._base)cur._base=snapOf(cur);
   {const A0=ang(cur),pw=A0%180==0?cur.W:cur.H,ph=A0%180==0?cur.H:cur.W;baseW=Math.max(120,Math.min(wrap.clientWidth-4,(wrap.clientHeight-4)*pw/ph,900))}
   await renderPage(cur,baseCv,Math.min(baseW*2.5,2400),false);
   ec.width=baseCv.width;ec.height=baseCv.height;ec.style.width=baseW+"px";paint();
 }
-function paint(){if(!cur)return;const x=ec.getContext("2d");x.drawImage(baseCv,0,0);drawMarks(x,cur,ec.width,ec.height,st||dimSt);if(ruler.on)drawRuler(x);drawRot(x);drawHandles(x);if(selR&&mode=="move")drawSel(x);$("sb").style.display=(selR&&mode=="move")?"flex":"none";if(editing)placeEdit();fgUI();if(!P.size&&!editing){clearTimeout(cT);cT=setTimeout(commit,450)}}
+function paint(){if(!cur)return;const x=ec.getContext("2d");x.drawImage(baseCv,0,0);drawMarks(x,cur,ec.width,ec.height,st||dimSt||stArr);drawArm(x);if(ruler.on)drawRuler(x);drawRot(x);drawHandles(x);if(selR&&mode=="move")drawSel(x);$("sb").style.display=(mode=="move")?"flex":"none";if(editing)placeEdit();fgUI();if(!P.size&&!editing){clearTimeout(cT);cT=setTimeout(commit,450)}}
 function pt(e){const r=ec.getBoundingClientRect();return toUnrot((e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height,ang(cur))}
 function hit(e){
   const r=ec.getBoundingClientRect(),A=ang(cur),px=e.clientX-r.left,py=e.clientY-r.top,ppp=(A%180==0?r.width:r.height)/cur.W;
@@ -352,10 +358,12 @@ const P=new Map();
 function G(){const [a,b]=[...P.values()];return{d:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)||1,an:Math.atan2(b.clientY-a.clientY,b.clientX-a.clientX),mx:(a.clientX+b.clientX)/2,my:(a.clientY+b.clientY)/2}}
 ec.onpointerdown=e=>{
   commit();ec.setPointerCapture(e.pointerId);P.set(e.pointerId,e);
-  if(P.size==2){dimSt=null;pendDesel=false;sdrag=null;clearTimeout(lpT);lpT=null;rz=null;createTap=null;st=null;drag=null;let onItem=false;if(!(ruler.on&&mode=="pen")){const h=(mode=='dim')?null:(hit(e)||hit([...P.values()][0]));if(h&&h===sel&&(h.k=='t'||emode=='move'))onItem=true}const n=G(),r0=ec.getBoundingClientRect();g={fx:(n.mx-r0.left)/r0.width,fy:(n.my-r0.top)/r0.height,d0:n.d,a0:n.an,pm:n,zw:ec.getBoundingClientRect().width,sz:sel?(sel.k=="i"?sel.w:sel.s):0,rot:sel?sel.rot:0};g.item=onItem;if(ruler.on&&mode=="pen"&&(rdrag||isBody(e))){const m=pt({clientX:n.mx,clientY:n.my});g.ruler=true;g.deg0=ruler.deg;g.off=[ruler.a-m[0],ruler.b-m[1]];rdrag=null}paint();return}
+  if(P.size==2){dimSt=null;stArr=null;pendDesel=false;sdrag=null;clearTimeout(lpT);lpT=null;rz=null;createTap=null;st=null;drag=null;let onItem=false;if(!(ruler.on&&mode=="pen")){const h=(mode=='dim')?null:(hit(e)||hit([...P.values()][0]));if(h&&h===sel&&(h.k=='t'||emode=='move'))onItem=true}const n=G(),r0=ec.getBoundingClientRect();g={fx:(n.mx-r0.left)/r0.width,fy:(n.my-r0.top)/r0.height,d0:n.d,a0:n.an,pm:n,zw:ec.getBoundingClientRect().width,sz:sel?(sel.k=="i"?sel.w:sel.s):0,rot:sel?sel.rot:0};g.item=onItem;if(ruler.on&&mode=="pen"&&(rdrag||isBody(e))){const m=pt({clientX:n.mx,clientY:n.my});g.ruler=true;g.deg0=ruler.deg;g.off=[ruler.a-m[0],ruler.b-m[1]];rdrag=null}paint();return}
   if(P.size>2)return;
   const q=pt(e);
-  if(mode=="dim"){dimSt={c:col,w:.004,p:[q,q]};paint();return}
+  if(sArm&&sel===sArm){const c=stampCorner(sArm),r=ec.getBoundingClientRect(),A=ang(cur),[u,v]=toDisp(c[0],c[1],A);if(Math.hypot(e.clientX-(r.left+u*r.width),e.clientY-(r.top+v*r.height))<hitR()*1.8){stArr={c:sArm.c,w:.0035,p:[c,q]};paint();return}}
+  if(mode=="dim"){if(sel&&sel.k=="t"&&emode=="move"){const h=hit(e);if(h===sel){drag=[q[0]-sel.a,q[1]-sel.b];moved=false;dp={x:e.clientX,y:e.clientY};tapEdit=true;paint();return}}
+    if(sel){sel=null;emode=null;setHint();syncPanel()}dimSt={c:col,w:.004,p:[q,q]};paint();return}
   if(mode=="pen"){
     const A=ang(cur),dw=(A%180==0?baseW:baseW*ec.height/ec.width),z=ruler.on?rulerHit(e):null;
     if(z&&z.zone=="body"){rdrag=[q[0]-ruler.a,q[1]-ruler.b];paint();return}
@@ -397,6 +405,7 @@ ec.onpointermove=e=>{
   if(P.size>1)return;
   const q=pt(e);
   if(dp&&Math.hypot(e.clientX-dp.x,e.clientY-dp.y)>10){moved=true;createTap=null;if(lpT){clearTimeout(lpT);lpT=null}}
+  if(stArr){stArr.p[1]=q;paint();return}
   if(dimSt){dimSt.p[1]=axisSnap(dimSt.p[0],q);paint();return}
   if(shI>=0&&sel&&sel.shape){const Pp=sel.shape.rel.map(r=>[sel.a+r[0],sel.b+r[1]]);Pp[shI]=[q[0]-shOff[0],q[1]-shOff[1]];bakeShape(sel,cur,Pp);moved=true;paint();return}
   if(sdrag&&moved){selMove(e);return}
@@ -410,7 +419,7 @@ ec.onpointermove=e=>{
   else if(drag&&sel){sel.a=q[0]-drag[0];sel.b=q[1]-drag[1];moved=true;paint()}
   else if(rdrag){ruler.a=q[0]-rdrag[0];ruler.b=q[1]-rdrag[1];paint()}
 };
-const up=e=>{P.delete(e.pointerId);if(P.size<2)g=null;if(st){addStroke(st);st=null}if(!P.size&&moved&&shI<0&&sel&&sel.shape&&sel.shape.m=="mosaic")bakeShape(sel,cur,sel.shape.rel.map(r=>[sel.a+r[0],sel.b+r[1]]));shI=-1;drag=null;rdrag=null;rz=null;blocked=null;clearTimeout(lpT);lpT=null;if(dimSt&&!P.size)dimEnd();if(sdrag&&!P.size)selEnd();if(!P.size&&pendDesel&&sel&&(!moved||mode=="move")){sel=null;emode=null;setHint();syncPanel()}if(!P.size)pendDesel=false;if(!P.size){if(tapEdit&&!moved&&sel&&sel.k=="t"){emode=null;setHint();startEdit(sel)}else if(createTap&&!moved)newText(createTap)}tapEdit=false;createTap=null;paint();if(editing&&document.activeElement!==tin)tin.focus()};
+const up=e=>{P.delete(e.pointerId);if(P.size<2)g=null;if(st){addStroke(st);st=null}if(!P.size&&moved&&shI<0&&sel&&sel.shape&&sel.shape.m=="mosaic")bakeShape(sel,cur,sel.shape.rel.map(r=>[sel.a+r[0],sel.b+r[1]]));shI=-1;drag=null;rdrag=null;rz=null;blocked=null;clearTimeout(lpT);lpT=null;if(stArr&&!P.size)stArrEnd();if(dimSt&&!P.size)dimEnd();if(sdrag&&!P.size)selEnd();if(!P.size&&pendDesel&&sel&&(!moved||mode=="move")){sel=null;emode=null;setHint();syncPanel()}if(!P.size)pendDesel=false;if(!P.size){if(tapEdit&&!moved&&sel&&sel.k=="t"){emode=null;setHint();startEdit(sel)}else if(createTap&&!moved)newText(createTap)}tapEdit=false;createTap=null;paint();if(editing&&document.activeElement!==tin)tin.focus()};
 ec.onpointerup=ec.onpointercancel=up;
 document.querySelectorAll(".col").forEach(b=>b.onclick=()=>{
   col=b.dataset.c;document.querySelectorAll(".col").forEach(x=>x.classList.toggle("on",x==b));
@@ -436,7 +445,7 @@ $("empty").onclick=()=>$("bAdd").click();
 $("bAdd").onclick=()=>sheet("追加",[["ファイルから(PDF)",()=>$("fi").click()],["写真から",()=>$("phi").click()],["テンプレートから",()=>tplList()]]);
 $("bShare").onclick=()=>sheet("共有・書き出し",[["選択したページ",()=>exp(true)],["すべてのページ",()=>exp(false)],["選択ページをテンプレートに保存",()=>tplSave(true)],["全ページをテンプレートに保存",()=>tplSave(false)]]);
 $("eAdd").onclick=()=>sheet("ページに追加",[["ファイルから(PDF・画像)",()=>$("pf").click()],["写真から",()=>$("pi").click()]]);
-$("eMore").onclick=()=>sheet("その他",[["ページを回転",()=>$("rt").click()],...(cur&&cur._undo?[["トリミングを元に戻す",undoCrop]]:[]),["拡大",()=>$("zi").click()],["縮小",()=>$("zo").click()],["ペンの書き込みを全消去",()=>$("cl").click()],["テキストを全消去",()=>clearText()],...(cur&&cur.items.some(i=>i.lock)?[["固定した画像を解除",()=>{cur.items.forEach(i=>{delete i.lock});paint();toast("固定を解除しました")}]]:[])]);
+$("eMore").onclick=()=>sheet("その他",[["ページを回転",()=>$("rt").click()],...(cur&&cur._undo?[["トリミングを元に戻す",undoCrop]]:[]),["拡大",()=>$("zi").click()],["縮小",()=>$("zo").click()],["ペンの書き込みを全消去",()=>$("cl").click()],["テキストを全消去",()=>clearText()],["範囲選択で作った囲い・斜線を全消去",()=>clearShapes()],["説明書",()=>openManual()],...(cur&&cur.items.some(i=>i.lock)?[["固定した画像を解除",()=>{cur.items.forEach(i=>{delete i.lock});paint();toast("固定を解除しました")}]]:[])]);
 async function addItemFile(f){
   try{
     let c,w=.5;
@@ -457,15 +466,16 @@ $("cc").oninput=()=>{col=$("cc").value;document.querySelectorAll(".col").forEach
 if(window.visualViewport){const fit=()=>{const v=visualViewport;if(v.scale>1.02)return;for(const id of["ed","fn","tm","tf","ts","dm"]){const e=$(id);e.style.top=v.offsetTop+"px";e.style.height=v.height+"px";e.style.bottom="auto"}};visualViewport.addEventListener("resize",fit);visualViewport.addEventListener("scroll",fit)}
 
 let ruler={on:false,a:.5,b:.4,deg:0},rdrag=null,blocked=null,rotInfo=null,rotT=null;
-function rulerUI(){$("eRul").classList.toggle("on",ruler.on);$("rp").style.display=ruler.on?"flex":"none"}
+function rulerUI(){$("rm").textContent="長さ "+15*(ruler.m||1)+"cm";$("eRul").classList.toggle("on",ruler.on);$("rp").style.display=ruler.on?"flex":"none"}
 $("eRul").onclick=()=>{ruler.on=!ruler.on;if(ruler.on)setMode("pen");rulerUI();paint()};
+$("rm").onclick=()=>{ruler.m=(ruler.m||1)%3+1;rulerUI();paint()};
 $("rx").onclick=()=>{ruler.on=false;rulerUI();paint()};
 const rset=d=>{ruler.deg=d;rotShow(ruler.a,ruler.b,ruler.deg);paint()};
 $("r0").onclick=()=>rset(-ang(cur));$("r9").onclick=()=>rset(90-ang(cur));
 $("rl2").onclick=()=>rset(ruler.deg-15);$("rr2").onclick=()=>rset(ruler.deg+15);
 function snapRot(d){const t=d+ang(cur),m=Math.round(t/90)*90;return Math.abs(t-m)<3?m-ang(cur):d}
 function rotShow(a,b,d){const A=ang(cur),[u,v]=toDisp(a,b,A);rotInfo={x:u*ec.width,y:v*ec.height,t:d+A};clearTimeout(rotT);rotT=setTimeout(()=>{rotInfo=null;paint()},1200)}
-function rulerGeom(){const A=ang(cur),cw=ec.width,ch=ec.height,ppp=(A%180==0?cw:ch)/cur.W,[u,v]=toDisp(ruler.a,ruler.b,A);return{cx:u*cw,cy:v*ch,f:(ruler.deg+A)*PI/180,L:425*ppp,H:75*ppp,ppp,cw,ch,A}}
+function rulerGeom(){const A=ang(cur),cw=ec.width,ch=ec.height,ppp=(A%180==0?cw:ch)/cur.W,[u,v]=toDisp(ruler.a,ruler.b,A);return{cx:u*cw,cy:v*ch,f:(ruler.deg+A)*PI/180,L:425*ppp*(ruler.m||1),H:75*ppp,ppp,cw,ch,A}}
 function rPos(e,k){const r=ec.getBoundingClientRect(),s=ec.width/r.width,dx=(e.clientX-r.left)*s-k.cx,dy=(e.clientY-r.top)*s-k.cy;return{s,lx:dx*Math.cos(k.f)+dy*Math.sin(k.f),ly:-dx*Math.sin(k.f)+dy*Math.cos(k.f)}}
 function rulerHit(e){const k=rulerGeom(),{s,lx,ly}=rPos(e,k),d=44*s;
   if(Math.abs(lx)<=k.L/2&&Math.abs(ly)<=k.H/2)return{zone:"body"};
@@ -479,7 +489,7 @@ function drawRuler(x){
   x.fillStyle="rgba(150,190,255,.25)";x.fillRect(-L/2,-H/2,L,H);
   x.strokeStyle="rgba(40,80,190,.9)";x.lineWidth=Math.max(1.5,mm*.5);x.strokeRect(-L/2,-H/2,L,H);
   x.lineWidth=Math.max(1,mm*.18);x.fillStyle="rgba(30,50,120,.9)";x.font=(mm*3.8)+"px sans-serif";x.textAlign="center";x.textBaseline="top";
-  for(let i=0;i<=150;i++){const X=-L/2+i*mm,t=(i%10==0?5:i%5==0?3.5:2)*mm;x.beginPath();x.moveTo(X,-H/2);x.lineTo(X,-H/2+t);x.moveTo(X,H/2);x.lineTo(X,H/2-t*.7);x.stroke();if(i%10==0)x.fillText(i/10,X,-H/2+5.6*mm)}
+  for(let i=0;i<=150*(ruler.m||1);i++){const X=-L/2+i*mm,t=(i%10==0?5:i%5==0?3.5:2)*mm;x.beginPath();x.moveTo(X,-H/2);x.lineTo(X,-H/2+t);x.moveTo(X,H/2);x.lineTo(X,H/2-t*.7);x.stroke();if(i%10==0)x.fillText(i/10,X,-H/2+5.6*mm)}
   x.restore()}
 function drawRot(x){
   if(!rotInfo)return;const t=((rotInfo.t%360)+360)%360,m=t%90,ok=Math.min(m,90-m)<1.2,w=ec.width,u=w/300,odd=Math.round(t/90)%2==1;
@@ -510,7 +520,7 @@ document.addEventListener("pointerdown",e=>{if(editing&&!e.target.closest("#tin,
 
 let emode=null,lpT=null,lpPt=null,dp=null,rz=null,createTap=null;
 function setHint(){
-  $("pgl").textContent=(pages.indexOf(cur)+1)+" / "+pages.length;
+  pgLabel();
   const T={move:"配置モード:配置後に編集、再配置可能です(ドラッグで移動・タップで入力)",size:"枠サイズ変更モード:右下の緑の丸をドラッグ",scale:"全体拡大モード:右下のオレンジの丸をドラッグ(比率そのまま)",shape:"形変更モード:丸をドラッグ/辺をタップで頂点を追加"},m=$("mhint");
   m.textContent=T[emode]||"";m.style.display=emode&&T[emode]?"block":"none"}
 function setEmode(m){emode=m;setHint();syncPanel();paint()}
@@ -755,7 +765,30 @@ function focusEdit(){
   wrap.scrollLeft+=r.left+u*r.width-(q.left+q.width/2);wrap.scrollTop+=r.top+v*r.height-(q.top+q.height/2);zoomNote()}
 
 function addStroke(st){cur.strokes.push(st);(cur._log=cur._log||[]).push({k:"s",o:st})}
+
+function stampCorner(it){
+  const r=ec.getBoundingClientRect(),A=ang(cur),ppp=(A%180==0?r.width:r.height)/cur.W,bm=bmOf(it),s=sc(it,cur)*ppp,w=bm.width*s*(it.sx||1),h=bm.height*s*(it.sy||1),f=(it.rot+A)*PI/180,lx=-w/2,ly=h/2,
+   dx=lx*Math.cos(f)-ly*Math.sin(f),dy=lx*Math.sin(f)+ly*Math.cos(f),[u,v]=toDisp(it.a,it.b,A);
+  return toUnrot((u*r.width+dx)/r.width,(v*r.height+dy)/r.height,A)}
+function drawArm(x){
+  if(!(sArm&&sel===sArm&&cur))return;const c=stampCorner(sArm),A=ang(cur),[u,v]=toDisp(c[0],c[1],A),R=hr()*2.6;
+  x.save();x.fillStyle="#f59e0b";x.strokeStyle="#fff";x.lineWidth=Math.max(1.5,R/4);x.beginPath();x.arc(u*ec.width,v*ec.height,R,0,7);x.fill();x.stroke();
+  x.fillStyle="#fff";x.font="bold "+R*1.5+"px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText("←",u*ec.width,v*ec.height+R*.05);x.restore()}
+function addArrow(P0,P1,col,sw){
+  const W=cur.W,H=cur.H,mk=p=>[p[0]/W,p[1]/H],x0=P0[0]*W,y0=P0[1]*H,x1=P1[0]*W,y1=P1[1]*H,dx=x1-x0,dy=y1-y0,L=Math.hypot(dx,dy)||1,ux=dx/L,uy=dy/L,ah=Math.min(16,L*.3),aw=ah*.45,bx=x1-ux*ah,by=y1-uy*ah,nx=-uy,ny=ux;
+  addStroke({c:col,w:sw,p:[mk([x0,y0]),mk([x1,y1])]});addStroke({c:col,w:sw,p:[mk([bx+nx*aw,by+ny*aw]),mk([x1,y1]),mk([bx-nx*aw,by-ny*aw])]})}
+function stArrEnd(){
+  const d=stArr;stArr=null;const r=ec.getBoundingClientRect(),A=ang(cur),a=toDisp(...d.p[0],A),b=toDisp(...d.p[1],A);
+  if(Math.hypot((b[0]-a[0])*r.width,(b[1]-a[1])*r.height)>=24){addArrow(d.p[0],d.p[1],d.c,.0035);toast("矢印を入れました。丸からもう一度引けば追加できます",2200)}paint()}
+$("sS").onclick=()=>{
+  const r=ec.getBoundingClientRect(),w=wrap.getBoundingClientRect(),A=ang(cur),cx=clamp(((w.left+w.width/2)-r.left)/r.width,.15,.85),cy=clamp(((w.top+w.height/2)-r.top)/r.height,.15,.85),[a,b]=toUnrot(cx,cy,A);
+  const it={k:"t",a,b,str:"使用の本拠\n保管場所の位置",s:.022,c:col,rot:-A,sx:1,sy:1,anc:"c",halo:true};
+  addItem(it);selR=null;sel=it;emode="move";sArm=it;setHint();syncPanel();paint();toast("スタンプを置きました。ドラッグで移動/左下のオレンジの丸から引くと矢印が伸びます",4200)};
+['sT','sI','sO','sC'].forEach(id=>{const f=$(id).onclick;$(id).onclick=ev=>{if(!selR)return toast("先に、範囲をドラッグで選んでください");return f&&f.call($(id),ev)}});
 function addItem(it){cur.items.push(it);(cur._log=cur._log||[]).push({k:"i",o:it})}
+function clearShapes(){
+  if(!cur.items.some(i=>i.shape))return toast("消せる囲い・斜線がありません");
+  sheet("範囲選択で作った囲い・斜線を全て消しますか?",[["消す",()=>{cur.items=cur.items.filter(i=>!i.shape);if(sel&&sel.shape){sel=null;emode=null;setHint();syncPanel()}paint();toast("囲い・斜線を消しました")}]])}
 function clearText(){
   if(!cur.items.some(i=>i.k=="t"))return toast("消せる文字がありません");
   sheet("このページに追加した文字を全て消しますか?",[["消す",()=>{endEdit();cur.items=cur.items.filter(i=>i.k!="t");if(sel&&sel.k=="t"){sel=null;emode=null;setHint();syncPanel()}paint();toast("文字を全て消しました")}]])}
@@ -802,15 +835,6 @@ function tplSave(selOnly){
   $("tsh").textContent="入力欄 "+ni+"個・固定の文字 "+nf+"個。ペンや画像は、元のPDFに焼き込んで保存します。";
   $("tsn").value=files[list[0].f].name+"のテンプレート";$("ts").style.display="flex"}
 $("tsx").onclick=()=>{$("ts").style.display="none"};
-$("tsok").onclick=async()=>{
-  const name=$("tsn").value.trim()||"テンプレート",list=tsList;$("ts").style.display="none";
-  try{
-    say("テンプレートを作成中…");
-    const bytes=await build(list.map(p=>({...p,items:p.items.filter(i=>i.k!="t")}))),fields=[];
-    list.forEach((p,pi)=>p.items.forEach(it=>{if(it.k=="t")fields.push({page:pi,a:it.a,b:it.b,s:it.s,c:it.c,sx:it.sx||1,sy:it.sy||1,rot:it.rot||0,anc:it.anc,type:it.field=="input"?"input":"fixed",str:it.str})}));
-    await tdb("put",{id:String(Date.now()),name,created:Date.now(),pdf:bytes,fields,pages:list.length});
-    say("テンプレート「"+name+"」を保存しました。「追加」→「テンプレートから」で使えます")
-  }catch(e){say("テンプレートを保存できませんでした")}};
 async function tplList(){
   let L=[];try{L=await tdb("all")}catch(e){return toast("この環境ではテンプレートを保存できません")}
   L.sort((a,b)=>b.created-a.created);const c=$("tlc");c.innerHTML="";
@@ -932,12 +956,16 @@ function fieldsFrom(list){
   return raw.map(({pi,it,no})=>({page:pi,a:it.a,b:it.b,s:it.s,c:it.c,sx:it.sx||1,sy:it.sy||1,rot:it.rot||0,anc:it.anc,type:it.field=="input"?"input":"fixed",no:it.field=="input"?rank[no]:undefined,str:it.str}))}
 $("tsok").onclick=async()=>{
   const name=$("tsn").value.trim()||"テンプレート",list=tsList;$("ts").style.display="none";
+  let ex=null;try{ex=(await tdb("all")).find(r=>r.name==name)}catch(_){}
+  if(ex){sheet("「"+name+"」は保存済みです",[["上書き保存",()=>tplDoSave(name,list,ex.id)],["別のテンプレートとして追加",()=>tplDoSave(name,list,String(Date.now()))]]);return}
+  tplDoSave(name,list,String(Date.now()))};
+async function tplDoSave(name,list,id){
   try{
     say("テンプレートを作成中…");
     const bytes=await build(list.map(p=>({...p,items:p.items.filter(i=>i.k!="t")})));
-    await tdb("put",{id:String(Date.now()),name,created:Date.now(),pdf:bytes,fields:fieldsFrom(list),pages:list.length});
+    await tdb("put",{id,name,created:Date.now(),pdf:bytes,fields:fieldsFrom(list),pages:list.length});
     say("テンプレート「"+name+"」を保存しました。「追加」→「テンプレートから」で使えます")
-  }catch(e){say("テンプレートを保存できませんでした")}};
+  }catch(e){say("テンプレートを保存できませんでした")}}
 // ---- テンプレート自体の編集モード
 async function tplEditStart(r){
   $("tl").style.display="none";snap();say("開いています…");
@@ -989,6 +1017,7 @@ async function tplEditSave(exit){
 function tplEditEnd(){const t=tplEdit;tplEdit=null;pages=pages.filter(p=>!t.pgs.includes(p));say("");$("ok").click()}
 function tplAskExit(){sheet("テンプレートの編集を終わりますか?",[["保存して終了",()=>tplEditSave(true)],["保存せずに終了",tplEditEnd]])}
 $("teS").onclick=()=>tplEditSave(false);
+$("teA").onclick=async()=>{try{const r=tplEdit.r,id=String(Date.now()),nr={...r,id,name:r.name+"のコピー",created:Date.now(),fields:fieldsFrom(tplEdit.pgs),pages:tplEdit.pgs.length};await tdb("put",nr);toast("「"+nr.name+"」として別に保存しました")}catch(e){toast("保存できませんでした")}};
 
 function hr(){const r=ec.getBoundingClientRect(),z=Math.max(1,r.width/baseW),css=Math.max(2.5,6/(1+.4*(z-1)));return css*ec.width/r.width}
 function hitR(){const z=Math.max(1,ec.getBoundingClientRect().width/baseW);return Math.max(11,24/(1+.35*(z-1)))}
@@ -1023,7 +1052,7 @@ $("dmok").onclick=()=>{
 $("dmx").onclick=()=>{$("dm").style.display="none"};
 $("dmv").addEventListener("keydown",e=>{if(e.key=="Enter")$("dmok").click()});
 function dimMake(d,label,val){
-  if(TXTONLY(label)){const mid=[(d.p[0][0]+d.p[1][0])/2,(d.p[0][1]+d.p[1][1])/2],A0=ang(cur),it={k:"t",a:mid[0],b:mid[1],str:label,s:.026,c:d.c,rot:-A0,sx:1,sy:1,anc:"c",halo:true};addItem(it);sel=it;syncPanel();paint();toast("「"+label+"」を置きました。タップで文字を直せます");return}
+  if(TXTONLY(label)){const mid=[(d.p[0][0]+d.p[1][0])/2,(d.p[0][1]+d.p[1][1])/2],A0=ang(cur),it={k:"t",a:mid[0],b:mid[1],str:label,s:.026,c:d.c,rot:-A0,sx:1,sy:1,anc:"c",halo:true};addItem(it);sel=it;emode="move";setHint();syncPanel();paint();toast("「"+label+"」を置きました。ドラッグで動かせます");return}
   const A=ang(cur),W=cur.W,H=cur.H,P0=d.p[0],P1=d.p[1],col=d.c,sw=.0035,mk=p=>[p[0]/W,p[1]/H];
   const x0=P0[0]*W,y0=P0[1]*H,x1=P1[0]*W,y1=P1[1]*H,dx=x1-x0,dy=y1-y0,L=Math.hypot(dx,dy)||1,ux=dx/L,uy=dy/L,ah=Math.min(14,L*.25),aw=ah*.4;
   const arrow=(tx,ty,vx,vy)=>{const bx=tx-vx*ah,by=ty-vy*ah,nx=-vy,ny=vx;return[mk([bx+nx*aw,by+ny*aw]),mk([tx,ty]),mk([bx-nx*aw,by-ny*aw])]};
@@ -1031,7 +1060,7 @@ function dimMake(d,label,val){
   const [ua,va]=toDisp(...P0,A),[ub,vb]=toDisp(...P1,A),dW=(A%180==0?W:H),dH=(A%180==0?H:W),horiz=Math.abs(ub-ua)*dW>=Math.abs(vb-va)*dH;
   const str=(label?label+" ":"")+val+"m",fp=.024*W,tw=str.length*fp*.6,off=horiz?[0,-(fp*.9+4)/dH]:[(10+tw/2)/dW,0];
   const [a,b]=toUnrot((ua+ub)/2+off[0],(va+vb)/2+off[1],A),it={k:"t",a,b,str,s:.024,c:col,rot:-A,sx:1,sy:1,anc:"c",halo:true};
-  addItem(it);sel=it;syncPanel();paint();toast("寸法を入れました。文字はタップで直せます")}
+  addItem(it);sel=it;emode="move";setHint();syncPanel();paint();toast("寸法を入れました。文字はすぐドラッグで動かせます")}
 $("zIn").onclick=()=>zoom(1.3);$("zOut").onclick=()=>zoom(1/1.3);
 $("ed").addEventListener("wheel",e=>{
   if(!(e.ctrlKey||e.metaKey))return;e.preventDefault();
@@ -1051,4 +1080,52 @@ document.addEventListener("keydown",e=>{
 
 $("tmi").onclick=async()=>{if(!selR)return;const c=crop(await pageBig(2000)),im=$("tmim");im.src=c.toDataURL("image/png");im.style.display="block";$("tmt").textContent="画像を長押しして、iPhoneの文字認識でコピーすることもできます"};
 if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+// ---- 説明書
+(function(){
+const C="#f59e0b",S="style=\"fill:var(--card);stroke:var(--bd)\"",T=(x,y,t,sz=9,a="middle",w=600)=>`<text x="${x}" y="${y}" font-size="${sz}" text-anchor="${a}" font-weight="${w}" style="fill:var(--fg)">${t}</text>`,
+ N=(n,x,y)=>`<circle cx="${x}" cy="${y}" r="8" fill="${C}"/><text x="${x}" y="${y+3.5}" font-size="10" font-weight="700" text-anchor="middle" fill="#fff">${n}</text>`,
+ R=(x,y,w,h,r=6,st="")=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" ${st||S}/>`,
+ SVG=(w,h,i)=>`<svg viewBox="0 0 ${w} ${h}" class="mfig">${i}</svg>`;
+const home=SVG(220,260,
+ R(4,4,212,252,16)+T(110,24,"PDFまとめ編集",11)+
+ [0,1,2,3].map(i=>R(18+(i%2)*96,40+Math.floor(i/2)*84,84,74,6)+T(60+(i%2)*96,84+Math.floor(i/2)*84,"ページ "+(i+1),9)).join("")+
+ R(14,214,192,34,12,"style=\"fill:var(--ac2);stroke:none\"")+["追加","全選択","回転","削除","戻る","共有"].map((t,i)=>T(31+i*31.5,235,t,7.5)).join("")+
+ N(1,60,50)+[2,3,4,5,6,7].map((n,i)=>N(n,31+i*31.5,210)).join(""));
+const editor=SVG(220,280,
+ R(4,4,212,272,16)+R(12,10,40,16,6)+T(32,21,"戻る",8)+T(110,21,"1 / 1",8)+R(130,10,22,16,6)+T(141,21,"－",9)+R(156,10,22,16,6)+T(167,21,"＋",9)+R(182,10,28,16,6,"style=\"fill:var(--ac);stroke:none\"")+T(196,21,"完了",8).replace("var(--fg)","#fff")+
+ R(14,34,192,150,6)+T(110,110,"PDFのページ",10)+
+ [["#111"],["#e11d48"],["#2563eb"],["#16a34a"]].map((c,i)=>`<circle cx="${28+i*22}" cy="198" r="7" fill="${c[0]}"/>`).join("")+T(150,201,"太さ ──●─",8)+
+ R(10,214,200,54,14,"style=\"fill:var(--card);stroke:var(--bd)\"")+["ペン","定規","文字","寸法","範囲","追加","その他"].map((t,i)=>T(26+i*28,246,t,7.5)).join("")+
+ N(1,32,6)+N(2,110,34)+N(3,154,34)+N(4,196,34)+N(5,60,190)+N(6,110,222)+N(7,194,222));
+const ruler=SVG(220,120,R(8,8,204,104,10)+`<g transform="rotate(-12 110 56)"><rect x="30" y="30" width="160" height="34" fill="rgba(150,190,255,.3)" stroke="#2845be"/>`+Array.from({length:17},(_,i)=>`<line x1="${30+i*10}" x2="${30+i*10}" y1="30" y2="${i%5?38:44}" stroke="#2845be"/>`).join("")+`<line x1="40" y1="64" x2="180" y2="64" stroke="#e11d48" stroke-width="2.5"/></g>`+T(110,100,"縁に沿って線が引けます",9)+N(1,30,30)+N(2,190,84));
+const dim=SVG(220,130,R(8,8,204,114,10)+`<rect x="30" y="22" width="160" height="86" fill="#8fd18f" stroke="#222" stroke-width="2"/><line x1="50" y1="84" x2="170" y2="84" stroke="#111" stroke-width="1.6"/><path d="M50 84l8-4v8zM170 84l-8-4v8z" fill="#111"/>`+T(110,78,"出入口 2.5m",10)+T(110,50,"保管場所",11)+N(1,50,84)+N(2,110,64)+N(3,110,38));
+const stamp=SVG(220,130,R(8,8,204,114,10)+`<rect x="30" y="22" width="160" height="90" fill="#eee" stroke="#aaa"/>`+T(100,52,"使用の本拠",11)+T(100,68,"保管場所の位置",11)+`<line x1="52" y1="74" x2="140" y2="96" stroke="#e11d48" stroke-width="2"/><path d="M140 96l-10-1 4-8z" fill="#e11d48" transform="rotate(10 140 96)"/><circle cx="52" cy="74" r="6" fill="${C}"/>`+N(1,52,74)+N(2,150,98));
+const encl=SVG(220,130,R(8,8,204,114,10)+`<defs><pattern id="hp" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="#e11d48" stroke-width="2"/></pattern></defs><polygon points="50,100 70,40 150,30 185,90" fill="url(#hp)" stroke="#e11d48" stroke-width="2.5"/>`+[[50,100],[70,40],[150,30],[185,90]].map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="5" fill="#fff" stroke="#4f5bd5" stroke-width="2"/>`).join("")+N(1,50,100)+N(2,110,36));
+const tpl=SVG(220,130,R(8,8,204,114,10)+[0,1].map(i=>`<rect x="${22+i*100}" y="20" width="78" height="92" fill="#fff" stroke="#bbb"/>`+T(61+i*100,34,"ページ"+(i+1),8)).join("")+
+ [[40,50,"A","氏名"],[40,76,"B","住所"],[140,50,"A","氏名"],[140,76,"C","電話"]].map(f=>`<rect x="${f[0]}" y="${f[1]-8}" width="46" height="18" fill="none" stroke="${C}" stroke-dasharray="3 2"/><circle cx="${f[0]}" cy="${f[1]-8}" r="7" fill="${C}"/><text x="${f[0]}" y="${f[1]-5}" font-size="9" font-weight="700" text-anchor="middle" fill="#fff">${f[2]}</text>`+T(f[0]+24,f[1]+5,f[3],8)).join("")+T(110,124,"同じ文字(A・A)は同時に入力",8));
+const MAN=[
+["start","はじめに",null,["PDFの結合・分割・回転・手書き・文字入れ・画像や写真の追加・共有を、1つのアプリでできます。","目次の項目をタップすると、その説明へ飛びます。各項目に図があります。","データは端末の中だけで処理されます(外部に送られません)。"]],
+["home","ホーム画面",home,["① ページの一覧です。ページをタップすると選択(もう一度で解除)。各ページ下の「◀ ✎ ▶」で、◀▶=前後へ並べ替え、✎=そのページの編集画面を開きます。","② 追加:PDF・写真・テンプレートを追加。","③ 全選択 ④ 回転(選んだページ) ⑤ 削除 ⑥ 戻る(直前の操作を取り消し) ⑦ 共有:PDF/JPEG/PNGで書き出し。","ページ番号は左上に表示されます。回転・削除は、選択したページに対して働きます。"]],
+["edit","編集画面の見かた",editor,["① 戻る:1操作ずつ取り消します。","② ページ番号の左右の ‹ › で前後のページへ移動。","③ ＋－:画面の拡大縮小(PCは Ctrl+ホイール)。二本指でも拡大でき、動かすのも二本指です。","④ 完了:ホーム画面へ戻ります。","⑤ 色や太さ(選んだモードで内容が変わります)。","⑥ 下のボタン列は左右にスライドできます(スクロールバーが数秒出ます)。","⑦ その他:全消去・拡大縮小・この説明書など。"]],
+["pen","ペン・手書き",null,["「ペン」を選んで指でなぞると手書きできます。色・太さは画面下で変更。","間違えたら「戻る」で1つずつ取り消し。「その他」→「ペンの書き込みを全消去」で一括削除。"]],
+["ruler","定規",ruler,["① 「定規」を押すと半透明の定規が出ます。本体をドラッグで移動、二本指で回転。水平・垂直ボタンで一発で整えられます。","② 縁のそばをなぞると、縁に沿ってまっすぐな線が引けます。定規の上には書き込めません。","「長さ」ボタンで定規を2倍・3倍にできます(15cm→30cm→45cm)。"]],
+["text","文字",null,["「文字」を押して、ページ上の置きたい場所をタップ。そのまま入力します。","最初は配置モードです。ドラッグで移動、タップで文字を直せます。","「サイズ変更」を押すと 大きさ・幅・高さ のゲージが出ます。「枠サイズ」「全体拡大」「基準(左・中央・右)」「白フチ」もあります。","長押しでメニュー。「その他」→「テキストを全消去」で文字だけ一括削除。"]],
+["dim","寸法(車庫証明などに)",dim,["① 「寸法」を選び、測りたいところを指でなぞって線を引きます(ほぼ水平・垂直なら自動でまっすぐに)。","② 名前(出入口・道路幅・横・縦…)を選び、数字(m)を入れて「入れる」。矢印つきの寸法線が入ります。","③ 「保管場所」だけは文字のみ。線を引かず短くタップしても置けます。","置いた直後は指でドラッグして動かせます。タップで文字の直し。"]],
+["range","範囲選択・囲い・スタンプ",encl,["「範囲選択」で四角くドラッグすると、文字のコピー(OCR)、画像のコピー、トリミング、「線で囲う」ができます。","① 線で囲う:色・太さ・斜線/格子/モザイク/塗りつぶしを選べます。「形変更」で頂点をドラッグして台形やひし形に。辺をタップで頂点を追加(多角形)。「頂点を減らす」で戻せます。","② 範囲選択の画面にある「スタンプ」で「使用の本拠/保管場所の位置」を置けます。"]],
+["stamp","スタンプと矢印",stamp,["① スタンプを置くと、左下にオレンジの丸が出ます。","② その丸から指をドラッグすると、矢印(←)を伸ばして目的の場所を指せます。","スタンプ本体はドラッグで移動。文字はタップで直せます。"]],
+["image","写真・画像・PDFを重ねる",null,["編集画面の「追加」から、ファイル(PDF・TIFF)や写真をページに貼れます。貼った直後はドラッグで移動、二本指で拡大縮小。","地図などは「固定」を押すと、触っても動かなくなります(解除は「その他」から)。","「トリミング」で不要な部分を切り取り。"]],
+["tpl","テンプレート",tpl,["よく使うPDFと入力欄を保存して、何度も呼び出せます。","① 作り方:文字を置いて「入力欄にする」→ ホーム画面の「共有」→「テンプレートに保存」。","② 使い方:「追加」→「テンプレートから」→「使う」。入力欄を順に入力できます。","③ 編集:一覧の「編集」。「番号・順番」でグループ(A・B・C)を設定。同じ文字の欄は別ページでも同時に入力されます。‹ › でページ移動、「上書き保存」で保存。","④ 共有:「共有」でファイルにして相手に送れます。相手は「他の人のテンプレートを取り込む」で読み込みます。"]],
+["share","共有・書き出し",null,["ホーム画面の「共有」。ファイル名をタップして自由に変更できます。","形式はPDF、JPEG画像、PNG画像から選べます(複数ページの画像はZIPにまとめます)。"]],
+["undo","戻す・消す",null,["「戻る」は1動作ずつ取り消し。ページ削除も戻せます。","その他:ペンの全消去/テキストの全消去/範囲選択で作った囲い・斜線の全消去。"]],
+["pc","パソコンで使うとき",null,["拡大縮小:Ctrl(Mac は ⌘)+ホイール、または Ctrl + / -。Ctrl+0 で元の大きさ。","Ctrl+Z で戻る、Delete で選んだ文字・画像を削除。","拡大してもボタンは動かず、PDFだけが拡大されます。"]]
+];
+const box=document.createElement("div");box.id="mn";
+box.innerHTML="<div class='mh'><b>説明書</b><button id='mnx'>閉じる</button></div><div class='mb'><h2>目次</h2><ol class='mt'>"+MAN.map((m,i)=>`<li><a data-g="${m[0]}">${m[1]}</a></li>`).join("")+"</ol>"+MAN.map((m,i)=>`<section id="mn_${m[0]}"><h3>${i+1}. ${m[1]}</h3>${m[2]||""}<ul>${m[3].map(t=>`<li>${t}</li>`).join("")}</ul><a class='up' data-g='top'>▲ 目次へ</a></section>`).join("")+"</div>";
+document.body.appendChild(box);
+box.addEventListener("click",e=>{const a=e.target.closest("a[data-g]");if(!a)return;const g=a.dataset.g,mb=box.querySelector(".mb");if(g=="top")mb.scrollTo({top:0,behavior:"smooth"});else{const s=$("mn_"+g);mb.scrollTo({top:s.offsetTop-8,behavior:"smooth"})}});
+$("mnx").onclick=()=>{box.style.display="none"};
+window.openManual=()=>{box.style.display="flex";box.querySelector(".mb").scrollTop=0};
+})();
+
+
 </script></body></html>
