@@ -368,14 +368,14 @@ ec.onpointermove=e=>{
   if(rz){resizeBy(e);return}
   if(st){
     if(st.edge){const t=edgeT(e);st.tmin=Math.min(st.tmin,t);st.tmax=Math.max(st.tmax,t);st.p=[edgeAt(st.edge,st.tmin),edgeAt(st.edge,st.tmax)]}
-    else if(ruler.on&&isBody(e)){cur.strokes.push(st);blocked={c:st.c,w:st.w};st=null}
+    else if(ruler.on&&isBody(e)){addStroke(st);blocked={c:st.c,w:st.w};st=null}
     else st.p.push(q);
     paint();
   }else if(blocked&&!isBody(e)){st={c:blocked.c,w:blocked.w,p:[q]};blocked=null}
   else if(drag&&sel){sel.a=q[0]-drag[0];sel.b=q[1]-drag[1];moved=true;paint()}
   else if(rdrag){ruler.a=q[0]-rdrag[0];ruler.b=q[1]-rdrag[1];paint()}
 };
-const up=e=>{P.delete(e.pointerId);if(P.size<2)g=null;if(st){cur.strokes.push(st);st=null}if(!P.size&&moved&&shI<0&&sel&&sel.shape&&sel.shape.m=="mosaic")bakeShape(sel,cur,sel.shape.rel.map(r=>[sel.a+r[0],sel.b+r[1]]));shI=-1;drag=null;rdrag=null;rz=null;blocked=null;clearTimeout(lpT);lpT=null;if(sdrag&&!P.size)selEnd();if(!P.size&&pendDesel&&sel&&(!moved||mode=="move")){sel=null;emode=null;setHint();syncPanel()}if(!P.size)pendDesel=false;if(!P.size){if(tapEdit&&!moved&&sel&&sel.k=="t"){emode=null;setHint();startEdit(sel)}else if(createTap&&!moved)newText(createTap)}tapEdit=false;createTap=null;paint();if(editing&&document.activeElement!==tin)tin.focus()};
+const up=e=>{P.delete(e.pointerId);if(P.size<2)g=null;if(st){addStroke(st);st=null}if(!P.size&&moved&&shI<0&&sel&&sel.shape&&sel.shape.m=="mosaic")bakeShape(sel,cur,sel.shape.rel.map(r=>[sel.a+r[0],sel.b+r[1]]));shI=-1;drag=null;rdrag=null;rz=null;blocked=null;clearTimeout(lpT);lpT=null;if(sdrag&&!P.size)selEnd();if(!P.size&&pendDesel&&sel&&(!moved||mode=="move")){sel=null;emode=null;setHint();syncPanel()}if(!P.size)pendDesel=false;if(!P.size){if(tapEdit&&!moved&&sel&&sel.k=="t"){emode=null;setHint();startEdit(sel)}else if(createTap&&!moved)newText(createTap)}tapEdit=false;createTap=null;paint();if(editing&&document.activeElement!==tin)tin.focus()};
 ec.onpointerup=ec.onpointercancel=up;
 document.querySelectorAll(".col").forEach(b=>b.onclick=()=>{
   col=b.dataset.c;document.querySelectorAll(".col").forEach(x=>x.classList.toggle("on",x==b));
@@ -385,7 +385,7 @@ $("sz").oninput=()=>{if(!sel)return;const v=+$("sz").value;if(sel.k=="i")sel.w=M
 $("rl").onclick=()=>{if(sel){sel.rot-=15;rotShow(sel.a,sel.b,sel.rot);paint()}};$("rr").onclick=()=>{if(sel){sel.rot+=15;rotShow(sel.a,sel.b,sel.rot);paint()}};
 $("ex").onclick=()=>{if(sel&&sel.k=="t")startEdit(sel)};
 $("dl").onclick=()=>{if(sel){cur.items=cur.items.filter(i=>i!==sel);sel=null;syncPanel();paint()}};
-$("un").onclick=()=>{cur.strokes.pop();paint()};
+$("un").onclick=undoLast;
 $("cl").onclick=()=>{if(cur.strokes.length)sheet("ペンの書き込みを全て消しますか?",[["消す",()=>{cur.strokes=[];paint()}]])};
 function zoomAt(w,fx,fy,mx,my){ec.style.width=clamp(w,baseW,baseW*5)+"px";const r=ec.getBoundingClientRect();wrap.scrollLeft+=r.left+fx*r.width-mx;wrap.scrollTop+=r.top+fy*r.height-my}
 const zoom=f=>{const r=ec.getBoundingClientRect(),q=wrap.getBoundingClientRect(),mx=q.left+q.width/2,my=q.top+q.height/2;zoomAt(r.width*f,(mx-r.left)/r.width,(my-r.top)/r.height,mx,my)};
@@ -400,7 +400,7 @@ $("empty").onclick=()=>$("bAdd").click();
 $("bAdd").onclick=()=>sheet("追加",[["ファイルから(PDF)",()=>$("fi").click()],["写真から",()=>$("phi").click()]]);
 $("bShare").onclick=()=>sheet("共有・書き出し",[["選択したページ",()=>exp(true)],["すべてのページ",()=>exp(false)]]);
 $("eAdd").onclick=()=>sheet("ページに追加",[["ファイルから(PDF・画像)",()=>$("pf").click()],["写真から",()=>$("pi").click()]]);
-$("eMore").onclick=()=>sheet("その他",[["ページを回転",()=>$("rt").click()],...(cur&&cur._undo?[["トリミングを元に戻す",undoCrop]]:[]),["拡大",()=>$("zi").click()],["縮小",()=>$("zo").click()],["ペンの書き込みを全消去",()=>$("cl").click()]]);
+$("eMore").onclick=()=>sheet("その他",[["ページを回転",()=>$("rt").click()],...(cur&&cur._undo?[["トリミングを元に戻す",undoCrop]]:[]),["拡大",()=>$("zi").click()],["縮小",()=>$("zo").click()],["ペンの書き込みを全消去",()=>$("cl").click()],["テキストを全消去",()=>clearText()]]);
 async function addItemFile(f){
   try{
     let c,w=.5;
@@ -409,12 +409,12 @@ async function addItemFile(f){
       c=document.createElement("canvas");c.width=vp.width;c.height=vp.height;const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);
       await p.render({canvasContext:x,viewport:vp}).promise;w=.8;
     }else{c=await imgCanvas(f,1600);c=await cropPhoto(c);if(!c)return}
-    const it={k:"i",a:.5,b:.5,w,rot:0,bm:c,jpg:await bytesOf(c)};cur.items.push(it);setMode("move");sel=it;syncPanel();paint();
+    const it={k:"i",a:.5,b:.5,w,rot:0,bm:c,jpg:await bytesOf(c)};addItem(it);setMode("move");sel=it;syncPanel();paint();
   }catch(_){toast("読み込めませんでした")}
 }
 $("pi").onchange=$("pf").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(f)await addItemFile(f)};
 
-function newText(q){const it={k:"t",a:q[0],b:q[1],str:"テキスト",s:.03,c:col,rot:0,sx:1,sy:1};cur.items.push(it);sel=it;syncPanel();paint();startEdit(it,true)}
+function newText(q){const it={k:"t",a:q[0],b:q[1],str:"テキスト",s:.03,c:col,rot:0,sx:1,sy:1};addItem(it);sel=it;syncPanel();paint();startEdit(it,true)}
 $("sx").oninput=()=>{if(sel){sel.sx=+$("sx").value/100;paint()}};
 $("sy").oninput=()=>{if(sel){sel.sy=+$("sy").value/100;paint()}};
 $("cc").oninput=()=>{col=$("cc").value;document.querySelectorAll(".col").forEach(x=>x.classList.remove("on"));if(sel&&sel.k=="t"){sel.c=col;paint()}};
@@ -532,7 +532,7 @@ $("sI").onclick=async()=>{
 async function pasteClip(){
   if(!clipCv)return toast("先に画像をコピーしてください");
   const c=document.createElement("canvas");c.width=clipCv.width;c.height=clipCv.height;c.getContext("2d").drawImage(clipCv,0,0);
-  const it={k:"i",a:.5,b:.5,w:.4,rot:0,bm:c,jpg:await bytesOf(c)};cur.items.push(it);setMode("move");sel=it;syncPanel();paint()}
+  const it={k:"i",a:.5,b:.5,w:.4,rot:0,bm:c,jpg:await bytesOf(c)};addItem(it);setMode("move");sel=it;syncPanel();paint()}
 $("sP").onclick=pasteClip;$("sX").onclick=()=>{selR=null;paint()};
 $("eAdd").onclick=()=>sheet("ページに追加",[["ファイルから(PDF・画像)",()=>$("pf").click()],["写真から",()=>$("pi").click()],...(clipCv?[["コピーした画像を貼り付け",pasteClip]]:[])]);
 async function embeddedText(){
@@ -638,7 +638,7 @@ async function doBox(shapeMode){
     const B=selBox(),A=ang(cur),P=[[B.a,B.b],[B.c,B.b],[B.c,B.d],[B.a,B.d]].map(p=>toUnrot(p[0],p[1],A));
     if(bx.m=="mosaic")await ensureRaw(cur);
     const it={k:"i",png:true,shape:{c:bx.c,wd:+$("bxw").value,m:bx.m,d:bx.d,rel:[]},a:.5,b:.5,w:.1,rot:0};
-    bakeShape(it,cur,P);cur.items.push(it);setMode("move");sel=it;if(shapeMode)emode="shape";setHint();syncPanel();paint();
+    bakeShape(it,cur,P);addItem(it);setMode("move");sel=it;if(shapeMode)emode="shape";setHint();syncPanel();paint();
     toast(shapeMode?"丸をドラッグして形を変えられます":"囲いを追加しました。「形変更」で四隅を動かせます",3600)
   }catch(e){toast("囲いを作れませんでした")}}
 // ---- トリミング
@@ -721,4 +721,18 @@ function focusEdit(){
   placeEdit();
   const r=ec.getBoundingClientRect(),A=ang(cur),[u,v]=toDisp(editing.a,editing.b,A),q=wrap.getBoundingClientRect();
   wrap.scrollLeft+=r.left+u*r.width-(q.left+q.width/2);wrap.scrollTop+=r.top+v*r.height-(q.top+q.height/2)}
+
+function addStroke(st){cur.strokes.push(st);(cur._log=cur._log||[]).push({k:"s",o:st})}
+function addItem(it){cur.items.push(it);(cur._log=cur._log||[]).push({k:"i",o:it})}
+function undoLast(){
+  endEdit();const L=cur._log||[];
+  while(L.length){
+    const a=L.pop();
+    if(a.k=="s"){const i=cur.strokes.indexOf(a.o);if(i>=0){cur.strokes.splice(i,1);paint();return}}
+    else{const i=cur.items.indexOf(a.o);if(i>=0){cur.items.splice(i,1);if(sel===a.o){sel=null;emode=null;setHint();syncPanel()}paint();return}}
+  }
+  toast("戻せる操作がありません")}
+function clearText(){
+  if(!cur.items.some(i=>i.k=="t"))return toast("消せる文字がありません");
+  sheet("このページに追加した文字を全て消しますか?",[["消す",()=>{endEdit();cur.items=cur.items.filter(i=>i.k!="t");if(sel&&sel.k=="t"){sel=null;emode=null;setHint();syncPanel()}paint();toast("文字を全て消しました")}]])}
 </script></body></html>
