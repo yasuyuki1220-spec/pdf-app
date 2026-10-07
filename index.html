@@ -46,10 +46,11 @@ button{font:inherit;color:var(--fg);cursor:pointer}svg{width:22px;height:22px;st
 #bx .box{max-height:92%;overflow:auto}#bx .st{padding:8px 4px 2px}.cdot{width:34px;height:34px;border-radius:50%;border:2px solid var(--bd);padding:0}.cdot.on{outline:3px solid var(--ac);outline-offset:2px}
 #pcv{display:block;margin:8px auto;touch-action:none;border-radius:10px;background:#222}
 #shp .cdot{width:28px;height:28px}#shp .chip{padding:6px 10px;font-size:13px}
+#szp{display:none;background:var(--ac2);border-radius:14px;padding:8px 12px;margin-top:6px;gap:10px;font-size:12px}#szp label{flex:1;display:flex;flex-direction:column;gap:2px;font-weight:600;min-width:0}#szp input{width:100%;margin:0}#bgz.act{background:var(--ac)!important;color:#fff}
 #pr,#op,#shp{flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-x;overscroll-behavior-x:contain;-webkit-user-select:none;user-select:none}#pr button,#op button,#shp button{touch-action:pan-x;-webkit-tap-highlight-color:transparent;transform:none!important;transition:none!important}#pr button:active,#op button:active,#shp button:active{transform:none}
 #ed .dock,#ed .dock *{touch-action:pan-x}
 #pr>*,#op>*,#shp>*,#op #opg>*{flex:none}
-#ed.kb #op,#ed.kb #shp,#ed.kb #rp,#ed.kb #sb,#ed.kb .dock.ed{display:none!important}
+#ed.kb #szp,#ed.kb #op,#ed.kb #shp,#ed.kb #rp,#ed.kb #sb,#ed.kb .dock.ed{display:none!important}
 #mhint{display:none;background:var(--ac);color:#fff;border-radius:12px;padding:7px 12px;font-size:13px;font-weight:600;text-align:center;margin:0 0 6px;line-height:1.4}
 .sbar{position:fixed;height:5px;border-radius:3px;background:rgba(0,0,0,.14);z-index:25;opacity:0;transition:opacity .3s;pointer-events:none}.sbar i{display:block;height:100%;background:var(--ac);border-radius:3px}
 #tl .box,#tf .box,#to .box{max-height:88%;overflow:auto}
@@ -64,6 +65,7 @@ button{font:inherit;color:var(--fg);cursor:pointer}svg{width:22px;height:22px;st
 #ed.fill #pr,#ed.fill #op,#ed.fill #shp,#ed.fill #rp,#ed.fill #sb,#ed.fill .dock.ed,#ed.fill #fg{display:none!important}
 #te{display:none;align-items:center;gap:6px;margin:0 0 6px}#te button{border:0;border-radius:10px;padding:8px 10px;font-size:13px;background:var(--card);box-shadow:var(--sh)}#te button.p{background:var(--ac);color:#fff}#te .fl{flex:1;font-weight:700;font-size:13px;color:#b45309}
 .chip2{display:block;width:100%;margin:6px 0 0;border:0;border-radius:10px;padding:8px;background:#fff3e0;color:#b45309;font-size:12px;font-weight:700}
+.tg{border:1px solid var(--bd);border-radius:14px;padding:8px 10px;margin:8px 0}.tg.multi{border-color:#f59e0b;background:rgba(245,158,11,.08)}.tgh{display:flex;align-items:center;gap:8px}.tgn{font-size:22px;color:#f59e0b;min-width:30px}.tgl{flex:1;font-weight:700;font-size:14px}.tg button{border:1px solid var(--bd);background:none;border-radius:10px;padding:8px 10px;font-size:13px}.tg button:disabled{opacity:.3}.tgr{display:flex;align-items:center;gap:8px;padding:8px 2px 2px}.tgt{flex:1;font-size:14px;text-decoration:underline dotted}
 .tr{flex-wrap:wrap}.tr .tb{flex-basis:100%;display:flex;gap:8px;justify-content:flex-end}
 input[type=range]{accent-color:var(--ac)}
 .col{width:28px;height:28px;border-radius:50%;border:2px solid var(--bd);padding:0}.col.on{outline:2px solid var(--ac);outline-offset:2px}
@@ -108,16 +110,15 @@ input[type=range]{accent-color:var(--ac)}
 <div class="top"><button class="tb" id="un"><svg><use href="#i-undo"/></svg>戻る</button><span id="pgl"></span><span style="display:flex;gap:4px"><button class="tb" id="zOut">－</button><button class="tb" id="zIn">＋</button></span><button class="tb pri" id="ok">完了</button></div>
 <div id="mhint"></div>
 <div id="fg"><span class="fl" id="fgl"></span><button id="fgs" class="p">スライド入力</button></div>
-<div id="te"><span class="fl">テンプレート編集中</span><button id="teN">番号</button><button id="teO">順番</button><button id="teS" class="p">保存</button></div>
+<div id="te"><span class="fl">テンプレート編集中</span><button id="teO">番号・順番</button><button id="teS" class="p">保存</button></div>
 <div class="w" id="wrap"><canvas id="ec"></canvas></div>
 <div id="fp"><div id="fps"></div><div id="fpb"><button id="fpu">▲</button><span id="fpc" style="font-size:12px;font-weight:700"></span><button id="fpd">▼</button><button class="p" id="fpx">完了</button></div></div>
 <div class="ctx" id="pr">
 <button class="col on" style="background:#111" data-c="#111111"></button><button class="col" style="background:#e11d48" data-c="#e11d48"></button><button class="col" style="background:#2563eb" data-c="#2563eb"></button><button class="col" style="background:#16a34a" data-c="#16a34a"></button><button class="col" style="background:#f59e0b" data-c="#f59e0b"></button><button class="col" style="background:#fff" data-c="#ffffff"></button>
 <input type="color" id="cc" value="#111111" style="width:28px;height:28px;padding:0;border:0;background:none"><span style="font-size:12px;color:var(--mut)">太さ</span><input id="wd" type="range" min="1" max="14" value="3" style="width:90px">
 </div>
-<div class="ctx" id="op"><span id="opg" style="display:contents"><span style="font-size:12px">大きさ</span><input id="sz" type="range" min="1" max="100" value="20" style="width:80px">
-<span style="font-size:12px">幅</span><input id="sx" type="range" min="20" max="300" value="100" style="width:80px">
-<span style="font-size:12px">高さ</span><input id="sy" type="range" min="20" max="300" value="100" style="width:80px">
+<div id="szp"><label>大きさ<input id="sz" type="range" min="1" max="100" value="20"></label><label>幅<input id="sx" type="range" min="20" max="300" value="100"></label><label>高さ<input id="sy" type="range" min="20" max="300" value="100"></label></div>
+<div class="ctx" id="op"><span id="opg" style="display:contents"><button id="bgz">サイズ変更</button>
 <button id="rl">↺</button><button id="rr">↻</button></span><button id="bsh">形変更</button><button id="bvd">頂点を減らす</button><button id="blk">固定</button><button id="bhl">白フチ</button><button id="bmv">移動</button><button id="bsz">枠サイズ</button><button id="bsc">全体拡大</button><button id="bac">基準:左</button><button id="bfd">入力欄にする</button><button id="ex">入力</button><button id="dl">削除</button></div>
 <div class="ctx" id="shp" style="display:none;background:var(--ac2);border-radius:14px;padding:6px 10px;margin-top:6px">
 <button class="cdot" style="background:#e11d48" data-c="#e11d48"></button><button class="cdot" style="background:#111" data-c="#111111"></button><button class="cdot" style="background:#2563eb" data-c="#2563eb"></button><button class="cdot" style="background:#16a34a" data-c="#16a34a"></button><button class="cdot" style="background:#f59e0b" data-c="#f59e0b"></button><button class="cdot" style="background:#fff" data-c="#ffffff"></button>
@@ -148,7 +149,7 @@ input[type=range]{accent-color:var(--ac)}
 <div id="tl"><div class="box"><div class="st">テンプレートから追加</div><div id="tlc"></div><div class="row"><button class="p" id="tli">他の人のテンプレートを取り込む</button><button id="tlx">閉じる</button></div><input id="tlf" type="file" accept=".json,application/json" hidden></div></div>
 <div id="tf"><div class="box"><div class="st" id="tft"></div><div id="tfc"></div><div class="row"><button class="p" id="tfok">作成</button><button id="tfx">キャンセル</button></div></div></div>
 <div id="ts"><div class="box"><div class="st">テンプレートとして保存</div><div id="tsh" style="font-size:13px;color:var(--mut);padding:0 4px 8px;line-height:1.5"></div><input id="tsn" type="text"><div class="row"><button class="p" id="tsok">保存</button><button id="tsx">キャンセル</button></div></div></div>
-<div id="to"><div class="box"><div class="st">入力の順番(上から①②…)。同じ番号の欄は同時に入力されます</div><div id="toc"></div><div class="row"><button class="p" id="tox">閉じる</button></div></div></div>
+<div id="to"><div class="box"><div class="st">入力の順番と番号<div style="font-size:12px;font-weight:400;color:var(--mut);line-height:1.5;margin-top:4px">▲▼で順番を入れ替え。「①と同時に入力」を押すと、同じ番号の欄にまとめて1回で入力できます(別ページでも同じ番号なら同時)。名前をタップすると画面でその欄を選べます。</div></div><div id="toc"></div><div class="row"><button class="p" id="tox">閉じる</button></div></div></div>
 <div id="dm"><div class="box"><div class="st">寸法を入力(単位:m)</div><div class="chips" id="dmc"><button class="chip on" data-l="出入口">出入口</button><button class="chip" data-l="道路幅">道路幅</button><button class="chip" data-l="保管場所 横">保管場所 横</button><button class="chip" data-l="保管場所 縦">保管場所 縦</button><button class="chip" data-l="前面道路">前面道路</button><button class="chip" data-l="">名前なし</button></div>
 <div style="display:flex;gap:8px;align-items:center;margin:6px 0"><input id="dmv" type="text" inputmode="decimal" placeholder="例 5.0" autocomplete="off"><b>m</b></div><div class="row"><button class="p" id="dmok">入れる</button><button id="dmx">キャンセル</button></div></div></div>
 <div id="toast"></div>
@@ -193,19 +194,20 @@ async function renderPage(pg,cv,w,withMarks=true){
 }
 function drawMarks(x,pg,cw,ch,extra){
   const A=ang(pg);x.lineCap=x.lineJoin="round";
-  for(const s of pg.strokes.concat(extra?[extra]:[])){
+  const dS=()=>{for(const s of pg.strokes.concat(extra?[extra]:[])){
     x.strokeStyle=s.c;x.lineWidth=s.w*(A%180==0?cw:ch);x.beginPath();
     s.p.forEach(([a,b],k)=>{const [u,v]=toDisp(a,b,A);k?x.lineTo(u*cw,v*ch):x.moveTo(u*cw,v*ch)});
     if(s.p.length==1){const [u,v]=toDisp(...s.p[0],A);x.lineTo(u*cw+.1,v*ch)}
     x.stroke();
-  }
+  }};
   const ppp=(A%180==0?cw:ch)/pg.W;
-  for(const it of pg.items){if(it===editing)continue;try{const ghost=it.ph&&x.canvas.id!="ec";if(ghost&&!(x.canvas.dataset&&x.canvas.dataset.t))continue;
+  for(const pass of [0,1,2]){if(pass==1){dS();continue}
+  for(const it of pg.items){if((it.k=='i')!=(pass==0))continue;if(it===editing)continue;try{const ghost=it.ph&&x.canvas.id!="ec";if(ghost&&!(x.canvas.dataset&&x.canvas.dataset.t))continue;
     const bm=bmOf(it),s=sc(it,pg)*ppp,[u,v]=toDisp(it.a,it.b,A),w=bm.width*s*(it.sx||1),h=bm.height*s*(it.sy||1);
     x.save();x.translate(u*cw,v*ch);x.rotate((it.rot+A)*PI/180);if(ghost){x.strokeStyle="#f59e0b";x.lineWidth=Math.max(1.5,cw/160);x.setLineDash([6,4]);x.strokeRect(-w/2,-h/2,w,h);x.setLineDash([]);if(it.no){const rr=Math.max(9,cw/18);x.fillStyle="#f59e0b";x.beginPath();x.arc(-w/2,-h/2,rr,0,7);x.fill();x.fillStyle="#fff";x.font="bold "+rr*1.3+"px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText(it.no,-w/2,-h/2)}x.restore();continue}if(it.ph)x.globalAlpha=.55;x.drawImage(bm,-w/2,-h/2,w,h);x.globalAlpha=1;if(it.field=="input"&&x.canvas.id=="ec"){x.strokeStyle="#f59e0b";x.lineWidth=Math.max(1.5,cw/400);x.setLineDash([8,6]);x.strokeRect(-w/2,-h/2,w,h);x.setLineDash([]);if(it.no){const rr=Math.max(10,cw/42);x.fillStyle="#f59e0b";x.beginPath();x.arc(-w/2,-h/2,rr,0,7);x.fill();x.fillStyle="#fff";x.font="bold "+rr*1.3+"px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText(it.no,-w/2,-h/2)}}
     if(it===sel&&x.canvas.id=="ec"){x.lineWidth=Math.max(2,cw/250);x.strokeStyle=emode=="size"?"#16a34a":emode=="scale"?"#f59e0b":emode=="move"?"#e11d48":"#2563eb";x.setLineDash(emode?[]:[6,4]);x.strokeRect(-w/2,-h/2,w,h);if(emode=="size"||emode=="scale"){x.fillStyle=emode=="size"?"#16a34a":"#f59e0b";x.beginPath();x.arc(w/2,h/2,hr(),0,7);x.fill()}}
     x.restore();
-  }catch(err){try{x.restore()}catch(_){}}}
+  }catch(err){try{x.restore()}catch(_){}}}}
 }
 
 function draw(flash){
@@ -312,9 +314,11 @@ async function runExport(list,name,fmt){
     await deliverFiles(fs,name)
   }catch(err){say("作成に失敗しました。暗号化PDFは非対応です")}}
 // ---- エディタ ----
-function setMode(m){sbAll();mode=m;emode=null;selR=null;sdrag=null;document.querySelectorAll("[data-m]").forEach(b=>b.classList.toggle("on",b.dataset.m==m));if(m=="pen"||m=="line"){sel=null;syncPanel()}paint()}
+function setMode(m){sbAll();mode=m;emode=null;setHint();selR=null;sdrag=null;document.querySelectorAll("[data-m]").forEach(b=>b.classList.toggle("on",b.dataset.m==m));if(m=="pen"||m=="line"){sel=null;syncPanel()}paint()}
 document.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{setMode(b.dataset.m);if(b.dataset.m=="move")toast("画面をなぞって範囲を選びます");if(b.dataset.m=="dim")toast("線をなぞると寸法線になります(水平・垂直に自動で合います)");if(b.dataset.m=="text"){if(sel&&sel.k=="t")startEdit(sel);else newText(toUnrot(.5,.35,ang(cur)))}});
+let szOpen=false;
 function syncPanel(){sbAll();
+  if(!sel||sel.shape)szOpen=false;$("szp").style.display=szOpen?"flex":"none";$("bgz").classList.toggle("act",szOpen);
   $("op").style.display=sel?"flex":"none";$("pr").style.display=sel&&sel.shape?"none":"";$("shp").style.display=sel&&sel.shape?"flex":"none";if(!sel)return;
   const t=sel.k=="t";$("ex").style.display=$("bmv").style.display=$("bsz").style.display=$("bsc").style.display=$("bfd").style.display=$("bac").style.display=t?"":"none";$("bac").textContent="基準:"+({l:"左",c:"中央",r:"右"}[sel.anc||"l"]);$("bfd").textContent=sel.field=="input"?"固定に戻す":"入力欄にする";$("bfd").classList.toggle("act",sel.field=="input");$("bsc").classList.toggle("act",emode=="scale");$("bmv").style.display=(t||(sel.k=="i"&&!sel.shape))?"":"none";$("blk").style.display=(sel.k=="i"&&!sel.shape)?"":"none";$("blk").textContent=sel.lock?"固定解除":"固定";$("bhl").style.display=t?"":"none";$("bhl").classList.toggle("act",!!sel.halo);$("bvd").style.display=(sel.shape&&emode=="shape")?"":"none";$("bsh").style.display=sel.shape?"":"none";$("bsh").classList.toggle("act",emode=="shape");$("opg").style.display=sel.shape?"none":"contents";if(sel.shape)shpUI();$("bmv").classList.toggle("act",emode=="move");$("bsz").classList.toggle("act",emode=="size");
   $("sz").value=sel.k=="i"?sel.w*100:sel.s*700-4;$("sx").value=(sel.sx||1)*100;$("sy").value=(sel.sy||1)*100;
@@ -337,7 +341,7 @@ function hit(e){
   }
   return null;
 }
-function snap(q0,q1){
+function axisSnap(q0,q1){
   const A=ang(cur),[u0,v0]=toDisp(...q0,A);let [u1,v1]=toDisp(...q1,A);
   const dx=(u1-u0)*ec.width,dy=(v1-v0)*ec.height;
   if(Math.abs(dy)<Math.abs(dx)*.06)v1=v0;else if(Math.abs(dx)<Math.abs(dy)*.06)u1=u0;
@@ -392,7 +396,7 @@ ec.onpointermove=e=>{
   if(P.size>1)return;
   const q=pt(e);
   if(dp&&Math.hypot(e.clientX-dp.x,e.clientY-dp.y)>10){moved=true;createTap=null;if(lpT){clearTimeout(lpT);lpT=null}}
-  if(dimSt){dimSt.p[1]=snap(dimSt.p[0],q);paint();return}
+  if(dimSt){dimSt.p[1]=axisSnap(dimSt.p[0],q);paint();return}
   if(shI>=0&&sel&&sel.shape){const Pp=sel.shape.rel.map(r=>[sel.a+r[0],sel.b+r[1]]);Pp[shI]=[q[0]-shOff[0],q[1]-shOff[1]];bakeShape(sel,cur,Pp);moved=true;paint();return}
   if(sdrag&&moved){selMove(e);return}
   if(rz){resizeBy(e);return}
@@ -411,6 +415,7 @@ document.querySelectorAll(".col").forEach(b=>b.onclick=()=>{
   col=b.dataset.c;document.querySelectorAll(".col").forEach(x=>x.classList.toggle("on",x==b));
   if(sel&&sel.k=="t"){sel.c=col;paint()}
 });
+$("bgz").onclick=()=>{szOpen=!szOpen;syncPanel()};
 $("sz").oninput=()=>{if(!sel)return;const v=+$("sz").value;if(sel.k=="i")sel.w=Math.max(.03,v/100);else sel.s=(v+4)/700;paint()};
 $("rl").onclick=()=>{if(sel){sel.rot-=15;rotShow(sel.a,sel.b,sel.rot);paint()}};$("rr").onclick=()=>{if(sel){sel.rot+=15;rotShow(sel.a,sel.b,sel.rot);paint()}};
 $("ex").onclick=()=>{if(sel&&sel.k=="t")startEdit(sel)};
@@ -948,22 +953,28 @@ function tplGroups(){
   const m=new Map();(tplEdit?tplEdit.pgs:[]).forEach((pg,pi)=>pg.items.forEach(it=>{if(it.field=="input"){const n=it.no||9999;if(!m.has(n))m.set(n,[]);m.get(n).push({pg,pi,it})}}));
   return [...m.entries()].sort((a,b)=>a[0]-b[0]).map(([no,list])=>({no,list}))}
 const tplMaxNo=()=>Math.max(0,...tplGroups().map(g=>g.no===9999?0:g.no));
-$("teN").onclick=()=>{
-  if(!sel||sel.field!="input")return toast("番号を変える入力欄(オレンジの点線の文字)を選んでください");
-  const G=tplGroups(),it=sel,items=[];
-  G.forEach((g,i)=>{if(g.list.every(x=>x.it===it))return;items.push(["入力欄"+(i+1)+"「"+g.list[0].it.str+"」と同時に入力",()=>{it.no=g.no;paint();toast("同じ番号にしました")}])});
-  items.push(["新しい番号にする(最後の入力欄)",()=>{it.no=tplMaxNo()+1;paint()}]);
-  sheet("この入力欄の番号",items)};
+const CN=["⓪","①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩","⑪","⑫","⑬","⑭","⑮","⑯","⑰","⑱","⑲","⑳"],cn=n=>CN[n]||("("+n+")");
+function tplNorm(){tplGroups().forEach((g,i)=>g.list.forEach(x=>x.it.no=i+1))}
+function tplJump(x){$("to").style.display="none";const go=()=>{sel=x.it;emode=null;setHint();syncPanel();paint()};if(cur!==x.pg)openEd(x.pg).then(go);else go()}
 function toOpen(){
-  const c=$("toc");c.innerHTML="";const G=tplGroups();
+  tplNorm();const c=$("toc");c.innerHTML="";const G=tplGroups();
   if(!G.length){c.textContent="入力欄がありません。文字を選んで「入力欄にする」を押してください";$("to").style.display="flex";return}
   G.forEach((g,i)=>{
-    const row=document.createElement("div"),tn=document.createElement("div"),sm=document.createElement("small"),up=document.createElement("button"),dn=document.createElement("button");
-    row.className="tr";tn.className="tn";tn.textContent=(i+1)+".  "+g.list[0].it.str;
-    sm.textContent=g.list.length>1?"同時入力 "+g.list.length+"か所(ページ "+[...new Set(g.list.map(x=>x.pi+1))].join("・")+")":"ページ "+(g.list[0].pi+1);tn.appendChild(sm);
-    up.textContent="▲";dn.textContent="▼";up.style.cssText=dn.style.cssText="border:1px solid var(--bd);background:none;border-radius:10px;padding:8px 12px";
-    const sw=j=>{const o=G[j];if(!o)return;const a=g.no,b=o.no;g.list.forEach(x=>x.it.no=b);o.list.forEach(x=>x.it.no=a);toOpen();paint()};
-    up.onclick=()=>sw(i-1);dn.onclick=()=>sw(i+1);row.append(tn,up,dn);c.appendChild(row)});
+    const box=document.createElement("div");box.className="tg"+(g.list.length>1?" multi":"");
+    const hd=document.createElement("div");hd.className="tgh";
+    const bd=document.createElement("b");bd.className="tgn";bd.textContent=cn(i+1);
+    const lb=document.createElement("span");lb.className="tgl";lb.textContent=g.list.length>1?(i+1)+"番目(同時入力 "+g.list.length+"か所)":(i+1)+"番目に入力";
+    const up=document.createElement("button"),dn=document.createElement("button");up.textContent="▲ 前へ";dn.textContent="▼ 後ろへ";up.disabled=i==0;dn.disabled=i==G.length-1;
+    const sw=j=>{const o=G[j];if(!o)return;g.list.forEach(x=>x.it.no=j+1);o.list.forEach(x=>x.it.no=i+1);toOpen();paint()};
+    up.onclick=()=>sw(i-1);dn.onclick=()=>sw(i+1);hd.append(bd,lb,up,dn);box.appendChild(hd);
+    g.list.forEach(x=>{
+      const r=document.createElement("div");r.className="tgr";
+      const nm=document.createElement("span");nm.className="tgt";nm.textContent=x.it.str+"  ・ページ"+(x.pi+1);nm.onclick=()=>tplJump(x);
+      r.appendChild(nm);
+      if(g.list.length>1){const b=document.createElement("button");b.textContent="分ける";b.onclick=()=>{x.it.no=G.length+1;tplNorm();x.it.no=i+1.5;tplNorm();toOpen();paint()};r.appendChild(b)}
+      else if(i>0){const b=document.createElement("button");b.textContent=cn(i)+"と同時に入力";b.onclick=()=>{x.it.no=i;tplNorm();toOpen();paint()};r.appendChild(b)}
+      box.appendChild(r)});
+    c.appendChild(box)});
   $("to").style.display="flex"}
 $("teO").onclick=toOpen;$("tox").onclick=()=>{$("to").style.display="none"};
 async function tplEditSave(exit){
