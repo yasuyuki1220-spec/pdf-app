@@ -46,7 +46,8 @@ button{font:inherit;color:var(--fg);cursor:pointer}svg{width:22px;height:22px;st
 #bx .box{max-height:92%;overflow:auto}#bx .st{padding:8px 4px 2px}.cdot{width:34px;height:34px;border-radius:50%;border:2px solid var(--bd);padding:0}.cdot.on{outline:3px solid var(--ac);outline-offset:2px}
 #pcv{display:block;margin:8px auto;touch-action:none;border-radius:10px;background:#222}
 #shp .cdot{width:28px;height:28px}#shp .chip{padding:6px 10px;font-size:13px}
-#pr,#op,#shp{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch}
+#pr,#op,#shp{flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-x;overscroll-behavior-x:contain;-webkit-user-select:none;user-select:none}#pr button,#op button,#shp button{touch-action:pan-x;-webkit-tap-highlight-color:transparent;transform:none!important;transition:none!important}#pr button:active,#op button:active,#shp button:active{transform:none}
+#ed .dock,#ed .dock *{touch-action:pan-x}
 #pr>*,#op>*,#shp>*,#op #opg>*{flex:none}
 #ed.kb #op,#ed.kb #shp,#ed.kb #rp,#ed.kb #sb,#ed.kb .dock.ed{display:none!important}
 #mhint{display:none;background:var(--ac);color:#fff;border-radius:12px;padding:7px 12px;font-size:13px;font-weight:600;text-align:center;margin:0 0 6px;line-height:1.4}
@@ -199,12 +200,12 @@ function drawMarks(x,pg,cw,ch,extra){
     x.stroke();
   }
   const ppp=(A%180==0?cw:ch)/pg.W;
-  for(const it of pg.items){if(it===editing)continue;const ghost=it.ph&&x.canvas.id!="ec";if(ghost&&!(x.canvas.dataset&&x.canvas.dataset.t))continue;
+  for(const it of pg.items){if(it===editing)continue;try{const ghost=it.ph&&x.canvas.id!="ec";if(ghost&&!(x.canvas.dataset&&x.canvas.dataset.t))continue;
     const bm=bmOf(it),s=sc(it,pg)*ppp,[u,v]=toDisp(it.a,it.b,A),w=bm.width*s*(it.sx||1),h=bm.height*s*(it.sy||1);
     x.save();x.translate(u*cw,v*ch);x.rotate((it.rot+A)*PI/180);if(ghost){x.strokeStyle="#f59e0b";x.lineWidth=Math.max(1.5,cw/160);x.setLineDash([6,4]);x.strokeRect(-w/2,-h/2,w,h);x.setLineDash([]);if(it.no){const rr=Math.max(9,cw/18);x.fillStyle="#f59e0b";x.beginPath();x.arc(-w/2,-h/2,rr,0,7);x.fill();x.fillStyle="#fff";x.font="bold "+rr*1.3+"px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText(it.no,-w/2,-h/2)}x.restore();continue}if(it.ph)x.globalAlpha=.55;x.drawImage(bm,-w/2,-h/2,w,h);x.globalAlpha=1;if(it.field=="input"&&x.canvas.id=="ec"){x.strokeStyle="#f59e0b";x.lineWidth=Math.max(1.5,cw/400);x.setLineDash([8,6]);x.strokeRect(-w/2,-h/2,w,h);x.setLineDash([]);if(it.no){const rr=Math.max(10,cw/42);x.fillStyle="#f59e0b";x.beginPath();x.arc(-w/2,-h/2,rr,0,7);x.fill();x.fillStyle="#fff";x.font="bold "+rr*1.3+"px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText(it.no,-w/2,-h/2)}}
     if(it===sel&&x.canvas.id=="ec"){x.lineWidth=Math.max(2,cw/250);x.strokeStyle=emode=="size"?"#16a34a":emode=="scale"?"#f59e0b":emode=="move"?"#e11d48":"#2563eb";x.setLineDash(emode?[]:[6,4]);x.strokeRect(-w/2,-h/2,w,h);if(emode=="size"||emode=="scale"){x.fillStyle=emode=="size"?"#16a34a":"#f59e0b";x.beginPath();x.arc(w/2,h/2,hr(),0,7);x.fill()}}
     x.restore();
-  }
+  }catch(err){try{x.restore()}catch(_){}}}
 }
 
 function draw(flash){
@@ -346,7 +347,7 @@ const P=new Map();
 function G(){const [a,b]=[...P.values()];return{d:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)||1,an:Math.atan2(b.clientY-a.clientY,b.clientX-a.clientX),mx:(a.clientX+b.clientX)/2,my:(a.clientY+b.clientY)/2}}
 ec.onpointerdown=e=>{
   commit();ec.setPointerCapture(e.pointerId);P.set(e.pointerId,e);
-  if(P.size==2){dimSt=null;pendDesel=false;sdrag=null;clearTimeout(lpT);lpT=null;rz=null;createTap=null;st=null;drag=null;let onItem=false;if(!(ruler.on&&mode=="pen")){const h=hit(e)||hit([...P.values()][0]);if(h){if(h!==sel){sel=h;emode=null;setHint();syncPanel()}onItem=true}}const n=G(),r0=ec.getBoundingClientRect();g={fx:(n.mx-r0.left)/r0.width,fy:(n.my-r0.top)/r0.height,d0:n.d,a0:n.an,pm:n,zw:ec.getBoundingClientRect().width,sz:sel?(sel.k=="i"?sel.w:sel.s):0,rot:sel?sel.rot:0};g.item=onItem;if(ruler.on&&mode=="pen"&&(rdrag||isBody(e))){const m=pt({clientX:n.mx,clientY:n.my});g.ruler=true;g.deg0=ruler.deg;g.off=[ruler.a-m[0],ruler.b-m[1]];rdrag=null}paint();return}
+  if(P.size==2){dimSt=null;pendDesel=false;sdrag=null;clearTimeout(lpT);lpT=null;rz=null;createTap=null;st=null;drag=null;let onItem=false;if(!(ruler.on&&mode=="pen")){const h=(mode=='dim')?null:(hit(e)||hit([...P.values()][0]));if(h&&h===sel&&(h.k=='t'||emode=='move'))onItem=true}const n=G(),r0=ec.getBoundingClientRect();g={fx:(n.mx-r0.left)/r0.width,fy:(n.my-r0.top)/r0.height,d0:n.d,a0:n.an,pm:n,zw:ec.getBoundingClientRect().width,sz:sel?(sel.k=="i"?sel.w:sel.s):0,rot:sel?sel.rot:0};g.item=onItem;if(ruler.on&&mode=="pen"&&(rdrag||isBody(e))){const m=pt({clientX:n.mx,clientY:n.my});g.ruler=true;g.deg0=ruler.deg;g.off=[ruler.a-m[0],ruler.b-m[1]];rdrag=null}paint();return}
   if(P.size>2)return;
   const q=pt(e);
   if(mode=="dim"){dimSt={c:col,w:.004,p:[q,q]};paint();return}
@@ -383,8 +384,8 @@ ec.onpointermove=e=>{
     if(g.ruler){const m=pt({clientX:n.mx,clientY:n.my});ruler.deg=snapRot(g.deg0+(n.an-g.a0)*180/PI);ruler.a=m[0]+g.off[0];ruler.b=m[1]+g.off[1];rotShow(ruler.a,ruler.b,ruler.deg);paint();return}
     if(g.item&&sel&&!sel.shape){
       const r=n.d/g.d0;
-      if(sel.k=="i")sel.w=clamp(g.sz*r,.03,1.5);else sel.s=clamp(g.sz*r,.007,.15);
-      sel.rot=snapRot(g.rot+(n.an-g.a0)*180/PI);rotShow(sel.a,sel.b,sel.rot);syncPanel();paint();
+      if(sel.k=="i")sel.w=clamp((g.sz||.3)*(isFinite(r)?r:1),.03,1.5);else sel.s=clamp(g.sz*r,.007,.15);
+      if(sel.k!='i'){sel.rot=snapRot(g.rot+(n.an-g.a0)*180/PI);rotShow(sel.a,sel.b,sel.rot)}paint();
     }else{zoomAt(g.zw*n.d/g.d0,g.fx,g.fy,n.mx,n.my)}
     return;
   }
