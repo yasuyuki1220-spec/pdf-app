@@ -54,6 +54,13 @@ button{font:inherit;color:var(--fg);cursor:pointer}svg{width:22px;height:22px;st
 #tl .box,#tf .box{max-height:88%;overflow:auto}
 .tr{display:flex;align-items:center;gap:8px;padding:10px 4px;border-bottom:1px solid var(--bd)}.tr .tn{flex:1;font-weight:600}.tr small{display:block;font-weight:400;color:var(--mut);font-size:12px}.tr button{border:1px solid var(--bd);background:none;border-radius:10px;padding:8px 12px;font-size:13px}.tr button.p{background:var(--ac);color:#fff;border:0}
 .tfr{display:block;margin:10px 0 4px}.tfr span{display:block;font-size:13px;color:var(--mut);margin-bottom:4px}.tfr input{width:100%;font:inherit;font-size:16px;border:1px solid var(--bd);border-radius:12px;padding:10px;background:var(--bg);color:var(--fg)}
+#fg{display:none;align-items:center;gap:6px;margin:0 0 6px}#fg button{border:0;border-radius:10px;padding:8px 10px;font-size:13px;background:var(--card);box-shadow:var(--sh)}#fg button.p{background:var(--ac);color:#fff}#fg .fl{flex:1;text-align:center;font-weight:700;font-size:13px;color:#b45309}
+#fp{display:none;background:var(--card);border-radius:18px;box-shadow:var(--sh);margin:6px 0;padding:4px 6px 4px 12px;align-items:center;gap:8px}
+#fps{flex:1;min-width:0;height:86px;overflow-y:auto;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}#fps::-webkit-scrollbar{display:none}
+.fs{height:86px;scroll-snap-align:start;scroll-snap-stop:always;display:flex;flex-direction:column;justify-content:center;gap:6px}.fs b{font-size:13px;color:#b45309}
+.fs input{width:100%;font:inherit;font-size:16px;border:1px solid var(--bd);border-radius:12px;padding:10px;background:var(--bg);color:var(--fg)}
+#fpb{display:flex;flex-direction:column;gap:5px;align-items:center}#fpb button{border:0;border-radius:10px;padding:7px 10px;font-size:13px;background:var(--ac2);color:var(--ac)}#fpb .p{background:var(--ac);color:#fff}
+#ed.fill #pr,#ed.fill #op,#ed.fill #shp,#ed.fill #rp,#ed.fill #sb,#ed.fill .dock.ed,#ed.fill #fg{display:none!important}
 input[type=range]{accent-color:var(--ac)}
 .col{width:28px;height:28px;border-radius:50%;border:2px solid var(--bd);padding:0}.col.on{outline:2px solid var(--ac);outline-offset:2px}
 .dock.ed{position:static;margin:4px auto calc(10px + env(safe-area-inset-bottom,0px));width:100%}
@@ -96,7 +103,9 @@ input[type=range]{accent-color:var(--ac)}
 <div id="ed">
 <div class="top"><button class="tb" id="un"><svg><use href="#i-undo"/></svg>戻る</button><span id="pgl"></span><button class="tb pri" id="ok">完了</button></div>
 <div id="mhint"></div>
+<div id="fg"><button id="fgp">◀ 前</button><span class="fl" id="fgl"></span><button id="fgn" class="p">次の入力欄 ▶</button></div>
 <div class="w" id="wrap"><canvas id="ec"></canvas></div>
+<div id="fp"><div id="fps"></div><div id="fpb"><button id="fpu">▲</button><span id="fpc" style="font-size:12px;font-weight:700"></span><button id="fpd">▼</button><button class="p" id="fpx">完了</button></div></div>
 <div class="ctx" id="pr">
 <button class="col on" style="background:#111" data-c="#111111"></button><button class="col" style="background:#e11d48" data-c="#e11d48"></button><button class="col" style="background:#2563eb" data-c="#2563eb"></button><button class="col" style="background:#16a34a" data-c="#16a34a"></button><button class="col" style="background:#f59e0b" data-c="#f59e0b"></button><button class="col" style="background:#fff" data-c="#ffffff"></button>
 <input type="color" id="cc" value="#111111" style="width:28px;height:28px;padding:0;border:0;background:none"><span style="font-size:12px;color:var(--mut)">太さ</span><input id="wd" type="range" min="1" max="14" value="3" style="width:90px">
@@ -104,7 +113,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="ctx" id="op"><span id="opg" style="display:contents"><span style="font-size:12px">大きさ</span><input id="sz" type="range" min="1" max="100" value="20" style="width:80px">
 <span style="font-size:12px">幅</span><input id="sx" type="range" min="20" max="300" value="100" style="width:80px">
 <span style="font-size:12px">高さ</span><input id="sy" type="range" min="20" max="300" value="100" style="width:80px">
-<button id="rl">↺</button><button id="rr">↻</button></span><button id="bsh">形変更</button><button id="bmv">移動</button><button id="bsz">枠サイズ</button><button id="bsc">全体拡大</button><button id="bfd">入力欄にする</button><button id="ex">入力</button><button id="dl">削除</button></div>
+<button id="rl">↺</button><button id="rr">↻</button></span><button id="bsh">形変更</button><button id="bmv">移動</button><button id="bsz">枠サイズ</button><button id="bsc">全体拡大</button><button id="bac">基準:左</button><button id="bfd">入力欄にする</button><button id="ex">入力</button><button id="dl">削除</button></div>
 <div class="ctx" id="shp" style="display:none;background:var(--ac2);border-radius:14px;padding:6px 10px;margin-top:6px">
 <button class="cdot" style="background:#e11d48" data-c="#e11d48"></button><button class="cdot" style="background:#111" data-c="#111111"></button><button class="cdot" style="background:#2563eb" data-c="#2563eb"></button><button class="cdot" style="background:#16a34a" data-c="#16a34a"></button><button class="cdot" style="background:#f59e0b" data-c="#f59e0b"></button><button class="cdot" style="background:#fff" data-c="#ffffff"></button>
 <input id="shw" type="range" min="1" max="10" value="4" style="width:70px"><button class="chip" data-sd="0">実線</button><button class="chip" data-sd="1">点線</button>
@@ -130,7 +139,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="st">内側の加工</div><div class="chips"><button class="chip on" data-x="none">線のみ</button><button class="chip" data-x="hatch">斜線</button><button class="chip" data-x="grid">格子</button><button class="chip" data-x="mosaic">モザイク</button><button class="chip" data-x="fill">塗りつぶし</button></div>
 <div class="row"><button class="p" id="bxok">囲う</button><button class="p" id="bxok2">形変更</button><button id="bxx">キャンセル</button></div></div></div>
 <div id="pc"><div class="box"><div class="st">写真をトリミング(四隅をドラッグ)</div><canvas id="pcv"></canvas><div class="chips"><button class="chip on" data-r="0">自由</button><button class="chip" data-r="1">1:1</button><button class="chip" data-r="1.3333">4:3</button><button class="chip" data-r="0.75">3:4</button><button class="chip" data-r="1.7778">16:9</button></div><div class="row"><button class="p" id="pcok">トリミングして使う</button><button id="pcn">そのまま使う</button><button id="pcx">キャンセル</button></div></div></div>
-<div id="tl"><div class="box"><div class="st">テンプレートから追加</div><div id="tlc"></div><div class="row"><button id="tlx">閉じる</button></div></div></div>
+<div id="tl"><div class="box"><div class="st">テンプレートから追加</div><div id="tlc"></div><div class="row"><button class="p" id="tli">他の人のテンプレートを取り込む</button><button id="tlx">閉じる</button></div><input id="tlf" type="file" accept=".json,application/json" hidden></div></div>
 <div id="tf"><div class="box"><div class="st" id="tft"></div><div id="tfc"></div><div class="row"><button class="p" id="tfok">作成</button><button id="tfx">キャンセル</button></div></div></div>
 <div id="ts"><div class="box"><div class="st">テンプレートとして保存</div><div id="tsh" style="font-size:13px;color:var(--mut);padding:0 4px 8px;line-height:1.5"></div><input id="tsn" type="text"><div class="row"><button class="p" id="tsok">保存</button><button id="tsx">キャンセル</button></div></div></div>
 <div id="toast"></div>
@@ -182,9 +191,9 @@ function drawMarks(x,pg,cw,ch,extra){
     x.stroke();
   }
   const ppp=(A%180==0?cw:ch)/pg.W;
-  for(const it of pg.items){if(it===editing)continue;
+  for(const it of pg.items){if(it===editing)continue;if(it.ph&&x.canvas.id!="ec")continue;
     const bm=bmOf(it),s=sc(it,pg)*ppp,[u,v]=toDisp(it.a,it.b,A),w=bm.width*s*(it.sx||1),h=bm.height*s*(it.sy||1);
-    x.save();x.translate(u*cw,v*ch);x.rotate((it.rot+A)*PI/180);x.drawImage(bm,-w/2,-h/2,w,h);if(it.field=="input"&&x.canvas.id=="ec"){x.strokeStyle="#f59e0b";x.lineWidth=Math.max(1.5,cw/400);x.setLineDash([8,6]);x.strokeRect(-w/2,-h/2,w,h);x.setLineDash([])}
+    x.save();x.translate(u*cw,v*ch);x.rotate((it.rot+A)*PI/180);if(it.ph)x.globalAlpha=.55;x.drawImage(bm,-w/2,-h/2,w,h);x.globalAlpha=1;if(it.field=="input"&&x.canvas.id=="ec"){x.strokeStyle="#f59e0b";x.lineWidth=Math.max(1.5,cw/400);x.setLineDash([8,6]);x.strokeRect(-w/2,-h/2,w,h);x.setLineDash([]);if(it.no){const rr=Math.max(10,cw/42);x.fillStyle="#f59e0b";x.beginPath();x.arc(-w/2,-h/2,rr,0,7);x.fill();x.fillStyle="#fff";x.font="bold "+rr*1.3+"px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText(it.no,-w/2,-h/2)}}
     if(it===sel&&x.canvas.id=="ec"){x.lineWidth=Math.max(2,cw/250);x.strokeStyle=emode=="size"?"#16a34a":emode=="scale"?"#f59e0b":emode=="move"?"#e11d48":"#2563eb";x.setLineDash(emode?[]:[6,4]);x.strokeRect(-w/2,-h/2,w,h);if(emode=="size"||emode=="scale"){x.fillStyle=emode=="size"?"#16a34a":"#f59e0b";x.beginPath();x.arc(w/2,h/2,Math.max(10,cw/30),0,7);x.fill()}}
     x.restore();
   }
@@ -247,7 +256,7 @@ async function build(list){
       const P=s.p.map(([a,b])=>({x:a*W,y:H*(1-b)}));if(P.length==1)P.push({x:P[0].x+.1,y:P[0].y});
       for(let k=1;k<P.length;k++)cp.drawLine({start:P[k-1],end:P[k],thickness:s.w*W,color:cl,lineCap:LineCapStyle.Round});
     }
-    for(const it of pg.items){
+    for(const it of pg.items){if(it.ph)continue;
       const bm=bmOf(it),s=sc(it,pg),w=bm.width*s*(it.sx||1),h=bm.height*s*(it.sy||1),th=-it.rot*PI/180,cx=it.a*W,cy=H*(1-it.b);
       const im=it.k=="i"?(it.png?await out.embedPng(it.shape?await bytesOf(it.bm,"image/png"):it.jpg):await out.embedJpg(it.jpg)):await out.embedPng(await bytesOf(bm,"image/png"));
       cp.drawImage(im,{x:cx-(w/2*Math.cos(th)-h/2*Math.sin(th)),y:cy-(w/2*Math.sin(th)+h/2*Math.cos(th)),width:w,height:h,rotate:degrees(th*180/PI)});
@@ -298,7 +307,7 @@ function setMode(m){sbAll();mode=m;emode=null;selR=null;sdrag=null;document.quer
 document.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{setMode(b.dataset.m);if(b.dataset.m=="move")toast("画面をなぞって範囲を選びます");if(b.dataset.m=="text"){if(sel&&sel.k=="t")startEdit(sel);else newText(toUnrot(.5,.35,ang(cur)))}});
 function syncPanel(){sbAll();
   $("op").style.display=sel?"flex":"none";$("pr").style.display=sel&&sel.shape?"none":"";$("shp").style.display=sel&&sel.shape?"flex":"none";if(!sel)return;
-  const t=sel.k=="t";$("ex").style.display=$("bmv").style.display=$("bsz").style.display=$("bsc").style.display=$("bfd").style.display=t?"":"none";$("bfd").textContent=sel.field=="input"?"固定に戻す":"入力欄にする";$("bfd").classList.toggle("act",sel.field=="input");$("bsc").classList.toggle("act",emode=="scale");$("bsh").style.display=sel.shape?"":"none";$("bsh").classList.toggle("act",emode=="shape");$("opg").style.display=sel.shape?"none":"contents";if(sel.shape)shpUI();$("bmv").classList.toggle("act",emode=="move");$("bsz").classList.toggle("act",emode=="size");
+  const t=sel.k=="t";$("ex").style.display=$("bmv").style.display=$("bsz").style.display=$("bsc").style.display=$("bfd").style.display=$("bac").style.display=t?"":"none";$("bac").textContent="基準:"+({l:"左",c:"中央",r:"右"}[sel.anc||"l"]);$("bfd").textContent=sel.field=="input"?"固定に戻す":"入力欄にする";$("bfd").classList.toggle("act",sel.field=="input");$("bsc").classList.toggle("act",emode=="scale");$("bsh").style.display=sel.shape?"":"none";$("bsh").classList.toggle("act",emode=="shape");$("opg").style.display=sel.shape?"none":"contents";if(sel.shape)shpUI();$("bmv").classList.toggle("act",emode=="move");$("bsz").classList.toggle("act",emode=="size");
   $("sz").value=sel.k=="i"?sel.w*100:sel.s*700-4;$("sx").value=(sel.sx||1)*100;$("sy").value=(sel.sy||1)*100;
 }
 async function openEd(pg){sbAll();cur=pg;emode=null;ruler={on:false,a:.5,b:.4,deg:0};rotInfo=null;rulerUI();$("pgl").textContent=(pages.indexOf(pg)+1)+" / "+pages.length;sel=null;$("ed").style.display="flex";setMode("pen");await redrawBase()}
@@ -308,7 +317,7 @@ async function redrawBase(){selR=null;if(!cur._base)cur._base=snapOf(cur);
   await renderPage(cur,baseCv,Math.min(baseW*2.5,2400),false);
   ec.width=baseCv.width;ec.height=baseCv.height;ec.style.width=baseW+"px";paint();
 }
-function paint(){if(!cur)return;const x=ec.getContext("2d");x.drawImage(baseCv,0,0);drawMarks(x,cur,ec.width,ec.height,st);if(ruler.on)drawRuler(x);drawRot(x);drawHandles(x);if(selR&&mode=="move")drawSel(x);$("sb").style.display=(selR&&mode=="move")?"flex":"none";if(editing)placeEdit();if(!P.size&&!editing){clearTimeout(cT);cT=setTimeout(commit,450)}}
+function paint(){if(!cur)return;const x=ec.getContext("2d");x.drawImage(baseCv,0,0);drawMarks(x,cur,ec.width,ec.height,st);if(ruler.on)drawRuler(x);drawRot(x);drawHandles(x);if(selR&&mode=="move")drawSel(x);$("sb").style.display=(selR&&mode=="move")?"flex":"none";if(editing)placeEdit();fgUI();if(!P.size&&!editing){clearTimeout(cT);cT=setTimeout(commit,450)}}
 function pt(e){const r=ec.getBoundingClientRect();return toUnrot((e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height,ang(cur))}
 function hit(e){
   const r=ec.getBoundingClientRect(),A=ang(cur),px=e.clientX-r.left,py=e.clientY-r.top,ppp=(A%180==0?r.width:r.height)/cur.W;
@@ -346,7 +355,7 @@ ec.onpointerdown=e=>{
     else if(h){
       if(h!==sel){sel=h;emode=null;setHint()}
       if(h.k=="t"){
-        tapEdit=(h===was);lpPt=dp;clearTimeout(lpT);
+        tapEdit=(h===was||(h.ph&&h.field=="input"));lpPt=dp;clearTimeout(lpT);
         lpT=setTimeout(()=>{lpT=null;tapEdit=false;itemMenu(h)},400);
         if(emode=="move")drag=[q[0]-h.a,q[1]-h.b];
       }else drag=[q[0]-h.a,q[1]-h.b];
@@ -396,11 +405,11 @@ $("ex").onclick=()=>{if(sel&&sel.k=="t")startEdit(sel)};
 $("dl").onclick=()=>{if(sel){cur.items=cur.items.filter(i=>i!==sel);sel=null;syncPanel();paint()}};
 $("un").onclick=undoLast;
 $("cl").onclick=()=>{if(cur.strokes.length)sheet("ペンの書き込みを全て消しますか?",[["消す",()=>{cur.strokes=[];paint()}]])};
-function zoomAt(w,fx,fy,mx,my){ec.style.width=clamp(w,baseW,baseW*5)+"px";const r=ec.getBoundingClientRect();wrap.scrollLeft+=r.left+fx*r.width-mx;wrap.scrollTop+=r.top+fy*r.height-my}
+function zoomAt(w,fx,fy,mx,my){ec.style.width=clamp(w,baseW,baseW*5)+"px";const r=ec.getBoundingClientRect();wrap.scrollLeft+=r.left+fx*r.width-mx;wrap.scrollTop+=r.top+fy*r.height-my;zoomNote()}
 const zoom=f=>{const r=ec.getBoundingClientRect(),q=wrap.getBoundingClientRect(),mx=q.left+q.width/2,my=q.top+q.height/2;zoomAt(r.width*f,(mx-r.left)/r.width,(my-r.top)/r.height,mx,my)};
 $("zi").onclick=()=>zoom(1.3);$("zo").onclick=()=>zoom(1/1.3);
 $("rt").onclick=async()=>{cur.r=(cur.r+90)%360;await redrawBase()};
-$("ok").onclick=()=>{cur.items=cur.items.filter(i=>i.k!="t"||i.str.trim());$("ed").style.display="none";cur=null;sel=null;draw()};
+$("ok").onclick=()=>{fillStop();cur.items=cur.items.filter(i=>i.k!="t"||i.str.trim());$("ed").style.display="none";cur=null;sel=null;draw()};
 
 function sheet(t,items){const s=$("sh");s.innerHTML="";const h=document.createElement("div");h.className="st";h.textContent=t;s.appendChild(h);
   [...items,["キャンセル",()=>{}]].forEach(([n,fn])=>{const b=document.createElement("button");b.className="sr";b.textContent=n;b.onclick=()=>{$("ov").style.display="none";fn()};s.appendChild(b)});$("ov").style.display="flex"}
@@ -471,18 +480,14 @@ function placeEdit(){
   S.left=(ec.offsetLeft+u*r.width)+"px";S.top=(ec.offsetTop+v*r.height)+"px";const fs=60*k,bs=Math.max(16,fs),m=bs/fs;tin._e=1/m;S.fontSize=bs+"px";S.color=it.c;S.padding=6*k*m+"px "+8*k*m+"px";
   S.transform=`translate(-50%,-50%) rotate(${it.rot+A}deg) scale(${(it.sx||1)/m},${(it.sy||1)/m})`;
   tin._w=tin.offsetWidth;tin._h=tin.offsetHeight}
-function startEdit(it,all){
+function startEdit(it,all){if(fillInst&&it.inst===fillInst){const k=fillL.findIndex(x=>x.it===it);if(k>=0){fpGo(k,true);return}}
   if(!editing)edPrevW=ec.getBoundingClientRect().width;$("ed").classList.add("kb");editing=it;sel=it;emode=null;setHint();syncPanel();tin.style.display="block";tin.textContent=it.str;paint();tin.focus();
-  const r=document.createRange();r.selectNodeContents(tin);if(!all)r.collapse(false);const g2=getSelection();g2.removeAllRanges();g2.addRange(r);
+  const r=document.createRange();r.selectNodeContents(tin);if(!all&&!it.ph)r.collapse(false);const g2=getSelection();g2.removeAllRanges();g2.addRange(r);
   setTimeout(focusEdit,350);setTimeout(focusEdit,800)}
 function endEdit(){
   if(!editing)return;const it=editing;editing=null;tin.style.display="none";tin.blur();$("ed").classList.remove("kb");if(edPrevW)ec.style.width=Math.max(baseW,edPrevW)+"px";if(edPrevW<=baseW+1){wrap.scrollLeft=0;wrap.scrollTop=0}
-  if(!it.str.trim()){cur.items=cur.items.filter(i=>i!==it);sel=null;syncPanel()}paint()}
-tin.oninput=()=>{
-  if(!editing)return;editing.str=tin.innerText.replace(/\n$/,"");
-  const w=tin.offsetWidth,h=tin.offsetHeight,r=ec.getBoundingClientRect(),A=ang(cur),f=(editing.rot+A)*PI/180,dw=(w-tin._w)/2*(editing.sx||1)*tin._e,dh=(h-tin._h)/2*(editing.sy||1)*tin._e;
-  const dx=dw*Math.cos(f)-dh*Math.sin(f),dy=dw*Math.sin(f)+dh*Math.cos(f),[u,v]=toDisp(editing.a,editing.b,A);
-  [editing.a,editing.b]=toUnrot(u+dx/r.width,v+dy/r.height,A);placeEdit()};
+  if(!it.str.trim()){if(it.field=="input"&&it.lbl){it.str=it.lbl;it.ph=true}else{cur.items=cur.items.filter(i=>i!==it);sel=null;syncPanel()}}paint()}
+tin.oninput=()=>{if(!editing)return;const v=tin.innerText.replace(/\n$/,"");editing.ph=false;setItemStr(editing,cur,v);placeEdit()};
 document.addEventListener("pointerdown",e=>{if(editing&&!e.target.closest("#tin,.ctx,#op"))endEdit()},true);
 
 let emode=null,lpT=null,lpPt=null,dp=null,rz=null,createTap=null;
@@ -732,7 +737,7 @@ function focusEdit(){
   const w=baseW*2.4;if(ec.getBoundingClientRect().width<w-1)ec.style.width=w+"px";
   placeEdit();
   const r=ec.getBoundingClientRect(),A=ang(cur),[u,v]=toDisp(editing.a,editing.b,A),q=wrap.getBoundingClientRect();
-  wrap.scrollLeft+=r.left+u*r.width-(q.left+q.width/2);wrap.scrollTop+=r.top+v*r.height-(q.top+q.height/2)}
+  wrap.scrollLeft+=r.left+u*r.width-(q.left+q.width/2);wrap.scrollTop+=r.top+v*r.height-(q.top+q.height/2);zoomNote()}
 
 function addStroke(st){cur.strokes.push(st);(cur._log=cur._log||[]).push({k:"s",o:st})}
 function addItem(it){cur.items.push(it);(cur._log=cur._log||[]).push({k:"i",o:it})}
@@ -787,7 +792,7 @@ $("tsok").onclick=async()=>{
   try{
     say("テンプレートを作成中…");
     const bytes=await build(list.map(p=>({...p,items:p.items.filter(i=>i.k!="t")}))),fields=[];
-    list.forEach((p,pi)=>p.items.forEach(it=>{if(it.k=="t")fields.push({page:pi,a:it.a,b:it.b,s:it.s,c:it.c,sx:it.sx||1,sy:it.sy||1,rot:it.rot||0,type:it.field=="input"?"input":"fixed",str:it.str})}));
+    list.forEach((p,pi)=>p.items.forEach(it=>{if(it.k=="t")fields.push({page:pi,a:it.a,b:it.b,s:it.s,c:it.c,sx:it.sx||1,sy:it.sy||1,rot:it.rot||0,anc:it.anc,type:it.field=="input"?"input":"fixed",str:it.str})}));
     await tdb("put",{id:String(Date.now()),name,created:Date.now(),pdf:bytes,fields,pages:list.length});
     say("テンプレート「"+name+"」を保存しました。「追加」→「テンプレートから」で使えます")
   }catch(e){say("テンプレートを保存できませんでした")}};
@@ -798,9 +803,11 @@ async function tplList(){
   L.forEach(r=>{
     const row=document.createElement("div"),tn=document.createElement("div"),sm=document.createElement("small"),b1=document.createElement("button"),b2=document.createElement("button");
     row.className="tr";tn.className="tn";tn.textContent=r.name;sm.textContent="入力欄 "+r.fields.filter(f=>f.type=="input").length+"・固定 "+r.fields.filter(f=>f.type!="input").length+"・"+(r.pages||1)+"ページ";tn.appendChild(sm);
-    b1.className="p";b1.textContent="使う";b1.onclick=()=>tplForm(r);b2.textContent="削除";
+    const b3=document.createElement("button");b3.textContent="共有";b3.onclick=()=>tplShare(r);b1.className="p";b1.textContent="使う";b1.onclick=()=>{$("tl").style.display="none";tplMake(r)};b2.textContent="削除";
     b2.onclick=()=>sheet("「"+r.name+"」を削除しますか?",[["削除する",async()=>{await tdb("del",r.id);tplList()}]]);
-    row.append(tn,b1,b2);c.appendChild(row)});
+    const cv=document.createElement("canvas");cv.style.cssText="width:44px;height:auto;min-height:56px;border:1px solid var(--bd);border-radius:4px;background:#fff";
+    row.append(cv,tn,b1,b3,b2);c.appendChild(row);
+    (async()=>{try{const d=await pdfjsLib.getDocument({data:new Uint8Array(r.pdf)}).promise,p=await d.getPage(1),vp=p.getViewport({scale:100/p.getViewport({scale:1}).width});cv.width=vp.width;cv.height=vp.height;await p.render({canvasContext:cv.getContext("2d"),viewport:vp}).promise}catch(_){}})()});
   $("tl").style.display="flex"}
 $("tlx").onclick=()=>{$("tl").style.display="none"};
 function tplForm(r){
@@ -811,12 +818,88 @@ function tplForm(r){
   $("tfok").onclick=async()=>{const vals={};ins.forEach(([k,i])=>vals[k]=i.value);$("tf").style.display="none";try{await tplMake(r,vals)}catch(e){say("テンプレートを開けませんでした")}};
   $("tf").style.display="flex"}
 $("tfx").onclick=()=>{$("tf").style.display="none"};
-async function tplMake(r,vals){
-  snap();say("作成中…");
-  const bytes=new Uint8Array(r.pdf),doc=await pdfjsLib.getDocument({data:bytes.slice()}).promise,fi=files.push({name:r.name,bytes,doc})-1,pgs=[];
+async function tplMake(r){
+  snap();say("開いています…");
+  const bytes=new Uint8Array(r.pdf),doc=await pdfjsLib.getDocument({data:bytes.slice()}).promise,fi=files.push({name:r.name,bytes,doc})-1,pgs=[],inst="t"+Date.now();
   for(let i=0;i<doc.numPages;i++){const p=await doc.getPage(i+1),v=p.view;pgs.push({f:fi,i,r:0,base:p.rotate%360,W:v[2]-v[0],H:v[3]-v[1],sel:false,strokes:[],items:[]})}
-  r.fields.forEach((f,k)=>{
-    const str=f.type=="input"?(vals[k]||""):f.str;if(!str||!str.trim()||!pgs[f.page])return;
-    pgs[f.page].items.push({k:"t",a:f.a,b:f.b,str,s:f.s,c:f.c,rot:f.rot,sx:f.sx,sy:f.sy})});
-  pages.push(...pgs);draw();say("「"+r.name+"」を追加しました。文字は編集画面で直せます")}
+  let n=0,first=null;
+  r.fields.forEach(f=>{
+    const pg=pgs[f.page];if(!pg)return;
+    const it={k:"t",a:f.a,b:f.b,str:f.str,s:f.s,c:f.c,rot:f.rot,sx:f.sx,sy:f.sy,anc:f.anc};
+    if(f.type=="input"){it.field="input";it.no=++n;it.ph=true;it.lbl=f.str;it.inst=inst;if(!first)first=pg}
+    pg.items.push(it)});
+  pages.push(...pgs);say("");draw();
+  if(first){await openEd(first);fillStart(inst);toast("上下にスライドして、入力欄①②…を順に入力できます",4500)}
+  else say("「"+r.name+"」を追加しました")}
+// ---- 入力欄ガイド(①②…の順に入力)
+const curInst=()=>(sel&&sel.inst)||((cur&&cur.items.find(i=>i.inst))||{}).inst;
+function fillList(inst){const L=[];if(!inst)return L;pages.forEach(pg=>pg.items.forEach(it=>{if(it.inst===inst&&it.field=="input")L.push({pg,it})}));return L.sort((a,b)=>a.it.no-b.it.no)}
+function fgUI(){
+  const g=$("fg");if(!cur){g.style.display="none";return}
+  const L=fillList(curInst());if(!L.length){g.style.display="none";return}
+  const rest=L.filter(x=>x.it.ph).length,i=L.findIndex(x=>x.it===sel);
+  g.style.display="flex";$("fgl").textContent=(i>=0?"入力欄 "+L[i].it.no+" / "+L.length:"入力欄 "+L.length+"か所")+(rest?"(未入力 "+rest+")":"(すべて入力済み)")}
+async function fillGo(d){
+  const L=fillList(curInst());if(!L.length)return;
+  let i=L.findIndex(x=>x.it===sel);if(i<0)i=d>0?-1:L.length;i=Math.max(0,Math.min(L.length-1,i+d));const t=L[i];
+  if(t.pg===cur){endEdit();sel=t.it;emode=null;startEdit(t.it,true);return}
+  endEdit();await openEd(t.pg);sel=t.it;syncPanel();paint();toast("入力欄をタップして入力してください")}
+$("fgn").onclick=()=>fillGo(1);$("fgp").onclick=()=>fillGo(-1);
+
+// ---- 文字の増え方の基準(左・中央・右)を固定したまま文字を変える
+function setItemStr(it,pg,str){
+  const W=pg.W,H=pg.H,s0=sc(it,pg),b0=bmOf(it),w0=b0.width*s0*(it.sx||1),h0=b0.height*s0*(it.sy||1),th=(it.rot||0)*PI/180,c=Math.cos(th),n=Math.sin(th),fx={l:-.5,c:0,r:.5}[it.anc||"l"];
+  const P=[it.a*W+fx*w0*c+h0/2*n,it.b*H+fx*w0*n-h0/2*c];
+  it.str=str;const b1=bmOf(it),s1=sc(it,pg),w1=b1.width*s1*(it.sx||1),h1=b1.height*s1*(it.sy||1);
+  it.a=(P[0]-fx*w1*c-h1/2*n)/W;it.b=(P[1]-fx*w1*n+h1/2*c)/H}
+$("bac").onclick=()=>{if(sel&&sel.k=="t"){sel.anc={l:"c",c:"r",r:"l"}[sel.anc||"l"];syncPanel();toast("文字が増える時の基準:"+{l:"左端",c:"中央",r:"右端"}[sel.anc])}};
+// ---- 拡大時の注意書き
+let zn=0;
+function zoomNote(){if(ec.getBoundingClientRect().width>baseW*1.05&&Date.now()-zn>20000){zn=Date.now();toast("拡大中:表示位置は、二本指でスライドして動かせます",4500)}}
+function centerOn(it,z){
+  ec.style.width=Math.max(baseW,baseW*z)+"px";
+  const r=ec.getBoundingClientRect(),A=ang(cur),[u,v]=toDisp(it.a,it.b,A),q=wrap.getBoundingClientRect();
+  wrap.scrollLeft+=r.left+u*r.width-(q.left+q.width/2);wrap.scrollTop+=r.top+v*r.height-(q.top+q.height/2);zoomNote()}
+// ---- 入力パネル(上下にスライドして1項目ずつ入力。背後にテンプレPDFを表示)
+let fillInst=null,fillL=[],fpI=-1,fpLock=false,fpT=null;
+function fillStart(inst){
+  fillInst=inst;fillL=fillList(inst);const box=$("fps");box.innerHTML="";
+  fillL.forEach((x,i)=>{
+    const d=document.createElement("div"),b=document.createElement("b"),inp=document.createElement("input");
+    d.className="fs";b.textContent="入力欄 "+x.it.no+" / "+fillL.length+"  "+x.it.lbl;inp.type="text";inp.placeholder=x.it.lbl+"を入力";inp.value=x.it.ph?"":x.it.str;
+    inp.oninput=()=>{const v=inp.value;x.it.ph=!v.trim();setItemStr(x.it,x.pg,v.trim()?v:x.it.lbl);if(x.pg===cur)paint()};
+    inp.onfocus=()=>{if(!fpLock&&fpI!==i)fpGo(i,false)};
+    d.append(b,inp);box.appendChild(d)});
+  $("ed").classList.add("fill");$("fp").style.display="flex";fpI=-1;fpGo(0,false)}
+async function fpGo(i,focus){
+  i=Math.max(0,Math.min(fillL.length-1,i));const t=fillL[i];if(!t)return;
+  if(i===fpI&&!focus)return;
+  fpI=i;fpLock=true;$("fps").scrollTo({top:i*86,behavior:"smooth"});$("fpc").textContent=(i+1)+"/"+fillL.length;
+  if(focus){const inp=$("fps").children[i].querySelector("input");inp.focus()}
+  if(t.pg!==cur){endEdit();await openEd(t.pg)}
+  sel=t.it;emode=null;syncPanel();centerOn(t.it,2.2);paint();
+  setTimeout(()=>{fpLock=false},450)}
+function fillStop(){
+  if(!fillInst)return;fillInst=null;fillL=[];$("ed").classList.remove("fill");$("fp").style.display="none";
+  if(cur){ec.style.width=baseW+"px";wrap.scrollLeft=0;wrap.scrollTop=0;sel=null;syncPanel();paint()}}
+$("fps").addEventListener("scroll",()=>{clearTimeout(fpT);fpT=setTimeout(()=>{if(fpLock)return;const i=Math.round($("fps").scrollTop/86);if(i!==fpI)fpGo(i,false)},120)},{passive:true});
+$("fpx").onclick=fillStop;$("fpu").onclick=()=>fpGo(fpI-1,true);$("fpd").onclick=()=>fpGo(fpI+1,true);
+// ---- テンプレートを他の人に渡す(ファイルで書き出し・取り込み)
+function b64(u){let s="";for(let i=0;i<u.length;i+=32768)s+=String.fromCharCode.apply(null,u.subarray(i,i+32768));return btoa(s)}
+async function tplShare(r){
+  try{
+    say("共有ファイルを作成中…");$("tl").style.display="none";
+    const o={app:"pdfmatome",v:1,name:r.name,pages:r.pages||1,fields:r.fields,pdf:b64(new Uint8Array(r.pdf))};
+    await deliverFiles([new File([JSON.stringify(o)],r.name+".テンプレート.json",{type:"application/json"})],r.name)
+  }catch(e){say("共有ファイルを作れませんでした")}}
+$("tli").onclick=()=>$("tlf").click();
+$("tlf").onchange=async e=>{
+  const f=e.target.files[0];e.target.value="";if(!f)return;
+  try{
+    const o=JSON.parse(await f.text());if(o.app!=="pdfmatome"||typeof o.pdf!=="string"||!Array.isArray(o.fields))throw 0;
+    const bin=atob(o.pdf),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+    const fields=o.fields.slice(0,200).map(x=>({page:+x.page||0,a:+x.a,b:+x.b,s:+x.s||.03,c:/^#[0-9a-f]{6}$/i.test(x.c)?x.c:"#111111",sx:+x.sx||1,sy:+x.sy||1,rot:+x.rot||0,anc:["l","c","r"].includes(x.anc)?x.anc:"l",type:x.type=="input"?"input":"fixed",str:String(x.str||"").slice(0,200)}));
+    await tdb("put",{id:String(Date.now()),name:String(o.name||"取り込み").slice(0,60),created:Date.now(),pdf:u,fields,pages:+o.pages||1});
+    toast("取り込みました");tplList()
+  }catch(err){toast("このファイルは取り込めません")}};
 </script></body></html>
