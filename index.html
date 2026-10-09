@@ -349,7 +349,7 @@ async function runExport(list,name,fmt){
     await deliverFiles(fs,name)
   }catch(err){say("作成に失敗しました。暗号化PDFは非対応です")}}
 // ---- エディタ ----
-function setMode(m){sbAll();mode=m;if(m!="move"&&qp&&qp.on)qOff();if($("dab"))$("dab").style.display=m=="dim"?"flex":"none";emode=null;setHint();selR=null;sdrag=null;document.querySelectorAll("[data-m]").forEach(b=>b.classList.toggle("on",b.dataset.m==m));if(m=="pen"||m=="line"){sel=null;syncPanel()}paint()}
+function setMode(m){sbAll();mode=m;if(m!="text"&&qp&&qp.on)qOff();if($("dab"))$("dab").style.display=m=="dim"?"flex":"none";emode=null;setHint();selR=null;sdrag=null;document.querySelectorAll("[data-m]").forEach(b=>b.classList.toggle("on",b.dataset.m==m));if(m=="pen"||m=="line"){sel=null;syncPanel()}paint()}
 document.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{setMode(b.dataset.m);if(b.dataset.m=="move")toast("画面をなぞって範囲を選びます");if(b.dataset.m=="dim")toast("線をなぞると寸法線になります(水平・垂直に自動で合います)");if(b.dataset.m=="text"){if(sel&&sel.k=="t")startEdit(sel);else newText(toUnrot(.5,.35,ang(cur)))}});
 let szOpen=false;
 let sArm=null,stArr=null;
@@ -363,7 +363,7 @@ const pgList=()=>tplEdit?tplEdit.pgs:pages;
 function pgLabel(){const L=pgList();$("pgl").textContent=(L.indexOf(cur)+1)+" / "+L.length}
 function goPage(d){if(!cur)return;const L=pgList(),n=L[L.indexOf(cur)+d];if(!n)return toast(d>0?"最後のページです":"最初のページです",1200);endEdit();commit();openEd(n)}
 $("pgP").onclick=()=>goPage(-1);$("pgN").onclick=()=>goPage(1);
-async function openEd(pg){sbAll();cur=pg;emode=null;ruler={on:false,a:.5,b:.4,deg:0};rotInfo=null;rulerUI();pgLabel();sel=null;$("ed").style.display="flex";setMode(qp&&qp.on&&tplEdit?"move":"pen");await redrawBase();qSync();if(qp&&qp.on)qOpts()}
+async function openEd(pg){sbAll();cur=pg;emode=null;ruler={on:false,a:.5,b:.4,deg:0};rotInfo=null;rulerUI();pgLabel();sel=null;$("ed").style.display="flex";setMode(qp&&qp.on&&tplEdit?"text":"pen");await redrawBase();qSync();if(qp&&qp.on)qOpts()}
 const baseCv=document.createElement("canvas");
 async function redrawBase(){selR=null;if(!cur._base)cur._base=snapOf(cur);
   {const A0=ang(cur),pw=A0%180==0?cur.W:cur.H,ph=A0%180==0?cur.H:cur.W;baseW=Math.max(120,Math.min(wrap.clientWidth-4,(wrap.clientHeight-4)*pw/ph,900))}
@@ -391,7 +391,7 @@ const P=new Map();
 function G(){const [a,b]=[...P.values()];return{d:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)||1,an:Math.atan2(b.clientY-a.clientY,b.clientX-a.clientX),mx:(a.clientX+b.clientX)/2,my:(a.clientY+b.clientY)/2}}
 ec.onpointerdown=e=>{
   commit();ec.setPointerCapture(e.pointerId);P.set(e.pointerId,e);
-  if(P.size==2){dimSt=null;stArr=null;pendDesel=false;sdrag=null;clearTimeout(lpT);lpT=null;rz=null;createTap=null;st=null;drag=null;let onItem=false;if(!(ruler.on&&mode=="pen")){const h=(mode=='dim')?null:(hit(e)||hit([...P.values()][0]));if(h&&h===sel&&(h.k=='t'||emode=='move'))onItem=true}const n=G(),r0=ec.getBoundingClientRect();g={fx:(n.mx-r0.left)/r0.width,fy:(n.my-r0.top)/r0.height,d0:n.d,a0:n.an,pm:n,zw:ec.getBoundingClientRect().width,sz:sel?(sel.k=="i"?sel.w:sel.s):0,rot:sel?sel.rot:0};g.item=onItem;if(ruler.on&&mode=="pen"&&(rdrag||isBody(e))){const m=pt({clientX:n.mx,clientY:n.my});g.ruler=true;g.deg0=ruler.deg;g.off=[ruler.a-m[0],ruler.b-m[1]];rdrag=null}paint();return}
+  if(P.size==2){dimSt=null;stArr=null;pendDesel=false;sdrag=null;clearTimeout(lpT);lpT=null;rz=null;createTap=null;st=null;drag=null;let onItem=false;if(!(ruler.on&&mode=="pen")){const h=(mode=='dim')?null:(hit(e)||hit([...P.values()][0]));if(h&&h===sel&&(h.k=='t'||emode=='move'))onItem=true}if(emode=='move'&&sel&&sel.k=='t')onItem=true;const n=G(),r0=ec.getBoundingClientRect();g={fx:(n.mx-r0.left)/r0.width,fy:(n.my-r0.top)/r0.height,d0:n.d,a0:n.an,pm:n,zw:ec.getBoundingClientRect().width,sz:sel?(sel.k=="i"?sel.w:sel.s):0,rot:sel?sel.rot:0};g.item=onItem;if(ruler.on&&mode=="pen"&&(rdrag||isBody(e))){const m=pt({clientX:n.mx,clientY:n.my});g.ruler=true;g.deg0=ruler.deg;g.off=[ruler.a-m[0],ruler.b-m[1]];rdrag=null}paint();return}
   if(P.size>2)return;
   const q=pt(e);
   if(qp&&qp.on&&tplEdit&&!sel&&!hit(e)){qPlace(q);return}
@@ -409,12 +409,11 @@ ec.onpointerdown=e=>{
     if(emode=="shape"&&sel&&sel.shape&&(shI=shapeHit(e))>=0){shLast=shI;shOff=[q[0]-(sel.a+sel.shape.rel[shI][0]),q[1]-(sel.b+sel.shape.rel[shI][1])]}
     else if(emode=="shape"&&sel&&sel.shape&&addVertexAt(e,q)){}
     else if((emode=="size"||emode=="scale")&&sel&&sel.k=="t"&&hitHandle(e,sel)){rz=sel;if(emode=="scale"){const L=loc(e,sel);rz0={s:sel.s,d:Math.max(1,Math.hypot(L.lx,L.ly))}}}
-    else if(emode=="move"&&sel&&sel.k=="t"&&(!h||h===sel)){drag=[q[0]-sel.a,q[1]-sel.b];tapEdit=(h===sel)}
+    else if(emode=="move"&&sel&&sel.k=="t"&&(!h||h===sel)){drag=[q[0]-sel.a,q[1]-sel.b];tapEdit=(h===sel);if(h===sel){clearTimeout(lpT);lpT=setTimeout(()=>{lpT=null;tapEdit=false;drag=null;itemMenu(sel)},500)}}
     else if(h){
       if(h!==sel){sel=h;emode=null;setHint()}
       if(h.k=="t"){
         tapEdit=(h===was||(h.ph&&h.field=="input"));lpPt=dp;clearTimeout(lpT);
-        lpT=setTimeout(()=>{lpT=null;tapEdit=false;itemMenu(h)},400);
         if(emode=="move")drag=[q[0]-h.a,q[1]-h.b];
       }else if(h.shape||emode=="move")drag=[q[0]-h.a,q[1]-h.b];
     }else if(mode=="move"){if(sel)pendDesel=true;selStart(e)}
@@ -432,7 +431,7 @@ ec.onpointermove=e=>{
     if(g.item&&sel&&!sel.shape){
       const r=n.d/g.d0;
       if(sel.k=="i")sel.w=clamp((g.sz||.3)*(isFinite(r)?r:1),.03,1.5);else sel.s=clamp(g.sz*r,.007,.15);
-      if(sel.k!='i'){sel.rot=snapRot(g.rot+(n.an-g.a0)*180/PI);rotShow(sel.a,sel.b,sel.rot)}paint();
+      paint();
     }else{zoomAt(g.zw*n.d/g.d0,g.fx,g.fy,n.mx,n.my)}
     return;
   }
@@ -1281,7 +1280,7 @@ function qPlace(q){
   if(matchMedia("(pointer:fine)").matches)inp.focus()}
 $("teQ").onclick=()=>{
   if(qp.on){qOff();return}
-  setMode("move");sel=null;emode=null;setHint();syncPanel();qp.on=true;qOpts();qSync();paint();
+  setMode("text");sel=null;emode=null;setHint();syncPanel();qp.on=true;qOpts();qSync();paint();
   toast("連続設置:名称を入れてページをクリック。「直前と同じグループ」にすると別ページとも同時入力になります。名称欄でEnterを押すと下に続けて置けます",6000);
   if(matchMedia("(pointer:fine)").matches)$("tqn").focus()};
 $("tqx").onclick=qOff;
