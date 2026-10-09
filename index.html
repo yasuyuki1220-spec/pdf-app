@@ -244,9 +244,24 @@ function draw(flash){
 }
 function mv(k,d){const j=k+d;if(j<0||j>=pages.length)return;snap();[pages[k],pages[j]]=[pages[j],pages[k]];say(`${k+1}枚目を${j+1}枚目に移動しました`);draw(j)}
 
-function loadImg(f){return new Promise((ok,ng)=>{const im=new Image(),u=URL.createObjectURL(f);im.onload=()=>{URL.revokeObjectURL(u);ok(im)};im.onerror=ng;im.src=u})}
+const isTif=f=>/\.tiff?$/i.test(f.name||"")||/tiff/i.test(f.type||"");
+function loadScript(u){return new Promise((ok,ng)=>{const s=document.createElement("script");s.src=u;s.onload=ok;s.onerror=ng;document.head.appendChild(s)})}
+async function tifPages(f){
+  if(!window.UTIF){try{await loadScript("https://cdn.jsdelivr.net/npm/utif@3.1.0/UTIF.js")}catch(e){await loadScript("https://unpkg.com/utif@3.1.0/UTIF.js")}}
+  const buf=await f.arrayBuffer(),ifds=UTIF.decode(buf),out=[];
+  for(const ifd of ifds){
+    if(ifd.t254&&(ifd.t254[0]&1))continue;
+    try{UTIF.decodeImage(buf,ifd);if(!ifd.width)continue;
+      const rgba=UTIF.toRGBA8(ifd),c=document.createElement("canvas");c.width=ifd.width;c.height=ifd.height;
+      c.getContext("2d").putImageData(new ImageData(new Uint8ClampedArray(rgba.buffer,rgba.byteOffset,rgba.byteLength),ifd.width,ifd.height),0,0);out.push(c)}catch(e){}}
+  if(!out.length)throw new Error("tiff");return out}
+function shrinkC(c,max){const r=Math.min(1,max/Math.max(c.width,c.height));if(r>=1)return c;const n=document.createElement("canvas");n.width=Math.round(c.width*r);n.height=Math.round(c.height*r);const x=n.getContext("2d");x.imageSmoothingQuality="high";x.drawImage(c,0,0,n.width,n.height);return n}
+function loadImg(f){if(isTif(f))return tifPages(f).then(p=>p[0]);return new Promise((ok,ng)=>{const im=new Image(),u=URL.createObjectURL(f);im.onload=()=>{URL.revokeObjectURL(u);ok(im)};im.onerror=ng;im.src=u})}
 async function imgCanvas(f,max){const im=await loadImg(f),r=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*r);c.height=Math.round(im.height*r);c.getContext("2d").drawImage(im,0,0,c.width,c.height);return c}
 async function imgToPdf(f){
+  if(isTif(f)){const P=await tifPages(f),d=await PDFLib.PDFDocument.create();
+    for(let c of P){c=shrinkC(c,2400);const im=await d.embedJpg(await bytesOf(c)),p=d.addPage([595,595*c.height/c.width]);p.drawImage(im,{x:0,y:0,width:p.getWidth(),height:p.getHeight()})}
+    return d.save()}
   let c=await imgCanvas(f,2000);c=await cropPhoto(c);if(!c)return null;const d=await PDFLib.PDFDocument.create(),im=await d.embedJpg(await bytesOf(c));
   const p=d.addPage([595,595*c.height/c.width]);p.drawImage(im,{x:0,y:0,width:p.getWidth(),height:p.getHeight()});return d.save();
 }
@@ -526,7 +541,7 @@ function placeEdit(){
   S.left=(ec.offsetLeft+u*r.width)+"px";S.top=(ec.offsetTop+v*r.height)+"px";const fs=60*k,bs=Math.max(16,fs),m=bs/fs;tin._e=1/m;S.fontSize=bs+"px";S.color=it.c;S.padding=6*k*m+"px "+8*k*m+"px";
   S.transform=`translate(-50%,-50%) rotate(${it.rot+A}deg) scale(${(it.sx||1)/m},${(it.sy||1)/m})`;
   tin._w=tin.offsetWidth;tin._h=tin.offsetHeight}
-function startEdit(it,all){if(fillInst&&it.inst===fillInst){const k=fillL.findIndex(g=>g.list.some(x=>x.it===it));if(k>=0){fpGo(k,true);return}}
+function startEdit(it,all){if(it.str==="テキスト")all=true;if(fillInst&&it.inst===fillInst){const k=fillL.findIndex(g=>g.list.some(x=>x.it===it));if(k>=0){fpGo(k,true);return}}
   if(!editing)edPrevW=ec.getBoundingClientRect().width;$("ed").classList.add("kb");editing=it;sel=it;emode=null;setHint();syncPanel();tin.style.display="block";tin.textContent=it.str;paint();tin.focus();
   const r=document.createRange();r.selectNodeContents(tin);if(!all&&!it.ph)r.collapse(false);const g2=getSelection();g2.removeAllRanges();g2.addRange(r);
   setTimeout(focusEdit,350);setTimeout(focusEdit,800)}
