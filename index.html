@@ -82,6 +82,7 @@ input[type=range]{accent-color:var(--ac)}
 #te{flex-wrap:wrap}#te .fl{flex:1 1 100%}#te button.act{background:var(--ac);color:#fff}
 #tq{display:none;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 6px;background:#fff3e0;border-radius:12px;padding:6px 8px}#tq input,#tq select{font:inherit;font-size:14px;border:1px solid var(--bd);border-radius:8px;padding:6px 8px;background:var(--bg);color:var(--fg)}#tq input{flex:1;min-width:130px}#tq button{border:0;border-radius:9px;padding:7px 12px;font-size:13px;background:var(--card);box-shadow:var(--sh)}#tq small{flex-basis:100%;color:#b45309;font-size:12px;line-height:1.4}
 #dab{display:none;align-items:center;gap:8px;margin:0 0 6px}#dab button{border:0;border-radius:10px;padding:4px 20px;font-size:26px;line-height:1.2;background:var(--card);box-shadow:var(--sh);font-weight:700}#dab span{font-size:12px;color:var(--mut)}
+#ed.qp #sb{display:none!important}
 .rotb{touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 </style></head><body>
 <svg style="display:none"><defs>
@@ -393,7 +394,7 @@ ec.onpointerdown=e=>{
   if(P.size==2){dimSt=null;stArr=null;pendDesel=false;sdrag=null;clearTimeout(lpT);lpT=null;rz=null;createTap=null;st=null;drag=null;let onItem=false;if(!(ruler.on&&mode=="pen")){const h=(mode=='dim')?null:(hit(e)||hit([...P.values()][0]));if(h&&h===sel&&(h.k=='t'||emode=='move'))onItem=true}const n=G(),r0=ec.getBoundingClientRect();g={fx:(n.mx-r0.left)/r0.width,fy:(n.my-r0.top)/r0.height,d0:n.d,a0:n.an,pm:n,zw:ec.getBoundingClientRect().width,sz:sel?(sel.k=="i"?sel.w:sel.s):0,rot:sel?sel.rot:0};g.item=onItem;if(ruler.on&&mode=="pen"&&(rdrag||isBody(e))){const m=pt({clientX:n.mx,clientY:n.my});g.ruler=true;g.deg0=ruler.deg;g.off=[ruler.a-m[0],ruler.b-m[1]];rdrag=null}paint();return}
   if(P.size>2)return;
   const q=pt(e);
-  if(qp&&qp.on&&tplEdit&&!hit(e)){qPlace(q);return}
+  if(qp&&qp.on&&tplEdit&&!sel&&!hit(e)){qPlace(q);return}
   if(sArm&&sel===sArm){const c=stampCorner(sArm),r=ec.getBoundingClientRect(),A=ang(cur),[u,v]=toDisp(c[0],c[1],A);if(Math.hypot(e.clientX-(r.left+u*r.width),e.clientY-(r.top+v*r.height))<hitR()*1.8){stArr={c:sArm.c,w:.0035,p:[c,q]};paint();return}}
   if(mode=="dim"){if(sel&&sel.k=="t"&&emode=="move"){const h=hit(e);if(h===sel){drag=[q[0]-sel.a,q[1]-sel.b];moved=false;dp={x:e.clientX,y:e.clientY};tapEdit=true;paint();return}}
     if(sel){sel=null;emode=null;setHint();syncPanel()}dimSt={c:col,w:.004,p:[q,q]};paint();return}
@@ -1266,7 +1267,7 @@ $("dmA").onclick=()=>{
   const it={k:"t",a,b,str:"←",s:.05,c:col,rot:-A,sx:1,sy:1,anc:"c",halo:true};
   addItem(it);selR=null;sel=it;emode="move";setHint();syncPanel();paint();toast("矢印を置きました。ドラッグで移動、↺↻で向き(長押しで回り続けます)",3500)};
 var qp={on:false,lastIt:null};
-function qSync(){if(!qp)return;$("tq").style.display=(qp.on&&cur&&tplEdit)?"flex":"none";$("teQ").classList.toggle("act",!!qp.on)}
+function qSync(){if(!qp)return;$("ed").classList.toggle("qp",!!(qp.on&&cur&&tplEdit));$("tq").style.display=(qp.on&&cur&&tplEdit)?"flex":"none";$("teQ").classList.toggle("act",!!qp.on)}
 function qOff(){qp.on=false;qSync()}
 function qOpts(){tplNorm();const s2=$("tqg"),v=s2.value||"new";s2.innerHTML="";const add=(val,t)=>{const o=document.createElement("option");o.value=val;o.textContent=t;s2.appendChild(o)};
   add("new","毎回 新しいグループ");add("same","直前と同じグループ(同時入力)");tplGroups().forEach((g,i)=>add("g"+g.no,"グループ"+LT(i+1)+"に追加"));
