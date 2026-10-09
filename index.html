@@ -611,15 +611,15 @@ function startEdit(it,all,raw){if(it.str==="テキスト")all=true;if(!raw&&fill
   if(!editing)edPrevW=ec.getBoundingClientRect().width;$("ed").classList.add("kb");editing=it;sel=it;emode=null;setHint();syncPanel();tin.style.display="block";tin.textContent=it.str;paint();tin.focus();
   const r=document.createRange();r.selectNodeContents(tin);if(!all&&!it.ph)r.collapse(false);const g2=getSelection();g2.removeAllRanges();g2.addRange(r);
   setTimeout(focusEdit,350);setTimeout(focusEdit,800)}
-function endEdit(){
-  if(!editing)return;const it=editing;editing=null;tin.style.display="none";tin.blur();$("ed").classList.remove("kb");if(edPrevW)ec.style.width=Math.max(baseW,edPrevW)+"px";if(edPrevW<=baseW+1){wrap.scrollLeft=0;wrap.scrollTop=0}
+function endEdit(keep){
+  if(!editing)return;const it=editing;editing=null;if(!keep){tin.style.display="none";tin.blur();$("ed").classList.remove("kb")}if(edPrevW)ec.style.width=Math.max(baseW,edPrevW)+"px";if(edPrevW<=baseW+1){wrap.scrollLeft=0;wrap.scrollTop=0}
   if(!it.str.trim()){if(it.field=="input"&&it.lbl){it.str=it.lbl;it.ph=true;fitItem(it,cur)}else{cur.items=cur.items.filter(i=>i!==it);sel=null;syncPanel()}}paint()}
 tin.setAttribute("enterkeyhint","next");
 tin.addEventListener("keydown",e=>{if(!editing||!editing.xlc||fillInst||e.isComposing||e.keyCode==229)return;if(e.key=="Enter"&&e.shiftKey)return;if(e.key=="Enter"||e.key=="Tab"){e.preventDefault();xlNext(e.key=="Tab"&&e.shiftKey?-1:1)}});
 tin.addEventListener("keydown",e=>{if(!editing||!fillInst||editing.inst!==fillInst||e.isComposing||e.keyCode==229)return;if(e.key=="Enter"&&e.shiftKey)return;if(e.key=="Enter"||e.key=="Tab"){e.preventDefault();fpStep(e.key=="Tab"&&e.shiftKey?-1:1)}});
 tin.oninput=()=>{if(!editing)return;const v=tin.innerText.replace(/\n$/,"");editing.ph=false;if(fillInst&&editing.inst===fillInst&&colPick){editing.c=col;tin.style.color=col}setItemStr(editing,cur,v);placeEdit();
   if(fillInst&&editing.inst===fillInst){const g=fillL[fpI];if(g)g.list.forEach(x=>{if(x.it!==editing){if(colPick)x.it.c=col;x.it.ph=!v.trim();setItemStr(x.it,x.pg,v.trim()?v:x.it.lbl)}})}};
-document.addEventListener("pointerdown",e=>{if(editing&&!e.target.closest("#tin,.ctx,#op"))endEdit()},true);
+document.addEventListener("pointerdown",e=>{if(editing&&!e.target.closest("#tin,.ctx,#op,#fpb"))endEdit()},true);
 
 var mvExit=false;let emode=null,lpT=null,lpPt=null,dp=null,rz=null,createTap=null;
 function prVis(){$("pr").style.display=((sel&&sel.shape)||(mode=="move"&&!(sel&&sel.k=="t")))?"none":""}
@@ -1017,7 +1017,7 @@ function fillStart(inst){
 async function fpGo(i,focus){
   i=Math.max(0,Math.min(fillL.length-1,i));const g=fillL[i];if(!g)return;
   const t=g.list.find(x=>x.pg===cur)||g.list[0];
-  endEdit();fpI=i;$("fpc").textContent=(i+1)+"/"+fillL.length;
+  endEdit(!!focus);fpI=i;$("fpc").textContent=(i+1)+"/"+fillL.length;
   if(t.pg!==cur){await openEd(t.pg)}
   sel=t.it;emode=null;syncPanel();centerOn(t.it,2.2);paint();
   if(focus)startEdit(t.it,true,true)}
@@ -1107,7 +1107,7 @@ function smDraw(x,pg,cw,ch,A){x.save();const k=(A%180==0?cw:ch)/pg.W,pd=Math.max
   if(smForm){x.save();x.strokeStyle="rgba(124,58,237,.6)";x.lineWidth=Math.max(1.5,cw/450);pg.items.forEach(it=>{if(it.field!="toggle")return;const [u,v]=toDisp(it.a,it.b,A),r=Math.max(7,it.s*(A%180==0?cw:ch)*.95);x.beginPath();x.arc(u*cw,v*ch,r,0,7);x.stroke()});x.restore()}
   if(smBadge){const rr=Math.max(8,cw/70);x.save();x.font="700 "+Math.round(rr*1.2)+"px sans-serif";x.textAlign="center";x.textBaseline="middle";pg.items.forEach(it=>{if(it.field!="input"||!it.no)return;const T=smTapOrd;if(T&&!T.got.includes(it))return;let u,v;if(it.cell){[u,v]=toDisp(it.cell.x0,it.cell.y0,A)}else{[u,v]=toDisp(it.a,it.b,A)}x.fillStyle=T?"#16a34a":"#2563eb";x.beginPath();x.arc(u*cw,v*ch,rr,0,7);x.fill();x.fillStyle="#fff";x.fillText(String(it.no),u*cw,v*ch+1)});x.restore()}
   x.restore()}
-$("fpx").onclick=fillDone;$("fpu").onclick=()=>fpStep(-1);$("fpd").onclick=()=>fpStep(1);$("fpk").onclick=()=>{const g=fillL[fpI];if(g)g.skip=true;fpStep(1)};
+$("fpx").onclick=fillDone;$("fpu").onclick=()=>fpStep(-1);$("fpd").onclick=()=>fpStep(1);$("fpb").addEventListener("pointerdown",e=>{if(e.target.closest("button")&&e.target.id!="fpx")e.preventDefault()});$("fpb").addEventListener("mousedown",e=>{if(e.target.closest("button")&&e.target.id!="fpx")e.preventDefault()});$("fpk").onclick=()=>{const g=fillL[fpI];if(g)g.skip=true;fpStep(1)};
 // ---- テンプレートを他の人に渡す(ファイルで書き出し・取り込み)
 function b64(u){let s="";for(let i=0;i<u.length;i+=32768)s+=String.fromCharCode.apply(null,u.subarray(i,i+32768));return btoa(s)}
 async function tplShare(r){
