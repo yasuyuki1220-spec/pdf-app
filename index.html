@@ -82,7 +82,7 @@ input[type=range]{accent-color:var(--ac)}
 #te{flex-wrap:wrap}#te .fl{flex:1 1 100%}#te button.act{background:var(--ac);color:#fff}
 #tq{display:none;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 6px;background:#fff3e0;border-radius:12px;padding:6px 8px}#tq input,#tq select{font:inherit;font-size:14px;border:1px solid var(--bd);border-radius:8px;padding:6px 8px;background:var(--bg);color:var(--fg)}#tq input{flex:1;min-width:130px}#tq button{border:0;border-radius:9px;padding:7px 12px;font-size:13px;background:var(--card);box-shadow:var(--sh)}#tq small{flex-basis:100%;color:#b45309;font-size:12px;line-height:1.4}
 #dab{display:none;align-items:center;gap:8px;margin:0 0 6px}#dab button{border:0;border-radius:10px;padding:4px 20px;font-size:26px;line-height:1.2;background:var(--card);box-shadow:var(--sh);font-weight:700}#dab span{font-size:12px;color:var(--mut)}
-#ed.qp #sb{display:none!important}
+#ed.qp #sb{display:none!important}#ed.mv .w{touch-action:none}
 .rotb{touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 </style></head><body>
 <svg style="display:none"><defs>
@@ -353,7 +353,7 @@ function setMode(m){sbAll();mode=m;if(m!="text"&&qp&&qp.on)qOff();if($("dab"))$(
 document.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{setMode(b.dataset.m);if(b.dataset.m=="move")toast("画面をなぞって範囲を選びます");if(b.dataset.m=="dim")toast("線をなぞると寸法線になります(水平・垂直に自動で合います)");if(b.dataset.m=="text"){if(sel&&sel.k=="t")startEdit(sel);else newText(toUnrot(.5,.35,ang(cur)))}});
 let szOpen=false;
 let sArm=null,stArr=null;
-let _ls=null;function syncPanel(){sbAll();if(sel!==sArm)sArm=null;if(sel!==_ls){_ls=sel;if(sel)$("op").scrollLeft=0}
+let _ls=null;function syncPanel(){$("ed").classList.toggle("mv",emode=="move"&&!!sel&&!sel.shape);sbAll();if(sel!==sArm)sArm=null;if(sel!==_ls){_ls=sel;if(sel)$("op").scrollLeft=0}
   if(!sel||sel.shape)szOpen=false;$("szp").style.display=szOpen?"flex":"none";$("bgz").classList.toggle("act",szOpen);
   $("op").style.display=sel?"flex":"none";$("pr").style.display=sel&&sel.shape?"none":"";$("shp").style.display=sel&&sel.shape?"flex":"none";if(!sel)return;
   const t=sel.k=="t";$("ex").style.display=$("bmv").style.display=$("bsz").style.display=$("bsc").style.display=$("bfd").style.display=$("bac").style.display=t?"":"none";$("bac").textContent="基準:"+({l:"左",c:"中央",r:"右"}[sel.anc||"l"]);$("bfd").textContent=sel.field=="input"?"固定に戻す":"入力欄にする";$("bfd").classList.toggle("act",sel.field=="input");$("bsc").classList.toggle("act",emode=="scale");$("bmv").style.display=(t||(sel.k=="i"&&!sel.shape))?"":"none";$("blk").style.display=(sel.k=="i"&&!sel.shape)?"":"none";$("blk").textContent=sel.lock?"固定解除":"固定";$("bhl").style.display=t?"":"none";$("bhl").classList.toggle("act",!!sel.halo);$("bvd").style.display=(sel.shape&&emode=="shape")?"":"none";$("bsh").style.display=sel.shape?"":"none";$("bsh").classList.toggle("act",emode=="shape");$("opg").style.display=sel.shape?"none":"contents";if(sel.shape)shpUI();$("bmv").classList.toggle("act",emode=="move");$("bsz").classList.toggle("act",emode=="size");
@@ -391,7 +391,7 @@ const P=new Map();
 function G(){const [a,b]=[...P.values()];return{d:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)||1,an:Math.atan2(b.clientY-a.clientY,b.clientX-a.clientX),mx:(a.clientX+b.clientX)/2,my:(a.clientY+b.clientY)/2}}
 ec.onpointerdown=e=>{
   commit();ec.setPointerCapture(e.pointerId);P.set(e.pointerId,e);
-  if(P.size==2){dimSt=null;stArr=null;pendDesel=false;sdrag=null;clearTimeout(lpT);lpT=null;rz=null;createTap=null;st=null;drag=null;let onItem=false;if(!(ruler.on&&mode=="pen")){const h=(mode=='dim')?null:(hit(e)||hit([...P.values()][0]));if(h&&h===sel&&(h.k=='t'||emode=='move'))onItem=true}if(emode=='move'&&sel&&sel.k=='t')onItem=true;const n=G(),r0=ec.getBoundingClientRect();g={fx:(n.mx-r0.left)/r0.width,fy:(n.my-r0.top)/r0.height,d0:n.d,a0:n.an,pm:n,zw:ec.getBoundingClientRect().width,sz:sel?(sel.k=="i"?sel.w:sel.s):0,rot:sel?sel.rot:0};g.item=onItem;if(ruler.on&&mode=="pen"&&(rdrag||isBody(e))){const m=pt({clientX:n.mx,clientY:n.my});g.ruler=true;g.deg0=ruler.deg;g.off=[ruler.a-m[0],ruler.b-m[1]];rdrag=null}paint();return}
+  if(P.size==2){mvExit=false;dimSt=null;stArr=null;pendDesel=false;sdrag=null;clearTimeout(lpT);lpT=null;rz=null;createTap=null;st=null;drag=null;let onItem=false;if(!(ruler.on&&mode=="pen")){const h=(mode=='dim')?null:(hit(e)||hit([...P.values()][0]));if(h&&h===sel&&(h.k=='t'||emode=='move'))onItem=true}if(emode=='move'&&sel&&!sel.shape)onItem=true;const n=G(),r0=ec.getBoundingClientRect();g={fx:(n.mx-r0.left)/r0.width,fy:(n.my-r0.top)/r0.height,d0:n.d,a0:n.an,pm:n,zw:ec.getBoundingClientRect().width,sz:sel?(sel.k=="i"?sel.w:sel.s):0,rot:sel?sel.rot:0};g.item=onItem;if(ruler.on&&mode=="pen"&&(rdrag||isBody(e))){const m=pt({clientX:n.mx,clientY:n.my});g.ruler=true;g.deg0=ruler.deg;g.off=[ruler.a-m[0],ruler.b-m[1]];rdrag=null}paint();return}
   if(P.size>2)return;
   const q=pt(e);
   if(qp&&qp.on&&tplEdit&&!sel&&!hit(e)){qPlace(q);return}
@@ -409,7 +409,7 @@ ec.onpointerdown=e=>{
     if(emode=="shape"&&sel&&sel.shape&&(shI=shapeHit(e))>=0){shLast=shI;shOff=[q[0]-(sel.a+sel.shape.rel[shI][0]),q[1]-(sel.b+sel.shape.rel[shI][1])]}
     else if(emode=="shape"&&sel&&sel.shape&&addVertexAt(e,q)){}
     else if((emode=="size"||emode=="scale")&&sel&&sel.k=="t"&&hitHandle(e,sel)){rz=sel;if(emode=="scale"){const L=loc(e,sel);rz0={s:sel.s,d:Math.max(1,Math.hypot(L.lx,L.ly))}}}
-    else if(emode=="move"&&sel&&sel.k=="t"&&(!h||h===sel)){drag=[q[0]-sel.a,q[1]-sel.b];tapEdit=(h===sel);if(h===sel){clearTimeout(lpT);lpT=setTimeout(()=>{lpT=null;tapEdit=false;drag=null;itemMenu(sel)},500)}}
+    else if(emode=="move"&&sel&&sel.k=="t"&&(!h||h===sel)){drag=[q[0]-sel.a,q[1]-sel.b];tapEdit=(h===sel);mvExit=!h;if(h===sel){clearTimeout(lpT);lpT=setTimeout(()=>{lpT=null;tapEdit=false;drag=null;itemMenu(sel)},500)}}
     else if(h){
       if(h!==sel){sel=h;emode=null;setHint()}
       if(h.k=="t"){
@@ -453,7 +453,7 @@ ec.onpointermove=e=>{
   else if(drag&&sel){sel.a=q[0]-drag[0];sel.b=q[1]-drag[1];moved=true;paint()}
   else if(rdrag){ruler.a=q[0]-rdrag[0];ruler.b=q[1]-rdrag[1];paint()}
 };
-const up=e=>{P.delete(e.pointerId);if(P.size<2)g=null;if(st){addStroke(st);st=null}if(!P.size&&moved&&shI<0&&sel&&sel.shape&&sel.shape.m=="mosaic")bakeShape(sel,cur,sel.shape.rel.map(r=>[sel.a+r[0],sel.b+r[1]]));shI=-1;drag=null;rdrag=null;rz=null;blocked=null;clearTimeout(lpT);lpT=null;if(stArr&&!P.size)stArrEnd();if(dimSt&&!P.size)dimEnd();if(sdrag&&!P.size)selEnd();if(!P.size&&pendDesel&&sel&&(!moved||mode=="move")){sel=null;emode=null;setHint();syncPanel()}if(!P.size)pendDesel=false;if(!P.size){if(tapEdit&&!moved&&sel&&sel.k=="t"){emode=null;setHint();startEdit(sel)}else if(createTap&&!moved)newText(createTap)}tapEdit=false;createTap=null;paint();if(editing&&document.activeElement!==tin)tin.focus()};
+const up=e=>{P.delete(e.pointerId);if(P.size<2)g=null;if(st){addStroke(st);st=null}if(!P.size&&moved&&shI<0&&sel&&sel.shape&&sel.shape.m=="mosaic")bakeShape(sel,cur,sel.shape.rel.map(r=>[sel.a+r[0],sel.b+r[1]]));shI=-1;drag=null;rdrag=null;rz=null;blocked=null;clearTimeout(lpT);lpT=null;if(stArr&&!P.size)stArrEnd();if(dimSt&&!P.size)dimEnd();if(sdrag&&!P.size)selEnd();if(!P.size&&pendDesel&&sel&&(!moved||mode=="move")){sel=null;emode=null;setHint();syncPanel()}if(!P.size&&mvExit&&!moved&&sel&&emode=='move'){sel=null;emode=null;setHint();syncPanel()}if(!P.size){pendDesel=false;mvExit=false}if(!P.size){if(tapEdit&&!moved&&sel&&sel.k=="t"){emode=null;setHint();startEdit(sel)}else if(createTap&&!moved)newText(createTap)}tapEdit=false;createTap=null;paint();if(editing&&document.activeElement!==tin)tin.focus()};
 ec.onpointerup=ec.onpointercancel=up;
 document.querySelectorAll(".col").forEach(b=>b.onclick=()=>{
   col=b.dataset.c;document.querySelectorAll(".col").forEach(x=>x.classList.toggle("on",x==b));
@@ -552,7 +552,7 @@ function endEdit(){
 tin.oninput=()=>{if(!editing)return;const v=tin.innerText.replace(/\n$/,"");editing.ph=false;setItemStr(editing,cur,v);placeEdit()};
 document.addEventListener("pointerdown",e=>{if(editing&&!e.target.closest("#tin,.ctx,#op"))endEdit()},true);
 
-let emode=null,lpT=null,lpPt=null,dp=null,rz=null,createTap=null;
+var mvExit=false;let emode=null,lpT=null,lpPt=null,dp=null,rz=null,createTap=null;
 function setHint(){
   pgLabel();
   const T={move:"配置モード:配置後に編集、再配置可能です(ドラッグで移動・タップで入力)",size:"枠サイズ変更モード:右下の緑の丸をドラッグ",scale:"全体拡大モード:右下のオレンジの丸をドラッグ(比率そのまま)",shape:"形変更モード:丸をドラッグ/辺をタップで頂点を追加"},m=$("mhint");
@@ -1100,8 +1100,8 @@ $("ed").addEventListener("wheel",e=>{
   if(!(e.ctrlKey||e.metaKey))return;e.preventDefault();
   const r=ec.getBoundingClientRect();zoomAt(r.width*Math.exp(-e.deltaY*.01),(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height,e.clientX,e.clientY)},{passive:false});
 let gsW=1;
-$("ed").addEventListener("gesturestart",e=>{if(typeof e.clientX!=="number")return;e.preventDefault();gsW=ec.getBoundingClientRect().width},{passive:false});
-$("ed").addEventListener("gesturechange",e=>{if(typeof e.clientX!=="number")return;e.preventDefault();const r=ec.getBoundingClientRect();zoomAt(gsW*e.scale,(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height,e.clientX,e.clientY)},{passive:false});
+$("ed").addEventListener("gesturestart",e=>{if(typeof e.clientX!=="number")return;e.preventDefault();if(emode=="move"&&sel&&!sel.shape)return;gsW=ec.getBoundingClientRect().width},{passive:false});
+$("ed").addEventListener("gesturechange",e=>{if(typeof e.clientX!=="number")return;e.preventDefault();if(emode=="move"&&sel&&!sel.shape)return;const r=ec.getBoundingClientRect();zoomAt(gsW*e.scale,(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height,e.clientX,e.clientY)},{passive:false});
 document.addEventListener("keydown",e=>{
   if($("ed").style.display!=="flex")return;
   const t=document.activeElement;if(t&&(t.tagName=="INPUT"||t.tagName=="TEXTAREA"||t.isContentEditable))return;
