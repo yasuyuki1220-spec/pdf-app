@@ -107,7 +107,7 @@ input[type=range]{accent-color:var(--ac)}
 <div id="msg"></div>
 <div id="grid"></div>
 <div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、◀▶で順番を入替、✎で編集</div>
-<input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff" multiple hidden>
+<input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
 <button class="d pri" id="bAdd"><svg><use href="#i-plus"/></svg>追加</button>
@@ -273,10 +273,11 @@ $("fi").onchange=$("phi").onchange=async e=>{if(e.target.files.length)snap();
   for(const f of e.target.files){
     try{
       say("読み込み中: "+f.name);
-      const bytes=(f.type.startsWith("image/")||/\.tiff?$/i.test(f.name))?await imgToPdf(f):new Uint8Array(await f.arrayBuffer());
+      let xlm=null;if(/\.xls$/i.test(f.name)){say("古い.xls形式は読めません。Excelで「.xlsx」として保存し直してください");continue}
+      const bytes=/\.xls[xm]$/i.test(f.name)?await(async()=>{const r=await xlsxToPdf(f);xlm=r.model;return r.bytes})():(f.type.startsWith("image/")||/\.tiff?$/i.test(f.name))?await imgToPdf(f):new Uint8Array(await f.arrayBuffer());
       if(!bytes){say("");continue}
       const doc=await pdfjsLib.getDocument({data:bytes.slice()}).promise;
-      const fi=files.push({name:f.name.replace(/\.[^.]+$/,""),bytes,doc})-1;
+      const fi=files.push({name:f.name.replace(/\.[^.]+$/,""),bytes,doc,xl:xlm})-1;
       for(let i=0;i<doc.numPages;i++){
         const p=await doc.getPage(i+1),v=p.view;
         pages.push({f:fi,i,r:0,base:p.rotate%360,W:v[2]-v[0],H:v[3]-v[1],sel:false,strokes:[],items:[]});
@@ -458,7 +459,7 @@ ec.onpointermove=e=>{
   else if(drag&&sel){sel.a=q[0]-drag[0];sel.b=q[1]-drag[1];moved=true;paint()}
   else if(rdrag){ruler.a=q[0]-rdrag[0];ruler.b=q[1]-rdrag[1];paint()}
 };
-const up=e=>{if(tgT){const t=tgT;tgT=null;clearTimeout(lpT);lpT=null;if(!t.dead&&Math.hypot(e.clientX-t.x,e.clientY-t.y)<10){t.it.off=!t.it.off;paint()}}if(xlC&&xlTap){const c=xlTap;xlTap=null;if(c.ok&&Math.hypot(e.clientX-c.x,e.clientY-c.y)<12)xlToggle(e)}P.delete(e.pointerId);if(P.size<2)g=null;if(st){addStroke(st);st=null}if(!P.size&&moved&&shI<0&&sel&&sel.shape&&sel.shape.m=="mosaic")bakeShape(sel,cur,sel.shape.rel.map(r=>[sel.a+r[0],sel.b+r[1]]));shI=-1;drag=null;rdrag=null;rz=null;blocked=null;clearTimeout(lpT);lpT=null;if(stArr&&!P.size)stArrEnd();if(dimSt&&!P.size)dimEnd();if(sdrag&&!P.size)selEnd();if(!P.size&&pendDesel&&sel&&(!moved||mode=="move")){sel=null;emode=null;setHint();syncPanel()}if(!P.size&&mvExit&&!moved&&sel&&emode=='move'&&!sel.shape){const L=loc(e,sel);if(Math.abs(L.lx)>L.bw*(sel.sx||1)/2||Math.abs(L.ly)>L.bh*(sel.sy||1)/2){tapEdit=false;sel=null;emode=null;setHint();syncPanel()}}if(!P.size){pendDesel=false;mvExit=false}if(!P.size){if(tapEdit&&!moved&&sel&&sel.k=="t"){emode=null;setHint();startEdit(sel)}else if(createTap&&!moved)newText(createTap)}tapEdit=false;createTap=null;paint();if(editing&&document.activeElement!==tin)tin.focus()};
+const up=e=>{if(tgT){const t=tgT;tgT=null;clearTimeout(lpT);lpT=null;if(!t.dead&&Math.hypot(e.clientX-t.x,e.clientY-t.y)<10){togFlip(t.it)}}if(xlC&&xlTap){const c=xlTap;xlTap=null;if(c.ok&&Math.hypot(e.clientX-c.x,e.clientY-c.y)<12)xlToggle(e)}P.delete(e.pointerId);if(P.size<2)g=null;if(st){addStroke(st);st=null}if(!P.size&&moved&&shI<0&&sel&&sel.shape&&sel.shape.m=="mosaic")bakeShape(sel,cur,sel.shape.rel.map(r=>[sel.a+r[0],sel.b+r[1]]));shI=-1;drag=null;rdrag=null;rz=null;blocked=null;clearTimeout(lpT);lpT=null;if(stArr&&!P.size)stArrEnd();if(dimSt&&!P.size)dimEnd();if(sdrag&&!P.size)selEnd();if(!P.size&&pendDesel&&sel&&(!moved||mode=="move")){sel=null;emode=null;setHint();syncPanel()}if(!P.size&&mvExit&&!moved&&sel&&emode=='move'&&!sel.shape){const L=loc(e,sel);if(Math.abs(L.lx)>L.bw*(sel.sx||1)/2||Math.abs(L.ly)>L.bh*(sel.sy||1)/2){tapEdit=false;sel=null;emode=null;setHint();syncPanel()}}if(!P.size){pendDesel=false;mvExit=false}if(!P.size){if(tapEdit&&!moved&&sel&&sel.k=="t"){emode=null;setHint();startEdit(sel)}else if(createTap&&!moved)newText(createTap)}tapEdit=false;createTap=null;paint();if(editing&&document.activeElement!==tin)tin.focus()};
 ec.onpointerup=ec.onpointercancel=up;
 document.querySelectorAll(".col").forEach(b=>b.onclick=()=>{
   col=b.dataset.c;document.querySelectorAll(".col").forEach(x=>x.classList.toggle("on",x==b));
@@ -481,10 +482,10 @@ function sheet(t,items){const s=$("sh");s.innerHTML="";const h=document.createEl
   [...items,["キャンセル",()=>{}]].forEach(([n,fn])=>{const b=document.createElement("button");b.className="sr";b.textContent=n;b.onclick=()=>{$("ov").style.display="none";fn()};s.appendChild(b)});$("ov").style.display="flex"}
 $("ov").onclick=e=>{if(e.target.id=="ov")e.target.style.display="none"};
 $("empty").onclick=()=>$("bAdd").click();
-$("bAdd").onclick=()=>sheet("追加",[["ファイルから(PDF)",()=>$("fi").click()],["写真から",()=>$("phi").click()],["テンプレートから",()=>tplList()]]);
+$("bAdd").onclick=()=>sheet("追加",[["ファイルから(PDF・Excel)",()=>$("fi").click()],["写真から",()=>$("phi").click()],["テンプレートから",()=>tplList()]]);
 $("bShare").onclick=()=>sheet("共有・書き出し",[["選択したページ",()=>exp(true)],["すべてのページ",()=>exp(false)],["選択ページをテンプレートに保存",()=>tplSave(true)],["全ページをテンプレートに保存",()=>tplSave(false)]]);
 $("eAdd").onclick=()=>sheet("ページに追加",[["ファイルから(PDF・画像)",()=>$("pf").click()],["写真から",()=>$("pi").click()]]);
-$("eMore").onclick=()=>sheet("その他",[["ページを回転",()=>$("rt").click()],...(cur&&cur._undo?[["トリミングを元に戻す",undoCrop]]:[]),["拡大",()=>$("zi").click()],["縮小",()=>$("zo").click()],["ペンの書き込みを全消去",()=>$("cl").click()],["テキストを全消去",()=>clearText()],["範囲選択で作った囲い・斜線を全消去",()=>clearShapes()],["表の空欄・○□を自動検出",()=>xlStart()],["説明書",()=>openManual()],...(cur&&cur.items.some(i=>i.lock)?[["固定した画像を解除",()=>{cur.items.forEach(i=>{delete i.lock});paint();toast("固定を解除しました")}]]:[])]);
+$("eMore").onclick=()=>sheet("その他",[["ページを回転",()=>$("rt").click()],...(cur&&cur._undo?[["トリミングを元に戻す",undoCrop]]:[]),["拡大",()=>$("zi").click()],["縮小",()=>$("zo").click()],["ペンの書き込みを全消去",()=>$("cl").click()],["テキストを全消去",()=>clearText()],["範囲選択で作った囲い・斜線を全消去",()=>clearShapes()],["選択ボタン(◯→◉)を置く",()=>tgMenu()],["表の空欄・○□を自動検出",()=>xlStart()],["説明書",()=>openManual()],...(cur&&cur.items.some(i=>i.lock)?[["固定した画像を解除",()=>{cur.items.forEach(i=>{delete i.lock});paint();toast("固定を解除しました")}]]:[])]);
 async function addItemFile(f){
   try{
     let c,w=.5;
@@ -904,7 +905,7 @@ async function tplMake(r){
   r.fields.forEach(f=>{
     const pg=pgs[f.page];if(!pg)return;
     const it={k:"t",a:f.a,b:f.b,str:f.str,s:f.s,c:f.c,rot:f.rot,sx:f.sx,sy:f.sy,anc:f.anc};
-    if(f.type=="toggle"){it.field="toggle";it.off=true}
+    if(f.type=="toggle"){it.field="toggle";it.off=true;it.rd=f.rd;it.grp=f.grp?f.grp+"@"+inst:undefined}
     if(f.type=="input"){it.field="input";it.no=f.no||++n;it.ph=true;it.lbl=f.str;it.inst=inst;if(!first)first=pg}
     pg.items.push(it)});
   pages.push(...pgs);say("");draw();
@@ -993,7 +994,7 @@ function fieldsFrom(list){
   list.forEach((p,pi)=>p.items.forEach(it=>{if(it.k=="t"){if(it.field=="input"&&it.no)mx=Math.max(mx,it.no);raw.push({pi,it,no:it.field=="input"?it.no:0})}}));
   raw.forEach(x=>{if(x.it.field=="input"&&!x.no)x.no=++mx});
   const nos=[...new Set(raw.filter(x=>x.it.field=="input").map(x=>x.no))].sort((a,b)=>a-b),rank=Object.fromEntries(nos.map((n,i)=>[n,i+1]));
-  return raw.map(({pi,it,no})=>({page:pi,a:it.a,b:it.b,s:it.s,c:it.c,sx:it.sx||1,sy:it.sy||1,rot:it.rot||0,anc:it.anc,type:it.field=="input"?"input":it.field=="toggle"?"toggle":"fixed",no:it.field=="input"?rank[no]:undefined,str:it.str}))}
+  return raw.map(({pi,it,no})=>({page:pi,a:it.a,b:it.b,s:it.s,c:it.c,sx:it.sx||1,sy:it.sy||1,rot:it.rot||0,anc:it.anc,type:it.field=="input"?"input":it.field=="toggle"?"toggle":"fixed",no:it.field=="input"?rank[no]:undefined,str:it.str,grp:it.grp,rd:it.rd}))}
 $("tsok").onclick=async()=>{
   const name=$("tsn").value.trim()||"テンプレート",list=tsList;$("ts").style.display="none";
   let ex=null;try{ex=(await tdb("all")).find(r=>r.name==name)}catch(_){}
@@ -1014,7 +1015,7 @@ async function tplEditStart(r){
   let n=0;
   r.fields.forEach(f=>{const pg=pgs[f.page];if(!pg)return;
     const it={k:"t",a:f.a,b:f.b,str:f.str,s:f.s,c:f.c,rot:f.rot,sx:f.sx,sy:f.sy,anc:f.anc};
-    if(f.type=="toggle"){it.field="toggle";it.off=true}
+    if(f.type=="toggle"){it.field="toggle";it.off=true;it.rd=f.rd;it.grp=f.grp}
     if(f.type=="input"){it.field="input";it.no=f.no||++n}
     pg.items.push(it)});
   pages.push(...pgs);tplEdit={r,pgs};say("");draw();await openEd(pgs[0]);
@@ -1242,7 +1243,7 @@ const MAN=[
 ["dim","寸法(車庫証明などに)",dim,["① 「寸法」を選び、測りたいところを指でなぞって線を引きます(ほぼ水平・垂直なら自動でまっすぐに)。","② 名前(出入口・道路幅・横・縦…)を選び、数字(m)を入れて「入れる」。矢印つきの寸法線が入ります。","③ 「保管場所」だけは文字のみ。線を引かず短くタップしても置けます。","置いた直後は指でドラッグして動かせます。タップで文字の直し。"]],
 ["range","範囲選択・囲い・スタンプ",encl,["「範囲選択」で四角くドラッグすると、文字のコピー(OCR)、画像のコピー、トリミング、「線で囲う」ができます。","① 線で囲う:色・太さ・斜線/格子/モザイク/塗りつぶしを選べます。「形変更」で頂点をドラッグして台形やひし形に。辺をタップで頂点を追加(多角形)。「頂点を減らす」で戻せます。","② 範囲選択の画面にある「スタンプ」で「使用の本拠/保管場所の位置」を置けます。"]],
 ["stamp","スタンプと矢印",stamp,["① スタンプを置くと、左下にオレンジの丸が出ます。","② その丸から指をドラッグすると、矢印(←)を伸ばして目的の場所を指せます。","スタンプ本体はドラッグで移動。文字はタップで直せます。"]],
-["xl","Excel・帳票の空欄を入力欄に(○を◉に)",null,["Excelの表はPDFにして読み込みます(iPhoneは「共有→プリント→PDFで保存」)。","編集画面の「その他」→「表の空欄・○□を自動検出」を押します。","罫線で囲まれた空欄が紫の枠で出ます。入力欄にしたくない枠はタップで外し、「決定」。","横にある見出し(氏名・住所など)が、入力欄の名前になります。「スライド入力」で順番に入力できます。","○や□は1タップで◉や✓に切り替わります(もう一度タップで戻ります)。長押しで移動・削除ができます。"]],
+["xl","Excel・帳票の空欄を入力欄に(○を◉に)",null,["Excel(.xlsx)は「追加→ファイルから」でそのまま読み込めます(罫線・結合・フォーム部品の○□も読み取ります)。PDFにしたExcelでも使えます。","「その他」→「選択ボタン(◯→◉)を置く」で、◯本人 ◯他人 のような選択ボタンを好きな場所に置けます。左の◯をタップすると◉に変わり、同じグループの他は自動で外れます。","編集画面の「その他」→「表の空欄・○□を自動検出」を押します。","罫線で囲まれた空欄が紫の枠で出ます。入力欄にしたくない枠はタップで外し、「決定」。","横にある見出し(氏名・住所など)が、入力欄の名前になります。「スライド入力」で順番に入力できます。","○や□は1タップで◉や✓に切り替わります(もう一度タップで戻ります)。長押しで移動・削除ができます。"]],
 ["image","写真・画像・PDFを重ねる",null,["編集画面の「追加」から、ファイル(PDF・TIFF)や写真をページに貼れます。貼った直後はドラッグで移動、二本指で拡大縮小。","地図などは「固定」を押すと、触っても動かなくなります(解除は「その他」から)。","「トリミング」で不要な部分を切り取り。"]],
 ["tpl","テンプレート",tpl,["よく使うPDFと入力欄を保存して、何度も呼び出せます。","① 作り方:文字を置いて「入力欄にする」→ ホーム画面の「共有」→「テンプレートに保存」。","② 使い方:「追加」→「テンプレートから」→「使う」。入力欄を順に入力できます。","③ 編集:一覧の「編集」。「番号・順番」でグループ(A・B・C)を設定。同じ文字の欄は別ページでも同時に入力されます。‹ › でページ移動、「上書き保存」で保存。","④ 共有:「共有」でファイルにして相手に送れます。相手は「他の人のテンプレートを取り込む」で読み込みます。"]],
 ["camera","書類から自動入力(カメラ)",null,["テンプレートを呼び出した入力画面の「📷」を押すと、カメラで撮った書類から文字を読み取り、住所・氏名・電話番号を入力欄へ自動で入れます(入力欄の名前に「住所」「氏名」「電話」を含むときに使えます)。","電話番号:099・090・03 など、ハイフンの有無にかかわらず探します。","住所:「〒」の近く、「◯◯市」「◯◯郡」を目印に探します(県は無くてもOK)。","氏名:「氏名・名前・お名前」の横、「◯◯ △△様」の様の前を拾います。","読み取り結果は一覧で出るので、直してから「入力欄に入れる」を押します。候補が複数あるときは、下に候補が並びます。","うまく読めないときは、明るい場所で書類を真上から撮ってください。"]],
@@ -1413,12 +1414,12 @@ function xlLabel(c,texts){
 async function xlStart(){
   if(!cur)return;const f=files[cur.f];if(!f)return;
   say("表を解析中…");let r;
-  try{const pj=await f.doc.getPage(cur.i+1);r=await xlDetect(f.bytes,cur.i,pj)}catch(e){say("");return toast("検出に失敗しました")}
+  try{if(f.xl&&f.xl.pages[cur.i])r=f.xl.pages[cur.i];else{const pj=await f.doc.getPage(cur.i+1);r=await xlDetect(f.bytes,cur.i,pj)}}catch(e){say("");return toast("検出に失敗しました")}
   say("");
   const cells=[];
   r.cells.filter(c=>c.empty).forEach(c=>cells.push({x0:c.x0,y0:c.y0,x1:c.x1,y1:c.y1,on:true,lbl:xlLabel(c,r.texts)}));
   r.widgets.filter(w=>w.kind=="tx").forEach(w=>cells.push({x0:w.x0,y0:w.y0,x1:w.x1,y1:w.y1,on:true,lbl:(w.name||"").slice(0,12)}));
-  const marks=r.marks.map(m=>({kind:m.kind,cx:m.cx,cy:m.cy,size:m.size,on:false}));
+  const marks=r.marks.map(m=>({kind:m.kind,cx:m.cx,cy:m.cy,size:m.size,on:!!m.on}));
   r.widgets.filter(w=>w.kind=="btn").forEach(w=>marks.push({kind:w.radio?"c":"s",cx:(w.x0+w.x1)/2,cy:(w.y0+w.y1)/2,size:Math.max(w.x1-w.x0,w.y1-w.y0),on:w.on}));
   if(!cells.length&&!marks.length)return toast("検出できませんでした。罫線のある表や○□が見つかりません",4200);
   endEdit();sel=null;emode=null;setMode("text");syncPanel();setHint();
@@ -1449,8 +1450,10 @@ function xlOk(){
     const fs=Math.max(6,Math.min(16,(c.y1-c.y0)*.55));let base=(c.lbl||"").replace(/[○◯〇□☐◻▢]/g,"").trim()||("入力欄"+(nc+1));const cnt=(LB[base]=(LB[base]||0)+1),lbl=cnt>1?base+cnt:base;
     const it={k:"t",a:(c.x0+3-C.vx)/W,b:1-(((c.y0+c.y1)/2)-C.vy)/H,str:lbl,s:fs/W,c:"#111111",rot:0,sx:1,sy:1,anc:"l",field:"input",no:++n,ph:true,lbl,inst};
     addItem(it);nc++});
+  if(C.useM){const sid="gx"+Date.now(),rows=[];C.marks.filter(m=>m.kind=="c").slice().sort((p,q)=>q.cy-p.cy).forEach(m=>{const r=rows.find(r=>Math.abs(r.cy-m.cy)<m.size*.7);if(r)r.l.push(m);else rows.push({cy:m.cy,l:[m]})});
+    let gi=0;rows.forEach(r=>{r.l.sort((p,q)=>p.cx-q.cx);let pv=null;r.l.forEach(m=>{if(!pv||m.cx-pv.cx>m.size*10)gi++;m.grp=sid+"_"+gi;pv=m})})}
   if(C.useM)C.marks.forEach(m=>{
-    const it={k:"t",a:(m.cx-C.vx)/W,b:1-(m.cy-C.vy)/H,str:m.kind=="c"?"◉":"✓",s:(m.size*(m.kind=="c"?1.15:1.35))/W,c:"#111111",rot:0,sx:1,sy:1,anc:"c",field:"toggle",off:!m.on};
+    const it={k:"t",a:(m.cx-C.vx)/W,b:1-(m.cy-C.vy)/H,str:m.kind=="c"?"◉":"✓",s:(m.size*(m.kind=="c"?1.15:1.35))/W,c:"#111111",rot:0,sx:1,sy:1,anc:"c",field:"toggle",off:!m.on,rd:m.kind=="c",grp:m.grp};
     addItem(it);nm++});
   sel=null;emode=null;setHint();syncPanel();paint();
   toast("入力欄 "+nc+" か所、切替 "+nm+" か所を作りました。○や□は1タップで切り替わります",4500)}
@@ -1459,4 +1462,117 @@ $("xbX").onclick=()=>{xlC=null;xlUI();paint()};
 $("xbC").onclick=()=>{if(xlC){xlC.useC=!xlC.useC;xlUI();paint()}};
 $("xbM").onclick=()=>{if(xlC){xlC.useM=!xlC.useM;xlUI();paint()}};
 $("xbA").onclick=()=>{if(xlC){const any=xlC.cells.some(c=>c.on);xlC.cells.forEach(c=>c.on=!any);xlUI();paint()}};
+
+// ---- v37: .xlsx を直接読み込み(表を画像PDFにして、空欄・○□・フォーム部品は別モデルで保持)
+const xParse=s=>new DOMParser().parseFromString(s,"application/xml");
+const xCol=s=>{let n=0;for(const ch of s)n=n*26+ch.charCodeAt(0)-64;return n-1};
+const xRef=r=>{const m=/^([A-Z]+)(\d+)$/.exec(r||"");return m?[parseInt(m[2])-1,xCol(m[1])]:null};
+const xTxt=e=>e?e.textContent:"";
+const xAttr=(el,a)=>el?el.getAttribute(a):null;
+function xFmt(v,xf,fm){
+  const id=+xf.numFmtId||0,code=fm[id]||"",n=Number(v);if(v===""||!isFinite(n))return v;
+  const plain=code.replace(/"[^"]*"|\[[^\]]*\]|\\./g,"");
+  if((id>=14&&id<=22)||(id>=45&&id<=47)||(/[ymd]/i.test(plain)&&!/General/i.test(plain))){
+    const d=new Date(Math.round((n-25569)*86400000)),y=d.getUTCFullYear(),m=d.getUTCMonth()+1,dd=d.getUTCDate();
+    if(/年/.test(code))return y+"年"+m+"月"+dd+"日";return y+"/"+m+"/"+dd}
+  const dec=(/0\.(0+)/.exec(plain)||["",""])[1].length;
+  if(id==9||id==10||/%/.test(plain))return (n*100).toFixed(dec)+"%";
+  let s;if(id==1)s=n.toFixed(0);else if(id==2)s=n.toFixed(2);else if(id==3)s=Math.round(n).toLocaleString("en-US");else if(id==4)s=n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+  else if(code&&/0/.test(plain)){s=/,/.test(plain)?n.toLocaleString("en-US",{minimumFractionDigits:dec,maximumFractionDigits:dec}):n.toFixed(dec)}
+  else s=String(+n.toPrecision(12));
+  if(/[¥￥]/.test(code))s="¥"+s;return s}
+async function xlsxToPdf(file){
+  const zip=await JSZip.loadAsync(await file.arrayBuffer()),rd=async p=>{const f=zip.file(p);return f?await f.async("string"):null};
+  const wbx=await rd("xl/workbook.xml");if(!wbx)throw new Error("xlsx");
+  const wb=xParse(wbx),rels=xParse(await rd("xl/_rels/workbook.xml.rels")||"<r/>"),rel={};
+  [...rels.getElementsByTagName("Relationship")].forEach(r=>rel[r.getAttribute("Id")]=r.getAttribute("Target"));
+  const ss=[],ssx=await rd("xl/sharedStrings.xml");
+  if(ssx)[...xParse(ssx).getElementsByTagName("si")].forEach(si=>ss.push([...si.getElementsByTagName("t")].filter(t=>t.parentNode.nodeName!="rPh").map(t=>t.textContent).join("")));
+  const st=xParse(await rd("xl/styles.xml")||"<styleSheet/>"),fm={};
+  [...st.getElementsByTagName("numFmt")].forEach(n=>fm[n.getAttribute("numFmtId")]=n.getAttribute("formatCode"));
+  const rgb=el=>{const c=xAttr(el,"rgb");return c&&c.length==8?"#"+c.slice(2):null};
+  const sect=n=>{const e=st.getElementsByTagName(n)[0];return e?[...e.children]:[]};
+  const fonts=sect("fonts").map(f=>({sz:parseFloat(xAttr(f.getElementsByTagName("sz")[0],"val"))||11,b:!!f.getElementsByTagName("b")[0],c:rgb(f.getElementsByTagName("color")[0])||"#000000"}));
+  const fills=sect("fills").map(f=>{const p=f.getElementsByTagName("patternFill")[0];return p&&xAttr(p,"patternType")=="solid"?rgb(p.getElementsByTagName("fgColor")[0]):null});
+  const borders=sect("borders").map(b=>{const o={};["left","right","top","bottom"].forEach(k=>{const e=b.getElementsByTagName(k)[0];o[k]=e?xAttr(e,"style"):null});return o});
+  const xfs=sect("cellXfs").map(x=>{const a=x.getElementsByTagName("alignment")[0];return{numFmtId:x.getAttribute("numFmtId"),font:fonts[+x.getAttribute("fontId")]||fonts[0]||{sz:11,b:false,c:"#000000"},fill:fills[+x.getAttribute("fillId")]||null,border:borders[+x.getAttribute("borderId")]||{},h:xAttr(a,"horizontal"),v:xAttr(a,"vertical"),wrap:xAttr(a,"wrapText")=="1"||xAttr(a,"wrapText")=="true"}});
+  const dflt={numFmtId:0,font:{sz:11,b:false,c:"#000000"},fill:null,border:{},h:null,v:null,wrap:false};
+  const outPdf=await PDFLib.PDFDocument.create(),model={pages:[]};
+  for(const sh of wb.getElementsByTagName("sheet")){
+    if(xAttr(sh,"state")&&xAttr(sh,"state")!="visible")continue;
+    const rid=sh.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships","id")||sh.getAttribute("r:id"),tg=rel[rid];if(!tg)continue;
+    const sp=tg.startsWith("/")?tg.slice(1):"xl/"+tg,sx=await rd(sp);if(!sx)continue;
+    const d=xParse(sx),fmt=d.getElementsByTagName("sheetFormatPr")[0],dcw=parseFloat(xAttr(fmt,"defaultColWidth"))||8.43,drh=parseFloat(xAttr(fmt,"defaultRowHeight"))||15;
+    const cw={},cols=[...d.getElementsByTagName("col")];
+    cols.forEach(c=>{const a=+c.getAttribute("min")-1,b=Math.min(+c.getAttribute("max")-1,200),w=parseFloat(c.getAttribute("width"))||dcw,hid=c.getAttribute("hidden")=="1";for(let i=a;i<=b;i++)cw[i]=hid?0:w});
+    const cells=new Map(),rowH={},rowHid={};let maxR=0,maxC=0;
+    [...d.getElementsByTagName("row")].forEach(r=>{const ri=+r.getAttribute("r")-1;if(r.getAttribute("ht"))rowH[ri]=parseFloat(r.getAttribute("ht"));if(r.getAttribute("hidden")=="1")rowH[ri]=0;
+      [...r.getElementsByTagName("c")].forEach(c=>{const p=xRef(c.getAttribute("r"));if(!p)return;const t=c.getAttribute("t"),s=+c.getAttribute("s")||0,vE=c.getElementsByTagName("v")[0];let v="";
+        if(t=="s")v=ss[+xTxt(vE)]||"";else if(t=="inlineStr")v=[...c.getElementsByTagName("t")].map(x=>x.textContent).join("");else if(t=="b")v=xTxt(vE)=="1"?"TRUE":"FALSE";else if(vE){v=xTxt(vE);if(t!="str"&&t!="e")v=xFmt(v,xfs[s]||dflt,fm)}
+        cells.set(p[0]+","+p[1],{v,s,num:!t||t=="n"});if(v!==""||(xfs[s]&&Object.values(xfs[s].border).some(Boolean))){maxR=Math.max(maxR,p[0]);maxC=Math.max(maxC,p[1])}})});
+    const merges=[...d.getElementsByTagName("mergeCell")].map(m=>{const [a,b]=(m.getAttribute("ref")||"").split(":"),p=xRef(a),q=xRef(b||a);return p&&q?{r0:p[0],c0:p[1],r1:q[0],c1:q[1]}:null}).filter(Boolean);
+    merges.forEach(m=>{maxR=Math.max(maxR,m.r1);maxC=Math.max(maxC,m.c1)});
+    if(!cells.size)continue;maxR=Math.min(maxR,600);maxC=Math.min(maxC,60);
+    // フォーム部品(VML)
+    const ctl=[];try{const lg=d.getElementsByTagName("legacyDrawing")[0];if(lg){const rid2=lg.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships","id")||lg.getAttribute("r:id"),rp=sp.replace(/worksheets\/(.*)$/,"worksheets/_rels/$1.rels"),rx=xParse(await rd(rp)||"<r/>");
+      let vt=null;[...rx.getElementsByTagName("Relationship")].forEach(r=>{if(r.getAttribute("Id")==rid2)vt=r.getAttribute("Target")});
+      if(vt){const vp=vt.startsWith("/")?vt.slice(1):"xl/"+vt.replace(/^\.\.\//,""),vml=await rd(vp)||"";
+        vml.split(/<v:shape[\s>]/).slice(1).forEach(blk=>{const ot=/ObjectType="(\w+)"/.exec(blk),an=/<x:Anchor>\s*([^<]+)</.exec(blk);if(!ot||!an||!/^(Radio|Checkbox|CheckBox)$/.test(ot[1]))return;
+          const a=an[1].split(",").map(s=>parseFloat(s)),tb=/<v:textbox[\s\S]*?<\/v:textbox>/.exec(blk),cap=tb?tb[0].replace(/<[^>]+>/g,"").replace(/&nbsp;/g," ").replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/\s+/g," ").trim():"",ck=/<x:Checked>\s*(\d+)/.exec(blk);
+          if(a.length>=8&&a.every(isFinite)){ctl.push({a,radio:ot[1]=="Radio",cap,on:!!(ck&&+ck[1]>0)});maxR=Math.max(maxR,Math.min(a[6],600));maxC=Math.max(maxC,Math.min(a[4],60))}})}}}catch(e){}
+    const colW=c=>((cw[c]!==undefined?cw[c]:dcw)*7+5)*.75,rowHt=r=>rowH[r]!==undefined?rowH[r]:drh;
+    const cx=[0];for(let c=0;c<=maxC;c++)cx.push(cx[c]+colW(c));const ry=[0];for(let r=0;r<=maxR;r++)ry.push(ry[r]+rowHt(r));
+    ctl.forEach(c=>{const a=c.a;c.x0=(cx[a[0]]||0)+a[1]*.75;c.y0=(ry[a[2]]||0)+a[3]*.75;c.x1=(cx[a[4]]||0)+a[5]*.75;c.y1=(ry[a[6]]||0)+a[7]*.75});
+    // 結合セル
+    const mAt=new Map(),skip=new Set();merges.forEach(m=>{mAt.set(m.r0+","+m.c0,m);for(let r=m.r0;r<=m.r1;r++)for(let c=m.c0;c<=m.c1;c++)if(r!=m.r0||c!=m.c0)skip.add(r+","+c)});
+    // ページ分割
+    const cwid=cx[maxC+1],k=cwid>760?760/cwid:1,M=24,pw=Math.max(300,cwid*k+2*M),ph=pw>560?pw*.7071:pw*1.4142,use=ph-2*M,ranges=[];
+    let rs=0,acc=0;for(let r=0;r<=maxR;r++){const h=rowHt(r)*k;if(acc+h>use&&r>rs){ranges.push([rs,r-1]);rs=r;acc=0}acc+=h}ranges.push([rs,maxR]);
+    for(const [ra,rb] of ranges){
+      const S=2,cv=document.createElement("canvas");cv.width=Math.round(pw*S);cv.height=Math.round(ph*S);const x=cv.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,cv.width,cv.height);
+      const X=c=>(M+cx[c]*k)*S,Y=r=>(M+(ry[r]-ry[ra])*k)*S,pdfY=ypt=>ph-ypt,pgM={view:[0,0,pw,ph],cells:[],marks:[],widgets:[],texts:[]};
+      const boxes=[];
+      for(let r=ra;r<=rb;r++)for(let c=0;c<=maxC;c++){const key=r+","+c;if(skip.has(key))continue;const cell=cells.get(key),m=mAt.get(key);if(!cell&&!m)continue;boxes.push({r0:r,c0:c,r1:m?Math.min(m.r1,rb):r,c1:m?m.c1:c,cell:cell||{v:"",s:0},xf:xfs[(cell||{}).s]||dflt})}
+      boxes.forEach(b=>{if(b.xf.fill){x.fillStyle=b.xf.fill;x.fillRect(X(b.c0),Y(b.r0),X(b.c1+1)-X(b.c0),Y(b.r1+1)-Y(b.r0))}});
+      boxes.forEach(b=>{const v=b.cell.v;if(v==="")return;
+        const f=b.xf.font,fs=f.sz*k,x0=X(b.c0),y0=Y(b.r0),w=X(b.c1+1)-x0,h=Y(b.r1+1)-y0,pad=2*k*S;
+        x.save();let nextX=x0+w;if(!b.xf.wrap&&(b.xf.h==null||b.xf.h=="left"||b.xf.h=="general")){for(let c=b.c1+1;c<=maxC;c++){const o=cells.get(b.r0+","+c);if(o&&o.v!==""){nextX=X(c);break}nextX=X(c+1)}}
+        x.beginPath();x.rect(x0,y0,Math.max(1,nextX-x0),h);x.clip();
+        x.font=(f.b?"bold ":"")+(fs*S)+"px 'Hiragino Sans','Yu Gothic','Noto Sans CJK JP','Noto Sans JP',sans-serif";x.fillStyle=f.c;x.textBaseline="alphabetic";
+        let lines=String(v).split(/\r?\n/);
+        if(b.xf.wrap){const o=[];lines.forEach(l=>{let cur="";for(const ch of l){if(x.measureText(cur+ch).width>w-2*pad&&cur){o.push(cur);cur=ch}else cur+=ch}o.push(cur)});lines=o}
+        const lh=fs*S*1.2,tot=lines.length*lh,al=b.xf.h||(b.cell.num?"right":"left"),va=b.xf.v||"bottom";
+        let top=va=="top"?y0+pad:va=="center"?y0+(h-tot)/2:y0+h-pad-tot;
+        lines.forEach((l,i)=>{const tw=x.measureText(l).width,tx=al=="center"?x0+(w-tw)/2:al=="right"?x0+w-pad-tw:x0+pad,base=top+i*lh+fs*S*.95;x.fillText(l,tx,base);
+          if(lines.length==1&&/[○◯〇□☐◻▢]/.test(l)){[...l].forEach((ch,ci)=>{if(/[○◯〇□☐◻▢]/.test(ch)){const pre=x.measureText(l.slice(0,ci)).width,cwd=x.measureText(ch).width;pgM.marks.push({kind:/[○◯〇]/.test(ch)?"c":"s",cx:(tx+pre+cwd/2)/S,cy:pdfY((base-fs*S*.33)/S),size:fs,on:false})}})}});
+        x.restore();
+        pgM.texts.push({x:x0/S,y:pdfY((y0+h)/S),w:w/S,h:h/S,s:String(v).replace(/\s+/g," ").trim()})});
+      // 罫線
+      const LW={thin:.5,hair:.3,medium:1.3,thick:2.2,double:1.3,dashed:.6,dotted:.6,dashDot:.6,mediumDashed:1.3};
+      const edge=(sty,x1,y1,x2,y2)=>{if(!sty)return;x.save();x.strokeStyle="#000";x.lineWidth=(LW[sty]||.6)*k*S*1.15;x.setLineDash(/dash|dot/i.test(sty)&&sty!="mediumDashed"?[3*S,2*S]:[]);x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();x.restore()};
+      boxes.forEach(b=>{const x0=X(b.c0),x1=X(b.c1+1),y0=Y(b.r0),y1=Y(b.r1+1),B=b.xf.border||{},Br=(cells.get(b.r0+","+b.c1)&&(xfs[cells.get(b.r0+","+b.c1).s]||dflt).border)||B,Bb=(cells.get(b.r1+","+b.c0)&&(xfs[cells.get(b.r1+","+b.c0).s]||dflt).border)||B;
+        edge(B.left,x0,y0,x0,y1);edge(B.top,x0,y0,x1,y0);edge(Br.right||B.right,x1,y0,x1,y1);edge(Bb.bottom||B.bottom,x0,y1,x1,y1);
+        const bordered=[B.left,B.top,B.right,B.bottom,Br.right,Bb.bottom].some(Boolean);
+        if(bordered&&b.cell.v===""&&(x1-x0)/S>=10&&(y1-y0)/S>=7)pgM.cells.push({x0:x0/S,y0:pdfY(y1/S),x1:x1/S,y1:pdfY(y0/S),empty:true})});
+      // フォーム部品を描く(○/□ と表示名)
+      ctl.forEach(c=>{const mid=(c.y0+c.y1)/2;if(mid<ry[ra]||mid>=ry[rb+1])return;
+        const px=(M+(c.x0-0)*k)*S,py=(M+((c.y0+c.y1)/2-ry[ra])*k)*S,r=5.5*k*S;
+        x.save();x.strokeStyle="#000";x.lineWidth=.8*k*S;x.beginPath();if(c.radio)x.arc(px+r+1.5*k*S,py,r,0,7);else x.rect(px+1.5*k*S,py-r,2*r,2*r);x.stroke();
+        x.fillStyle="#000";x.font=(10.5*k*S)+"px 'Hiragino Sans','Yu Gothic','Noto Sans CJK JP',sans-serif";x.textBaseline="middle";x.fillText(c.cap||"",px+2*r+6*k*S,py);x.restore();
+        pgM.marks.push({kind:c.radio?"c":"s",cx:(px+r+1.5*k*S)/S,cy:pdfY(py/S),size:11*k,on:c.on})});
+      const png=await bytesOf(cv,"image/png"),im=await outPdf.embedPng(png),pg=outPdf.addPage([pw,ph]);pg.drawImage(im,{x:0,y:0,width:pw,height:ph});model.pages.push(pgM)}
+  }
+  if(!model.pages.length)throw new Error("empty");
+  return{bytes:await outPdf.save(),model}}
+
+// ---- v37: 選択ボタン(◯→◉、同じグループは1つだけ選択)
+function togFlip(it){it.off=!it.off;if(!it.off&&it.rd&&it.grp)pages.forEach(p=>p.items.forEach(o=>{if(o!==it&&o.field=="toggle"&&o.grp===it.grp)o.off=true}));paint()}
+var tgLast=null;
+function tgPlace(kind,newGrp){
+  const r=ec.getBoundingClientRect(),w=wrap.getBoundingClientRect(),A=ang(cur),cx=clamp(((w.left+w.width/2)-r.left)/r.width,.15,.85),cy=clamp(((w.top+w.height/2)-r.top)/r.height,.15,.85),[a,b]=toUnrot(cx,cy,A);
+  let grp;if(kind=="c"){grp=(!newGrp&&tgLast)?tgLast:("g"+Date.now());tgLast=grp}
+  const it={k:"t",a,b,str:kind=="c"?"◉":"✓",s:kind=="c"?.017:.02,c:"#111111",rot:-A,sx:1,sy:1,anc:"c",field:"toggle",off:true,rd:kind=="c",grp};
+  addItem(it);selR=null;sel=it;emode="move";setHint();syncPanel();paint();
+  toast("置きました。ドラッグで動かして、○や□の上に重ねてください。枠の外をタップで確定。タップで切り替わります",5000)}
+function tgMenu(){sheet("選択ボタンを置く",[["◯→◉ 新しいグループ(例: ◯本人 ◯他人)",()=>tgPlace("c",true)],["◯→◉ 直前と同じグループに追加",()=>tgPlace("c",false)],["□→✓ チェックを置く",()=>tgPlace("s")]])}
 </script></body></html>
