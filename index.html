@@ -28,7 +28,8 @@ button{font:inherit;color:var(--fg);cursor:pointer}svg{width:22px;height:22px;st
 .dock{position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));background:var(--card);border:1px solid var(--bd);border-radius:24px;box-shadow:var(--sh);display:flex;padding:6px;z-index:10;max-width:620px;margin:0 auto}
 .d{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;border:0;background:none;font-size:10px;padding:8px 2px;border-radius:16px;color:var(--fg)}
 .d.on{background:var(--ac2);color:var(--ac)}.d.pri{background:var(--ac);color:#fff}
-#ed{position:fixed;inset:0;overflow:hidden;background:var(--bg);z-index:20;display:none;flex-direction:column;padding:env(safe-area-inset-top,0px) 10px 0}
+body.edopen{position:fixed;left:0;right:0;width:100%;overflow:hidden;overscroll-behavior:none}html:has(body.edopen){overflow:hidden;overscroll-behavior:none}
+#ed{overscroll-behavior:none;position:fixed;inset:0;overflow:hidden;background:var(--bg);z-index:20;display:none;flex-direction:column;padding:env(safe-area-inset-top,0px) 10px 0}
 .top{display:flex;align-items:center;justify-content:space-between;padding:8px 0}#pgl{min-width:44px;text-align:center}.pgn{display:flex;align-items:center;gap:2px}.pgn .tb{padding:6px 12px;font-size:18px;line-height:1}#pgl{font-size:13px;color:var(--mut);font-weight:600}
 .tb{border:0;background:var(--card);border-radius:12px;padding:8px 12px;font-size:14px;display:flex;gap:4px;align-items:center;box-shadow:var(--sh)}.tb svg{width:18px;height:18px}.tb.pri{background:var(--ac);color:#fff}
 #ed .w{position:relative;flex:1;overflow:auto;-webkit-overflow-scrolling:touch;border-radius:12px;background:var(--bd)}
@@ -1791,4 +1792,8 @@ async function pasteSys(q){q=q||[.5,.5];
 function ctxMenu(e){const q=pt(e);sheet("ここに置く",[["貼り付け(コピーした文字・画像)",()=>pasteSys(q)],["◯→◉ 選択ボタン(新しいグループ)",()=>tgPlace("c",true,q)],["◯→◉ 選択ボタン(直前と同じグループ)",()=>tgPlace("c",false,q)],["□→✓ チェック",()=>tgPlace("s",false,q)],["文字を置く",()=>{newText(q);setMode("text")}]])}
 document.addEventListener("paste",e=>{const t=e.target;if(t&&/INPUT|TEXTAREA/.test(t.tagName)||!cur||getComputedStyle($("ed")).display=="none")return;e.preventDefault();pasteSys()});
 function tgMenu(){sheet("選択ボタンを置く",[["◯→◉ 新しいグループ(例: ◯本人 ◯他人)",()=>tgPlace("c",true)],["◯→◉ 直前と同じグループに追加",()=>tgPlace("c",false)],["□→✓ チェックを置く",()=>tgPlace("s")]])}
+
+// 編集画面を開いている間は、裏のホーム画面が動かないように固定(iPhoneで画面がずれるのを防ぐ)
+(function(){const el=$("ed");let sy=0;function lock(){const on=!!el.style.display&&el.style.display!=="none";if(on===document.body.classList.contains("edopen"))return;if(on){sy=window.scrollY;document.body.style.top=-sy+"px";document.body.classList.add("edopen")}else{document.body.classList.remove("edopen");document.body.style.top="";window.scrollTo(0,sy)}}
+new MutationObserver(lock).observe(el,{attributes:true,attributeFilter:["style"]});lock()})();
 </script></body></html>
