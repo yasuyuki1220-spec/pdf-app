@@ -482,7 +482,7 @@ function sheet(t,items){const s=$("sh");s.innerHTML="";const h=document.createEl
   [...items,["キャンセル",()=>{}]].forEach(([n,fn])=>{const b=document.createElement("button");b.className="sr";b.textContent=n;b.onclick=()=>{$("ov").style.display="none";fn()};s.appendChild(b)});$("ov").style.display="flex"}
 $("ov").onclick=e=>{if(e.target.id=="ov")e.target.style.display="none"};
 $("empty").onclick=()=>$("bAdd").click();
-$("bAdd").onclick=()=>sheet("追加",[["ファイルから(PDF・Excel)",()=>$("fi").click()],["写真から",()=>$("phi").click()],["テンプレートから",()=>tplList()]]);
+$("bAdd").onclick=()=>sheet("追加",[["ファイルから",()=>$("fi").click()],["写真から",()=>$("phi").click()],["テンプレートから",()=>tplList()]]);
 $("bShare").onclick=()=>sheet("共有・書き出し",[["選択したページ",()=>exp(true)],["すべてのページ",()=>exp(false)],["選択ページをテンプレートに保存",()=>tplSave(true)],["全ページをテンプレートに保存",()=>tplSave(false)]]);
 $("eAdd").onclick=()=>sheet("ページに追加",[["ファイルから(PDF・画像)",()=>$("pf").click()],["写真から",()=>$("pi").click()]]);
 $("eMore").onclick=()=>sheet("その他",[["ページを回転",()=>$("rt").click()],...(cur&&cur._undo?[["トリミングを元に戻す",undoCrop]]:[]),["拡大",()=>$("zi").click()],["縮小",()=>$("zo").click()],["ペンの書き込みを全消去",()=>$("cl").click()],["テキストを全消去",()=>clearText()],["範囲選択で作った囲い・斜線を全消去",()=>clearShapes()],["選択ボタン(◯→◉)を置く",()=>tgMenu()],["表の空欄・○□を自動検出",()=>xlStart()],["説明書",()=>openManual()],...(cur&&cur.items.some(i=>i.lock)?[["固定した画像を解除",()=>{cur.items.forEach(i=>{delete i.lock});paint();toast("固定を解除しました")}]]:[])]);
@@ -1526,10 +1526,10 @@ async function xlsxToPdf(file){
     // 結合セル
     const mAt=new Map(),skip=new Set();merges.forEach(m=>{mAt.set(m.r0+","+m.c0,m);for(let r=m.r0;r<=m.r1;r++)for(let c=m.c0;c<=m.c1;c++)if(r!=m.r0||c!=m.c0)skip.add(r+","+c)});
     // ページ分割
-    const cwid=cx[maxC+1],k=cwid>760?760/cwid:1,M=24,pw=Math.max(300,cwid*k+2*M),ph=pw>560?pw*.7071:pw*1.4142,use=ph-2*M,ranges=[];
+    const cwid=cx[maxC+1],M=28,ls=cwid*.75>595-2*M,pw=ls?842:595,ph=ls?595:842,k=Math.min((pw-2*M)/cwid,1.3),use=ph-2*M,ranges=[];
     let rs=0,acc=0;for(let r=0;r<=maxR;r++){const h=rowHt(r)*k;if(acc+h>use&&r>rs){ranges.push([rs,r-1]);rs=r;acc=0}acc+=h}ranges.push([rs,maxR]);
     for(const [ra,rb] of ranges){
-      const S=2,cv=document.createElement("canvas");cv.width=Math.round(pw*S);cv.height=Math.round(ph*S);const x=cv.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,cv.width,cv.height);
+      const S=4,cv=document.createElement("canvas");cv.width=Math.round(pw*S);cv.height=Math.round(ph*S);const x=cv.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,cv.width,cv.height);
       const X=c=>(M+cx[c]*k)*S,Y=r=>(M+(ry[r]-ry[ra])*k)*S,pdfY=ypt=>ph-ypt,pgM={view:[0,0,pw,ph],cells:[],marks:[],widgets:[],texts:[]};
       const boxes=[];
       for(let r=ra;r<=rb;r++)for(let c=0;c<=maxC;c++){const key=r+","+c;if(skip.has(key))continue;const cell=cells.get(key),m=mAt.get(key);if(!cell&&!m)continue;boxes.push({r0:r,c0:c,r1:m?Math.min(m.r1,rb):r,c1:m?m.c1:c,cell:cell||{v:"",s:0},xf:xfs[(cell||{}).s]||dflt})}
