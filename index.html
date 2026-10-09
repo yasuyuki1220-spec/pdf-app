@@ -1505,34 +1505,34 @@ async function xlsxToPdf(file){
     const d=xParse(sx),fmt=d.getElementsByTagName("sheetFormatPr")[0],dcw=parseFloat(xAttr(fmt,"defaultColWidth"))||8.43,drh=parseFloat(xAttr(fmt,"defaultRowHeight"))||15;
     const cw={},cols=[...d.getElementsByTagName("col")];
     cols.forEach(c=>{const a=+c.getAttribute("min")-1,b=Math.min(+c.getAttribute("max")-1,200),w=parseFloat(c.getAttribute("width"))||dcw,hid=c.getAttribute("hidden")=="1";for(let i=a;i<=b;i++)cw[i]=hid?0:w});
-    const cells=new Map(),rowH={},rowHid={};let maxR=0,maxC=0;
+    const cells=new Map(),rowH={},rowHid={};let maxR=0,maxC=0,minR=1e9,minC=1e9;const upd=(r,c)=>{maxR=Math.max(maxR,r);maxC=Math.max(maxC,c);minR=Math.min(minR,r);minC=Math.min(minC,c)},ink=(v,s)=>{const o=xfs[s];return String(v).trim()!==""||!!(o&&((o.fill&&o.fill.toLowerCase()!="#ffffff")||Object.values(o.border).some(b=>b&&b!="none")))};
     [...d.getElementsByTagName("row")].forEach(r=>{const ri=+r.getAttribute("r")-1;if(r.getAttribute("ht"))rowH[ri]=parseFloat(r.getAttribute("ht"));if(r.getAttribute("hidden")=="1")rowH[ri]=0;
       [...r.getElementsByTagName("c")].forEach(c=>{const p=xRef(c.getAttribute("r"));if(!p)return;const t=c.getAttribute("t"),s=+c.getAttribute("s")||0,vE=c.getElementsByTagName("v")[0];let v="";
         if(t=="s")v=ss[+xTxt(vE)]||"";else if(t=="inlineStr")v=[...c.getElementsByTagName("t")].map(x=>x.textContent).join("");else if(t=="b")v=xTxt(vE)=="1"?"TRUE":"FALSE";else if(vE){v=xTxt(vE);if(t!="str"&&t!="e")v=xFmt(v,xfs[s]||dflt,fm)}
-        cells.set(p[0]+","+p[1],{v,s,num:!t||t=="n"});if(v!==""||(xfs[s]&&Object.values(xfs[s].border).some(Boolean))){maxR=Math.max(maxR,p[0]);maxC=Math.max(maxC,p[1])}})});
+        cells.set(p[0]+","+p[1],{v,s,num:!t||t=="n"});if(ink(v,s))upd(p[0],p[1])})});
     const merges=[...d.getElementsByTagName("mergeCell")].map(m=>{const [a,b]=(m.getAttribute("ref")||"").split(":"),p=xRef(a),q=xRef(b||a);return p&&q?{r0:p[0],c0:p[1],r1:q[0],c1:q[1]}:null}).filter(Boolean);
-    merges.forEach(m=>{maxR=Math.max(maxR,m.r1);maxC=Math.max(maxC,m.c1)});
-    if(!cells.size)continue;maxR=Math.min(maxR,600);maxC=Math.min(maxC,60);
+    merges.forEach(m=>{const a=cells.get(m.r0+","+m.c0);if(a&&ink(a.v,a.s)){upd(m.r0,m.c0);upd(m.r1,m.c1)}});
+    if(!cells.size)continue;let pa=false;const shI=[...wb.getElementsByTagName("sheet")].indexOf(sh);[...wb.getElementsByTagName("definedName")].forEach(dn=>{if(dn.getAttribute("name")=="_xlnm.Print_Area"&&+dn.getAttribute("localSheetId")==shI){const m=/\$?([A-Z]+)\$?(\d+):\$?([A-Z]+)\$?(\d+)/.exec(dn.textContent),p=m&&xRef(m[1]+m[2]),q=m&&xRef(m[3]+m[4]);if(p&&q){minR=p[0];minC=p[1];maxR=q[0];maxC=q[1];pa=true}}});if(minR>maxR||minC>maxC)continue;maxR=Math.min(maxR,minR+600);maxC=Math.min(maxC,minC+60);
     // フォーム部品(VML)
     const ctl=[];try{const lg=d.getElementsByTagName("legacyDrawing")[0];if(lg){const rid2=lg.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships","id")||lg.getAttribute("r:id"),rp=sp.replace(/worksheets\/(.*)$/,"worksheets/_rels/$1.rels"),rx=xParse(await rd(rp)||"<r/>");
       let vt=null;[...rx.getElementsByTagName("Relationship")].forEach(r=>{if(r.getAttribute("Id")==rid2)vt=r.getAttribute("Target")});
       if(vt){const vp=vt.startsWith("/")?vt.slice(1):"xl/"+vt.replace(/^\.\.\//,""),vml=await rd(vp)||"";
         vml.split(/<v:shape[\s>]/).slice(1).forEach(blk=>{const ot=/ObjectType="(\w+)"/.exec(blk),an=/<x:Anchor>\s*([^<]+)</.exec(blk);if(!ot||!an||!/^(Radio|Checkbox|CheckBox)$/.test(ot[1]))return;
           const a=an[1].split(",").map(s=>parseFloat(s)),tb=/<v:textbox[\s\S]*?<\/v:textbox>/.exec(blk),cap=tb?tb[0].replace(/<[^>]+>/g,"").replace(/&nbsp;/g," ").replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/\s+/g," ").trim():"",ck=/<x:Checked>\s*(\d+)/.exec(blk);
-          if(a.length>=8&&a.every(isFinite)){ctl.push({a,radio:ot[1]=="Radio",cap,on:!!(ck&&+ck[1]>0)});maxR=Math.max(maxR,Math.min(a[6],600));maxC=Math.max(maxC,Math.min(a[4],60))}})}}}catch(e){}
+          if(a.length>=8&&a.every(isFinite)){ctl.push({a,radio:ot[1]=="Radio",cap,on:!!(ck&&+ck[1]>0)});upd(Math.min(a[2],600),Math.min(a[0],60));upd(Math.min(a[6],600),Math.min(a[4],60))}})}}}catch(e){}
     const colW=c=>((cw[c]!==undefined?cw[c]:dcw)*7+5)*.75,rowHt=r=>rowH[r]!==undefined?rowH[r]:drh;
-    const cx=[0];for(let c=0;c<=maxC;c++)cx.push(cx[c]+colW(c));const ry=[0];for(let r=0;r<=maxR;r++)ry.push(ry[r]+rowHt(r));
+    const cx=[0];for(let c=0;c<=maxC;c++)cx.push(cx[c]+colW(c));const ry=[0];for(let r=0;r<=maxR;r++)ry.push(ry[r]+rowHt(r));{const ox=cx[minC],oy=ry[minR];for(let i=0;i<cx.length;i++)cx[i]-=ox;for(let i=0;i<ry.length;i++)ry[i]-=oy}
     ctl.forEach(c=>{const a=c.a;c.x0=(cx[a[0]]||0)+a[1]*.75;c.y0=(ry[a[2]]||0)+a[3]*.75;c.x1=(cx[a[4]]||0)+a[5]*.75;c.y1=(ry[a[6]]||0)+a[7]*.75});
     // 結合セル
     const mAt=new Map(),skip=new Set();merges.forEach(m=>{mAt.set(m.r0+","+m.c0,m);for(let r=m.r0;r<=m.r1;r++)for(let c=m.c0;c<=m.c1;c++)if(r!=m.r0||c!=m.c0)skip.add(r+","+c)});
     // ページ分割
-    const cwid=cx[maxC+1],M=28,ls=cwid*.75>595-2*M,pw=ls?842:595,ph=ls?595:842,k=Math.min((pw-2*M)/cwid,1.3),use=ph-2*M,ranges=[];
-    let rs=0,acc=0;for(let r=0;r<=maxR;r++){const h=rowHt(r)*k;if(acc+h>use&&r>rs){ranges.push([rs,r-1]);rs=r;acc=0}acc+=h}ranges.push([rs,maxR]);
+    const cwid=cx[maxC+1],M=28,ls=cwid>595-2*M,pw=ls?842:595,ph=ls?595:842,k=Math.min((pw-2*M)/cwid,1.3,pa?(ph-2*M)/ry[maxR+1]:9),use=ph-2*M,ranges=[];
+    let rs=minR,acc=0;for(let r=minR;r<=maxR;r++){const h=rowHt(r)*k;if(acc+h>use&&r>rs){ranges.push([rs,r-1]);rs=r;acc=0}acc+=h}ranges.push([rs,maxR]);
     for(const [ra,rb] of ranges){
       const S=4,cv=document.createElement("canvas");cv.width=Math.round(pw*S);cv.height=Math.round(ph*S);const x=cv.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,cv.width,cv.height);
       const X=c=>(M+cx[c]*k)*S,Y=r=>(M+(ry[r]-ry[ra])*k)*S,pdfY=ypt=>ph-ypt,pgM={view:[0,0,pw,ph],cells:[],marks:[],widgets:[],texts:[]};
       const boxes=[];
-      for(let r=ra;r<=rb;r++)for(let c=0;c<=maxC;c++){const key=r+","+c;if(skip.has(key))continue;const cell=cells.get(key),m=mAt.get(key);if(!cell&&!m)continue;boxes.push({r0:r,c0:c,r1:m?Math.min(m.r1,rb):r,c1:m?m.c1:c,cell:cell||{v:"",s:0},xf:xfs[(cell||{}).s]||dflt})}
+      for(let r=ra;r<=rb;r++)for(let c=minC;c<=maxC;c++){const key=r+","+c;if(skip.has(key))continue;const cell=cells.get(key),m=mAt.get(key);if(!cell&&!m)continue;boxes.push({r0:r,c0:c,r1:m?Math.min(m.r1,rb):r,c1:m?m.c1:c,cell:cell||{v:"",s:0},xf:xfs[(cell||{}).s]||dflt})}
       boxes.forEach(b=>{if(b.xf.fill){x.fillStyle=b.xf.fill;x.fillRect(X(b.c0),Y(b.r0),X(b.c1+1)-X(b.c0),Y(b.r1+1)-Y(b.r0))}});
       boxes.forEach(b=>{const v=b.cell.v;if(v==="")return;
         const f=b.xf.font,fs=f.sz*k,x0=X(b.c0),y0=Y(b.r0),w=X(b.c1+1)-x0,h=Y(b.r1+1)-y0,pad=2*k*S;
