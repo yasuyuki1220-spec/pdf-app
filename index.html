@@ -414,6 +414,7 @@ ec.onpointerdown=e=>{
       if(h!==sel){sel=h;emode=null;setHint()}
       if(h.k=="t"){
         tapEdit=(h===was||(h.ph&&h.field=="input"));lpPt=dp;clearTimeout(lpT);
+        lpT=setTimeout(()=>{lpT=null;tapEdit=false;if(navigator.vibrate)navigator.vibrate(12);sel=h;setEmode("move");drag=[q[0]-h.a,q[1]-h.b]},400);
         if(emode=="move")drag=[q[0]-h.a,q[1]-h.b];
       }else if(h.shape||emode=="move")drag=[q[0]-h.a,q[1]-h.b];
     }else if(mode=="move"){if(sel)pendDesel=true;selStart(e)}
