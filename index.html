@@ -123,7 +123,7 @@ input[type=range]{accent-color:var(--ac)}
 <div id="dab"><button id="dmA">←</button><span>押すと矢印「←」を置きます(動かす・回す・大きさ変更ができます)</span></div>
 <div id="fg"><span class="fl" id="fgl"></span><button id="fgc">📷 書類から</button><button id="fgs" class="p">スライド入力</button></div>
 <div id="te"><span class="fl">テンプレート編集中</span><button id="teQ">入力欄を連続設置</button><button id="teO">番号・順番</button><button id="teA">別名保存</button><button id="teS" class="p">上書き保存</button></div>
-<div id="tq"><input id="tqn" placeholder="名称を入れて、ページをクリック/タップ(例: 住所)"><select id="tqg"></select><button id="tqx">終了</button></div>
+<div id="tq"><input id="tqn" placeholder="名称を入れて、ページをダブルタップ(例: 住所)"><select id="tqg"></select><button id="tqx">終了</button></div>
 <div class="w" id="wrap"><canvas id="ec"></canvas></div>
 <div id="fp"><div id="fps"></div><div id="fbar"><i></i></div><div id="fpb"><button id="fpu">▲</button><span id="fpc" style="font-size:12px;font-weight:700"></span><button id="fpd">▼</button><button id="fpcam">📷</button><button class="p" id="fpx">完了</button></div></div>
 <div class="ctx" id="pr">
@@ -391,10 +391,10 @@ const P=new Map();
 function G(){const [a,b]=[...P.values()];return{d:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)||1,an:Math.atan2(b.clientY-a.clientY,b.clientX-a.clientX),mx:(a.clientX+b.clientX)/2,my:(a.clientY+b.clientY)/2}}
 ec.onpointerdown=e=>{
   commit();ec.setPointerCapture(e.pointerId);P.set(e.pointerId,e);
-  if(P.size==2){mvExit=false;dimSt=null;stArr=null;pendDesel=false;sdrag=null;clearTimeout(lpT);lpT=null;rz=null;createTap=null;st=null;drag=null;let onItem=false;if(!(ruler.on&&mode=="pen")){const h=(mode=='dim')?null:(hit(e)||hit([...P.values()][0]));if(h&&h===sel&&(h.k=='t'||emode=='move'))onItem=true}if(emode=='move'&&sel&&!sel.shape)onItem=true;const n=G(),r0=ec.getBoundingClientRect();g={fx:(n.mx-r0.left)/r0.width,fy:(n.my-r0.top)/r0.height,d0:n.d,a0:n.an,pm:n,zw:ec.getBoundingClientRect().width,sz:sel?(sel.k=="i"?sel.w:sel.s):0,rot:sel?sel.rot:0};g.item=onItem;if(ruler.on&&mode=="pen"&&(rdrag||isBody(e))){const m=pt({clientX:n.mx,clientY:n.my});g.ruler=true;g.deg0=ruler.deg;g.off=[ruler.a-m[0],ruler.b-m[1]];rdrag=null}paint();return}
+  if(P.size==2){if(qp)qp.t=0;mvExit=false;dimSt=null;stArr=null;pendDesel=false;sdrag=null;clearTimeout(lpT);lpT=null;rz=null;createTap=null;st=null;drag=null;let onItem=false;if(!(ruler.on&&mode=="pen")){const h=(mode=='dim')?null:(hit(e)||hit([...P.values()][0]));if(h&&h===sel&&(h.k=='t'||emode=='move'))onItem=true}if(emode=='move'&&sel&&!sel.shape)onItem=true;const n=G(),r0=ec.getBoundingClientRect();g={fx:(n.mx-r0.left)/r0.width,fy:(n.my-r0.top)/r0.height,d0:n.d,a0:n.an,pm:n,zw:ec.getBoundingClientRect().width,sz:sel?(sel.k=="i"?sel.w:sel.s):0,rot:sel?sel.rot:0};g.item=onItem;if(ruler.on&&mode=="pen"&&(rdrag||isBody(e))){const m=pt({clientX:n.mx,clientY:n.my});g.ruler=true;g.deg0=ruler.deg;g.off=[ruler.a-m[0],ruler.b-m[1]];rdrag=null}paint();return}
   if(P.size>2)return;
   const q=pt(e);
-  if(qp&&qp.on&&tplEdit&&!sel&&!hit(e)){qPlace(q);return}
+  if(qp&&qp.on&&tplEdit&&!sel&&!hit(e)){const now=Date.now();if(qp.t&&now-qp.t<420&&Math.hypot(e.clientX-qp.x,e.clientY-qp.y)<40){qp.t=0;qPlace(q)}else{qp.t=now;qp.x=e.clientX;qp.y=e.clientY}return}
   if(sArm&&sel===sArm){const c=stampCorner(sArm),r=ec.getBoundingClientRect(),A=ang(cur),[u,v]=toDisp(c[0],c[1],A);if(Math.hypot(e.clientX-(r.left+u*r.width),e.clientY-(r.top+v*r.height))<hitR()*1.8){stArr={c:sArm.c,w:.0035,p:[c,q]};paint();return}}
   if(mode=="dim"){if(sel&&sel.k=="t"&&emode=="move"){const h=hit(e);if(h===sel){drag=[q[0]-sel.a,q[1]-sel.b];moved=false;dp={x:e.clientX,y:e.clientY};tapEdit=true;paint();return}}
     if(sel){sel=null;emode=null;setHint();syncPanel()}dimSt={c:col,w:.004,p:[q,q]};paint();return}
@@ -1282,7 +1282,7 @@ function qPlace(q){
 $("teQ").onclick=()=>{
   if(qp.on){qOff();return}
   setMode("text");sel=null;emode=null;setHint();syncPanel();qp.on=true;qOpts();qSync();paint();
-  toast("連続設置:名称を入れてページをクリック。「直前と同じグループ」にすると別ページとも同時入力になります。名称欄でEnterを押すと下に続けて置けます",6000);
+  toast("連続設置:名称を入れてページをダブルタップ(ダブルクリック)。「直前と同じグループ」にすると別ページとも同時入力になります。名称欄でEnterを押すと下に続けて置けます",6000);
   if(matchMedia("(pointer:fine)").matches)$("tqn").focus()};
 $("tqx").onclick=qOff;
 $("tqn").onkeydown=e=>{
