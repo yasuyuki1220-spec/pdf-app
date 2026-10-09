@@ -75,6 +75,14 @@ input[type=range]{accent-color:var(--ac)}
 #ov{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:flex-end;z-index:70}
 #sh{background:var(--card);width:100%;border-radius:22px 22px 0 0;padding:12px 14px calc(14px + env(safe-area-inset-bottom,0px));max-width:620px;margin:0 auto}
 .st{font-size:13px;color:var(--mut);padding:6px 10px}.sr{display:block;width:100%;text-align:left;padding:15px 10px;border:0;border-bottom:1px solid var(--bd);background:none;font-size:16px}.sr:last-child{border:0;color:var(--mut)}
+#op #bmv{order:-4}#op #bsz{order:-3}#op #ex{order:-2}#op #bfd{order:-1}
+#op #bmv,#op #bsz,#op #ex,#op #bfd{padding:11px 15px!important;font-size:14px!important;font-weight:700;background:#fff3e0!important;color:#b45309}
+#op #bmv.act,#op #bsz.act,#op #bfd.act{background:var(--ac)!important;color:#fff}
+#fbar{width:7px;align-self:stretch;margin:10px 0;border-radius:4px;background:rgba(0,0,0,.16);position:relative;flex:none}#fbar i{position:absolute;left:0;right:0;border-radius:4px;background:var(--ac);transition:top .12s}
+#te{flex-wrap:wrap}#te .fl{flex:1 1 100%}#te button.act{background:var(--ac);color:#fff}
+#tq{display:none;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 6px;background:#fff3e0;border-radius:12px;padding:6px 8px}#tq input,#tq select{font:inherit;font-size:14px;border:1px solid var(--bd);border-radius:8px;padding:6px 8px;background:var(--bg);color:var(--fg)}#tq input{flex:1;min-width:130px}#tq button{border:0;border-radius:9px;padding:7px 12px;font-size:13px;background:var(--card);box-shadow:var(--sh)}#tq small{flex-basis:100%;color:#b45309;font-size:12px;line-height:1.4}
+#dab{display:none;align-items:center;gap:8px;margin:0 0 6px}#dab button{border:0;border-radius:10px;padding:4px 20px;font-size:26px;line-height:1.2;background:var(--card);box-shadow:var(--sh);font-weight:700}#dab span{font-size:12px;color:var(--mut)}
+.rotb{touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 </style></head><body>
 <svg style="display:none"><defs>
 <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
@@ -111,10 +119,12 @@ input[type=range]{accent-color:var(--ac)}
 <div id="ed">
 <div class="top"><button class="tb" id="un"><svg><use href="#i-undo"/></svg>戻る</button><span class="pgn"><button class="tb" id="pgP">‹</button><span id="pgl"></span><button class="tb" id="pgN">›</button></span><span style="display:flex;gap:4px"><button class="tb" id="zOut">－</button><button class="tb" id="zIn">＋</button></span><button class="tb pri" id="ok">完了</button></div>
 <div id="mhint"></div>
+<div id="dab"><button id="dmA">←</button><span>押すと矢印「←」を置きます(動かす・回す・大きさ変更ができます)</span></div>
 <div id="fg"><span class="fl" id="fgl"></span><button id="fgc">📷 書類から</button><button id="fgs" class="p">スライド入力</button></div>
-<div id="te"><span class="fl">テンプレート編集中</span><button id="teO">番号・順番</button><button id="teA">別名保存</button><button id="teS" class="p">上書き保存</button></div>
+<div id="te"><span class="fl">テンプレート編集中</span><button id="teQ">入力欄を連続設置</button><button id="teO">番号・順番</button><button id="teA">別名保存</button><button id="teS" class="p">上書き保存</button></div>
+<div id="tq"><input id="tqn" placeholder="名称を入れて、ページをクリック/タップ(例: 住所)"><select id="tqg"></select><button id="tqx">終了</button></div>
 <div class="w" id="wrap"><canvas id="ec"></canvas></div>
-<div id="fp"><div id="fps"></div><div id="fpb"><button id="fpu">▲</button><span id="fpc" style="font-size:12px;font-weight:700"></span><button id="fpd">▼</button><button id="fpcam">📷</button><button class="p" id="fpx">完了</button></div></div>
+<div id="fp"><div id="fps"></div><div id="fbar"><i></i></div><div id="fpb"><button id="fpu">▲</button><span id="fpc" style="font-size:12px;font-weight:700"></span><button id="fpd">▼</button><button id="fpcam">📷</button><button class="p" id="fpx">完了</button></div></div>
 <div class="ctx" id="pr">
 <button class="col on" style="background:#111" data-c="#111111"></button><button class="col" style="background:#e11d48" data-c="#e11d48"></button><button class="col" style="background:#2563eb" data-c="#2563eb"></button><button class="col" style="background:#16a34a" data-c="#16a34a"></button><button class="col" style="background:#f59e0b" data-c="#f59e0b"></button><button class="col" style="background:#fff" data-c="#ffffff"></button>
 <input type="color" id="cc" value="#111111" style="width:28px;height:28px;padding:0;border:0;background:none"><span style="font-size:12px;color:var(--mut)">太さ</span><input id="wd" type="range" min="1" max="14" value="3" style="width:90px">
@@ -323,11 +333,11 @@ async function runExport(list,name,fmt){
     await deliverFiles(fs,name)
   }catch(err){say("作成に失敗しました。暗号化PDFは非対応です")}}
 // ---- エディタ ----
-function setMode(m){sbAll();mode=m;emode=null;setHint();selR=null;sdrag=null;document.querySelectorAll("[data-m]").forEach(b=>b.classList.toggle("on",b.dataset.m==m));if(m=="pen"||m=="line"){sel=null;syncPanel()}paint()}
+function setMode(m){sbAll();mode=m;if(m!="move"&&qp&&qp.on)qOff();if($("dab"))$("dab").style.display=m=="dim"?"flex":"none";emode=null;setHint();selR=null;sdrag=null;document.querySelectorAll("[data-m]").forEach(b=>b.classList.toggle("on",b.dataset.m==m));if(m=="pen"||m=="line"){sel=null;syncPanel()}paint()}
 document.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{setMode(b.dataset.m);if(b.dataset.m=="move")toast("画面をなぞって範囲を選びます");if(b.dataset.m=="dim")toast("線をなぞると寸法線になります(水平・垂直に自動で合います)");if(b.dataset.m=="text"){if(sel&&sel.k=="t")startEdit(sel);else newText(toUnrot(.5,.35,ang(cur)))}});
 let szOpen=false;
 let sArm=null,stArr=null;
-function syncPanel(){sbAll();if(sel!==sArm)sArm=null;
+let _ls=null;function syncPanel(){sbAll();if(sel!==sArm)sArm=null;if(sel!==_ls){_ls=sel;if(sel)$("op").scrollLeft=0}
   if(!sel||sel.shape)szOpen=false;$("szp").style.display=szOpen?"flex":"none";$("bgz").classList.toggle("act",szOpen);
   $("op").style.display=sel?"flex":"none";$("pr").style.display=sel&&sel.shape?"none":"";$("shp").style.display=sel&&sel.shape?"flex":"none";if(!sel)return;
   const t=sel.k=="t";$("ex").style.display=$("bmv").style.display=$("bsz").style.display=$("bsc").style.display=$("bfd").style.display=$("bac").style.display=t?"":"none";$("bac").textContent="基準:"+({l:"左",c:"中央",r:"右"}[sel.anc||"l"]);$("bfd").textContent=sel.field=="input"?"固定に戻す":"入力欄にする";$("bfd").classList.toggle("act",sel.field=="input");$("bsc").classList.toggle("act",emode=="scale");$("bmv").style.display=(t||(sel.k=="i"&&!sel.shape))?"":"none";$("blk").style.display=(sel.k=="i"&&!sel.shape)?"":"none";$("blk").textContent=sel.lock?"固定解除":"固定";$("bhl").style.display=t?"":"none";$("bhl").classList.toggle("act",!!sel.halo);$("bvd").style.display=(sel.shape&&emode=="shape")?"":"none";$("bsh").style.display=sel.shape?"":"none";$("bsh").classList.toggle("act",emode=="shape");$("opg").style.display=sel.shape?"none":"contents";if(sel.shape)shpUI();$("bmv").classList.toggle("act",emode=="move");$("bsz").classList.toggle("act",emode=="size");
@@ -337,7 +347,7 @@ const pgList=()=>tplEdit?tplEdit.pgs:pages;
 function pgLabel(){const L=pgList();$("pgl").textContent=(L.indexOf(cur)+1)+" / "+L.length}
 function goPage(d){if(!cur)return;const L=pgList(),n=L[L.indexOf(cur)+d];if(!n)return toast(d>0?"最後のページです":"最初のページです",1200);endEdit();commit();openEd(n)}
 $("pgP").onclick=()=>goPage(-1);$("pgN").onclick=()=>goPage(1);
-async function openEd(pg){sbAll();cur=pg;emode=null;ruler={on:false,a:.5,b:.4,deg:0};rotInfo=null;rulerUI();pgLabel();sel=null;$("ed").style.display="flex";setMode("pen");await redrawBase()}
+async function openEd(pg){sbAll();cur=pg;emode=null;ruler={on:false,a:.5,b:.4,deg:0};rotInfo=null;rulerUI();pgLabel();sel=null;$("ed").style.display="flex";setMode(qp&&qp.on&&tplEdit?"move":"pen");await redrawBase();qSync();if(qp&&qp.on)qOpts()}
 const baseCv=document.createElement("canvas");
 async function redrawBase(){selR=null;if(!cur._base)cur._base=snapOf(cur);
   {const A0=ang(cur),pw=A0%180==0?cur.W:cur.H,ph=A0%180==0?cur.H:cur.W;baseW=Math.max(120,Math.min(wrap.clientWidth-4,(wrap.clientHeight-4)*pw/ph,900))}
@@ -368,6 +378,7 @@ ec.onpointerdown=e=>{
   if(P.size==2){dimSt=null;stArr=null;pendDesel=false;sdrag=null;clearTimeout(lpT);lpT=null;rz=null;createTap=null;st=null;drag=null;let onItem=false;if(!(ruler.on&&mode=="pen")){const h=(mode=='dim')?null:(hit(e)||hit([...P.values()][0]));if(h&&h===sel&&(h.k=='t'||emode=='move'))onItem=true}const n=G(),r0=ec.getBoundingClientRect();g={fx:(n.mx-r0.left)/r0.width,fy:(n.my-r0.top)/r0.height,d0:n.d,a0:n.an,pm:n,zw:ec.getBoundingClientRect().width,sz:sel?(sel.k=="i"?sel.w:sel.s):0,rot:sel?sel.rot:0};g.item=onItem;if(ruler.on&&mode=="pen"&&(rdrag||isBody(e))){const m=pt({clientX:n.mx,clientY:n.my});g.ruler=true;g.deg0=ruler.deg;g.off=[ruler.a-m[0],ruler.b-m[1]];rdrag=null}paint();return}
   if(P.size>2)return;
   const q=pt(e);
+  if(qp&&qp.on&&tplEdit&&!hit(e)){qPlace(q);return}
   if(sArm&&sel===sArm){const c=stampCorner(sArm),r=ec.getBoundingClientRect(),A=ang(cur),[u,v]=toDisp(c[0],c[1],A);if(Math.hypot(e.clientX-(r.left+u*r.width),e.clientY-(r.top+v*r.height))<hitR()*1.8){stArr={c:sArm.c,w:.0035,p:[c,q]};paint();return}}
   if(mode=="dim"){if(sel&&sel.k=="t"&&emode=="move"){const h=hit(e);if(h===sel){drag=[q[0]-sel.a,q[1]-sel.b];moved=false;dp={x:e.clientX,y:e.clientY};tapEdit=true;paint();return}}
     if(sel){sel=null;emode=null;setHint();syncPanel()}dimSt={c:col,w:.004,p:[q,q]};paint();return}
@@ -434,7 +445,7 @@ document.querySelectorAll(".col").forEach(b=>b.onclick=()=>{
 });
 $("bgz").onclick=()=>{szOpen=!szOpen;syncPanel()};
 $("sz").oninput=()=>{if(!sel)return;const v=+$("sz").value;if(sel.k=="i")sel.w=Math.max(.03,v/100);else sel.s=(v+4)/700;paint()};
-$("rl").onclick=()=>{if(sel){sel.rot-=15;rotShow(sel.a,sel.b,sel.rot);paint()}};$("rr").onclick=()=>{if(sel){sel.rot+=15;rotShow(sel.a,sel.b,sel.rot);paint()}};
+const selSpin=d=>{if(sel){sel.rot+=d;rotShow(sel.a,sel.b,sel.rot);paint()}};holdRot($("rl"),-1,()=>selSpin(-15),selSpin);holdRot($("rr"),1,()=>selSpin(15),selSpin);
 $("ex").onclick=()=>{if(sel&&sel.k=="t")startEdit(sel)};
 $("dl").onclick=()=>{if(sel){cur.items=cur.items.filter(i=>i!==sel);sel=null;syncPanel();paint()}};
 $("un").onclick=undoLast;
@@ -479,7 +490,7 @@ $("rm").onclick=()=>{ruler.m=(ruler.m||1)%3+1;rulerUI();paint()};
 $("rx").onclick=()=>{ruler.on=false;rulerUI();paint()};
 const rset=d=>{ruler.deg=d;rotShow(ruler.a,ruler.b,ruler.deg);paint()};
 $("r0").onclick=()=>rset(-ang(cur));$("r9").onclick=()=>rset(90-ang(cur));
-$("rl2").onclick=()=>rset(ruler.deg-15);$("rr2").onclick=()=>rset(ruler.deg+15);
+holdRot($("rl2"),-1,()=>rset(ruler.deg-15),d=>rset(ruler.deg+d));holdRot($("rr2"),1,()=>rset(ruler.deg+15),d=>rset(ruler.deg+d));
 function snapRot(d){const t=d+ang(cur),m=Math.round(t/90)*90;return Math.abs(t-m)<3?m-ang(cur):d}
 function rotShow(a,b,d){const A=ang(cur),[u,v]=toDisp(a,b,A);rotInfo={x:u*ec.width,y:v*ec.height,t:d+A};clearTimeout(rotT);rotT=setTimeout(()=>{rotInfo=null;paint()},1200)}
 function rulerGeom(){const A=ang(cur),cw=ec.width,ch=ec.height,ppp=(A%180==0?cw:ch)/cur.W,[u,v]=toDisp(ruler.a,ruler.b,A);return{cx:u*cw,cy:v*ch,f:(ruler.deg+A)*PI/180,L:425*ppp*(ruler.m||1),H:75*ppp,ppp,cw,ch,A}}
@@ -881,7 +892,7 @@ async function tplMake(r){
 const curInst=()=>(sel&&sel.inst)||((cur&&cur.items.find(i=>i.inst))||{}).inst;
 function fillList(inst){const L=[];if(!inst)return L;pages.forEach(pg=>pg.items.forEach(it=>{if(it.inst===inst&&it.field=="input")L.push({pg,it})}));return L.sort((a,b)=>a.it.no-b.it.no)}
 function fgUI(){
-  const g=$("fg");$("te").style.display=(cur&&tplEdit)?"flex":"none";
+  const g=$("fg");$("te").style.display=(cur&&tplEdit)?"flex":"none";qSync();
   if(!cur||fillInst||tplEdit){g.style.display="none";return}
   const L=fillList(curInst());if(!L.length){g.style.display="none";return}
   const grp=new Set(L.map(x=>x.it.no)).size,rest=new Set(L.filter(x=>x.it.ph).map(x=>x.it.no)).size;
@@ -914,7 +925,7 @@ function fillStart(inst){
     inp.oninput=()=>{const v=inp.value;g.list.forEach(x=>{x.it.ph=!v.trim();setItemStr(x.it,x.pg,v.trim()?v:x.it.lbl)});paint()};
     inp.onfocus=()=>{if(!fpLock&&fpI!==i)fpGo(i,false)};
     d.append(b,inp);box.appendChild(d)});
-  $("ed").classList.add("fill");$("fp").style.display="flex";fpI=-1;fpGo(0,false)}
+  $("ed").classList.add("fill");$("fp").style.display="flex";fpI=-1;fbUpd();fpGo(0,false)}
 async function fpGo(i,focus){
   i=Math.max(0,Math.min(fillL.length-1,i));const g=fillL[i];if(!g)return;
   if(i===fpI&&!focus)return;
@@ -927,7 +938,7 @@ async function fpGo(i,focus){
 function fillStop(){
   if(!fillInst)return;fillInst=null;fillL=[];$("ed").classList.remove("fill");$("fp").style.display="none";
   if(cur){ec.style.width=baseW+"px";wrap.scrollLeft=0;wrap.scrollTop=0;sel=null;syncPanel();paint()}}
-$("fps").addEventListener("scroll",()=>{clearTimeout(fpT);fpT=setTimeout(()=>{if(fpLock)return;const i=Math.round($("fps").scrollTop/86);if(i!==fpI)fpGo(i,false)},120)},{passive:true});
+$("fps").addEventListener("scroll",()=>{fbUpd();clearTimeout(fpT);fpT=setTimeout(()=>{if(fpLock)return;const i=Math.round($("fps").scrollTop/86);if(i!==fpI)fpGo(i,false)},120)},{passive:true});
 $("fpx").onclick=fillStop;$("fpu").onclick=()=>fpGo(fpI-1,true);$("fpd").onclick=()=>fpGo(fpI+1,true);
 // ---- テンプレートを他の人に渡す(ファイルで書き出し・取り込み)
 function b64(u){let s="";for(let i=0;i<u.length;i+=32768)s+=String.fromCharCode.apply(null,u.subarray(i,i+32768));return btoa(s)}
@@ -1021,7 +1032,7 @@ async function tplEditSave(exit){
     const r=tplEdit.r;await tdb("put",{...r,fields:fieldsFrom(tplEdit.pgs),pages:tplEdit.pgs.length});
     toast("テンプレートを保存しました");if(exit)tplEditEnd()
   }catch(e){toast("保存できませんでした")}}
-function tplEditEnd(){const t=tplEdit;tplEdit=null;pages=pages.filter(p=>!t.pgs.includes(p));say("");$("ok").click()}
+function tplEditEnd(){const t=tplEdit;tplEdit=null;qp.on=false;qSync();pages=pages.filter(p=>!t.pgs.includes(p));say("");$("ok").click()}
 function tplAskExit(){sheet("テンプレートの編集を終わりますか?",[["保存して終了",()=>tplEditSave(true)],["保存せずに終了",tplEditEnd]])}
 $("teS").onclick=()=>tplEditSave(false);
 $("teA").onclick=async()=>{try{const r=tplEdit.r,id=String(Date.now()),nr={...r,id,name:r.name+"のコピー",created:Date.now(),fields:fieldsFrom(tplEdit.pgs),pages:tplEdit.pgs.length};await tdb("put",nr);toast("「"+nr.name+"」として別に保存しました")}catch(e){toast("保存できませんでした")}};
@@ -1088,32 +1099,59 @@ document.addEventListener("keydown",e=>{
 $("tmi").onclick=async()=>{if(!selR)return;const c=crop(await pageBig(2000)),im=$("tmim");im.src=c.toDataURL("image/png");im.style.display="block";$("tmt").textContent="画像を長押しして、iPhoneの文字認識でコピーすることもできます"};
 if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 // ---- 書類の撮影 → 文字認識 → 住所・氏名・電話番号を入力欄へ
-const dcCat=l=>{l=(l||"").normalize("NFKC");if(/フリガナ|ふりがな|カナ|ﾌﾘｶﾞﾅ/.test(l))return null;if(/電話|TEL|携帯/i.test(l))return"tel";if(/住所|所在地/.test(l))return"addr";if(/氏名|名前|お名前|申請者|契約者|代表者|芳名/.test(l))return"name";return null};
+const dcCat=l=>{l=(l||"").normalize("NFKC");if(/フリガナ|ふりがな|カナ|ﾌﾘｶﾞﾅ/.test(l))return null;if(/電話|TEL|携帯/i.test(l))return"tel";if(/住所|所在地/.test(l))return"addr";if(/氏名|名前|お名前|申請者|契約者|代表者|芳名|会社名|法人名|社名|商号|屋号|事業者/.test(l))return"name";return null};
 function dcParse(raw){
-  const N=String(raw||"").normalize("NFKC"),lines=N.split(/\n+/).map(l=>l.replace(/[ \t　]+/g," ").trim()).filter(Boolean),out={tel:[],addr:[],name:[]};
-  const add=(k,v)=>{v=(v||"").trim();if(v&&!out[k].includes(v))out[k].push(v)},cj=s=>s.replace(/ (?=[^\x00-\x7F])|(?<=[^\x00-\x7F]) /g,"");
-  // 電話番号(099・090・03 など。ハイフンなしも可)
-  const tt=N.replace(/[‐‑‒–—―−]/g,"-").replace(/(\d)\s*[ーｰ]\s*(?=\d)/g,"$1-").replace(/\((?=\d)/g," ").replace(/\)\s*(?=\d)/g,"-"),found=[];
-  const fm=(d,h)=>{const g=d.replace(/\D/g,"");if(h)return h;if(g.length==11)return g.replace(/(\d{3})(\d{4})(\d{4})/,"$1-$2-$3");if(/^0[36]/.test(g))return g.replace(/(\d{2})(\d{4})(\d{4})/,"$1-$2-$3");return g.replace(/(\d{3})(\d{3})(\d{4})/,"$1-$2-$3")};
+  const N0=String(raw||"").normalize("NFKC"),jp=/[぀-ヿ一-鿿]/;
+  // 文字ごとに空白が入る認識結果(「山 田 太 郎」)を詰める
+  const fixSp=l=>{const t=l.split(" ").filter(Boolean);if(t.length<3)return l.replace(/[ \t　]+/g," ").trim();const cj=t.filter(x=>jp.test(x));if(cj.length&&cj.filter(x=>x.length==1).length/cj.length>.5)return l.replace(/(?<=[^\x00-\x7F]) (?=[^\x00-\x7F])/g,"").replace(/[ \t　]+/g," ").trim();return l.replace(/[ \t　]+/g," ").trim()};
+  const lines=N0.split(/\n+/).map(l=>fixSp(l.replace(/　/g," "))).filter(Boolean),N=lines.join("\n"),out={tel:[],addr:[],name:[]};
+  const add=(k,v)=>{v=(v||"").trim();if(v&&!out[k].includes(v))out[k].push(v)},cj=s=>s.replace(/ (?=[^\x00-\x7F])|(?<=[^\x00-\x7F]) /g,"").replace(/(\d) ?- ?(?=\d)/g,"$1-");
+  // 電話番号(099・090・03 など。ハイフンなしも可。O→0 などの読み違いも補正)
+  let tt=N.replace(/[‐‑‒–—―−]/g,"-").replace(/(\d)\s*[ーｰ]\s*(?=\d)/g,"$1-").replace(/\((?=\d)/g," ").replace(/\)\s*(?=\d)/g,"-");
+  tt=tt.replace(/[0-9OoQDIl|SsBZ\-\s]{9,}/g,seg=>((seg.match(/\d/g)||[]).length>=4?seg.replace(/[OoQD]/g,"0").replace(/[Il|]/g,"1").replace(/[Ss]/g,"5").replace(/B/g,"8").replace(/Z/g,"2"):seg));
+  tt=tt.replace(/(?:[\d-] ){5,}[\d-]/g,x=>x.replace(/ /g,""));const found=[];
+  const fm=(d)=>{const g=d.replace(/\D/g,"");if(g.length==11)return g.replace(/(\d{3})(\d{4})(\d{4})/,"$1-$2-$3");if(/^0[36]/.test(g))return g.replace(/(\d{2})(\d{4})(\d{4})/,"$1-$2-$3");return g.replace(/(\d{3})(\d{3})(\d{4})/,"$1-$2-$3")};
   for(const m of tt.matchAll(/(?<![\d-])(0\d{1,4})\s?-\s?(\d{1,4})\s?-\s?(\d{3,4})(?![\d-])/g)){const g=(m[1]+m[2]+m[3]);if(g.length==10||g.length==11)found.push({i:m.index,v:m[1]+"-"+m[2]+"-"+m[3]})}
   for(const m of tt.matchAll(/(?<![\d-])(0\d{9,10})(?![\d-])/g))found.push({i:m.index,v:fm(m[1])});
   found.forEach(f=>{const near=tt.slice(Math.max(0,f.i-8),f.i);f.r=(/TEL|Tel|tel|電話|携帯|連絡/.test(near)?0:1)+(/^099/.test(f.v)?0:.5)});
   found.sort((a,b)=>a.r-b.r||a.i-b.i).forEach(f=>add("tel",f.v));
   // 住所(〒の近く、◯◯市・◯◯郡を目印に。県は無くてもよい)
-  const cut=s=>s.replace(/\s*(TEL|Tel|tel|電話|FAX|携帯|様|氏名|名前|申請|\d{2,4}-\d{2,4}-\d{3,4}).*$/,"").trim(),pz=/〒?\s*(?<![\d-])\d{3}-\d{4}(?![\d-])/,city=/(?:[一-龥ァ-ヶ]{2,4}[都道府県])?[一-龥ぁ-んァ-ヶ]{1,8}[市郡]/;
+  const cut=s=>s.replace(/\s*(TEL|Tel|tel|電話|FAX|携帯|様|殿|御中|氏名|名前|申請|\d{2,4}-\d{2,4}-\d{3,4}).*$/,"").trim(),pz=/〒?\s*(?<![\d-])\d{3}-\d{4}(?![\d-])/,city=/(?:[一-龥ァ-ヶ]{2,4}[都道府県])?[一-龥ぁ-んァ-ヶ]{1,8}[市郡]/;
   lines.forEach((l,i)=>{if(!(/〒/.test(l)||pz.test(l)))return;let rest=cut(l.replace(pz,"").replace(/^.*?(住所|所在地)\s*[:：]?/,"")).trim();if(rest.length<4&&lines[i+1])rest=cut(lines[i+1]);if(rest.length>=4)add("addr",cj(rest))});
-  lines.forEach(l=>{const m=l.match(city);if(!m)return;const s=cut(l.slice(m.index));if(s.length>=5&&(/\d/.test(s)||/[町村区]|丁目/.test(s)))add("addr",cj(s))});
-  // 氏名(「氏名・名前・お名前」の横、「◯◯ △△様」の様の前)
-  const lab=/^(氏名|お名前|ご氏名|名前|申請者名?|契約者名?|代表者名?|ご芳名|御氏名|フリガナ|ふりがな|住所|電話|TEL|御|貴|ご|宛)$/;
-  lines.forEach(l=>{const m=l.match(/(?:氏名|お名前|ご氏名|名前|申請者名?|契約者名?|ご芳名)\s*[:：]?\s*(.{1,16})/);if(!m)return;let s=m[1].replace(/(様|フリガナ|ふりがな|住所|電話|TEL|〒|生年月日).*$/,"").replace(/[\d,、。:：()（）]/g,"").trim();const t=s.split(" ").filter(x=>x&&!lab.test(x)).slice(0,2);if(t.length&&t.join("").length>=2)add("name",t.join(" "))});
-  lines.forEach(l=>{const m=l.match(/(.{1,24}?)\s*様/);if(!m)return;const t=m[1].split(/[\s:：、,.。()（）「」]+/).filter(x=>x&&!lab.test(x)&&!/\d/.test(x));if(!t.length)return;const w=t.slice(-2);if(w.length==1&&w[0].length>6)w[0]=w[0].slice(-6);add("name",w.join(" "))});
+  lines.forEach(l0=>{const l=l0.replace(/^.*?(?:住\s?所|所在地)\s*[:：]?\s*/,""),m=l.match(city);if(!m)return;const s=cut(l.slice(m.index));if(s.length>=5&&(/\d/.test(s)||/[町村区]|丁目/.test(s)))add("addr",cj(s))});
+  // 氏名・法人名(「氏名・名前・お名前・会社名」の横、法人格のついた名前、「◯◯ △△様/御中」の前)
+  const lab=/^(氏名|お名前|ご氏名|名前|申請者名?|契約者名?|代表者名?|ご芳名|御氏名|会社名|法人名|社名|商号|屋号|御社名|貴社名|フリガナ|ふりがな|住所|電話|TEL|御|貴|ご|宛)$/;
+  lines.forEach(l=>{const m=l.match(/(?:氏名|お名前|ご氏名|名前|申請者名?|契約者名?|ご芳名|会社名|法人名|御社名|貴社名|社名|商号|屋号)\s*[:：]?\s*(.{1,24})/);if(!m)return;let s=m[1].replace(/(様|殿|御中|フリガナ|ふりがな|住所|電話|TEL|〒|生年月日|代表).*$/,"").replace(/[\d,、。:：]/g,"").trim();const t=s.split(" ").filter(x=>x&&!lab.test(x)).slice(0,2);if(t.length&&t.join("").length>=2)add("name",t.join(" "))});
+  const kind="株式会社|有限会社|合同会社|合資会社|合名会社|\\(株\\)|\\(有\\)|\\(合\\)|一般社団法人|一般財団法人|公益社団法人|公益財団法人|医療法人社団|医療法人財団|医療法人|社会福祉法人|学校法人|宗教法人|特定非営利活動法人|NPO法人|農業協同組合|協同組合",ch="[^\\s、,。:：()（）〒]",
+    pre=new RegExp("(?:"+kind+")\\s?"+ch+"{1,20}","g"),suf=new RegExp(ch+"{1,20}\\s?(?:株式会社|有限会社|合同会社|合資会社|合名会社|\\(株\\)|\\(有\\)|\\(合\\))","g");
+  const trim2=s=>s.replace(/^(申請者|契約者|会社名|法人名|御社名|貴社名|社名|商号|屋号|氏名|名前|お名前)\s*/,"").replace(/(様|殿|御中|TEL|電話|住所|〒|代表).*$/,"").replace(/\s+/g," ").trim();
+  lines.forEach(l=>{const L=l.replace(/\s*\(株\)\s*/g,"(株)");for(const re of [pre,suf]){re.lastIndex=0;for(const m of L.matchAll(re)){const s=trim2(m[0]);if(s.length>=4&&!/\d{3,}/.test(s))add("name",s)}}});
+  lines.forEach(l=>{const m=l.match(/(.{1,28}?)\s*(?:様|殿|御中)/);if(!m)return;const t=m[1].split(/[\s:：、,.。()（）「」]+/).filter(x=>x&&!lab.test(x)&&!/\d/.test(x));if(!t.length)return;const w=t.slice(-2);if(w.length==1&&w[0].length>8)w[0]=w[0].slice(-8);add("name",w.join(" "))});
   return out}
-
-async function ocrCanvas(c,onPart){
+async function ocrCanvas(c0,onPart){
   if(typeof Tesseract=="undefined")throw{code:"no_ocr",message:"文字認識を読み込めません。通信を確認してください"};
+  const {A,B}=dcPrep(c0);let step=0;const total=3;
   onPart("文字認識の準備中…(初回のみ数十秒かかります)");
-  const w=await Tesseract.createWorker("jpn",1,{langPath:"https://cdn.jsdelivr.net/npm/@tesseract.js-data/jpn/4.0.0_best_int",logger:m=>{if(m.status)onPart("文字認識中… "+Math.round((m.progress||0)*100)+"%")}});
-  try{const r=await w.recognize(c);return String(r.data.text||"")}finally{await w.terminate()}}
+  const w=await Tesseract.createWorker("jpn",1,{langPath:"https://cdn.jsdelivr.net/npm/@tesseract.js-data/jpn/4.0.0_best_int",logger:m=>{if(m.status&&/recogni/.test(m.status))onPart("文字認識中 "+step+"/"+total+" … "+Math.round((m.progress||0)*100)+"%")}});
+  const parts=[];
+  try{
+    const run=async(cv,psm,wl)=>{step++;try{await w.setParameters({tessedit_pageseg_mode:String(psm),preserve_interword_spaces:"1",user_defined_dpi:"300",tessedit_char_whitelist:wl||""});const r=await w.recognize(cv);parts.push(String(r.data.text||""))}catch(e){if(step==1)throw e}};
+    await run(A,3);await run(B,11);await run(B,11,"0123456789-()");
+    return parts.join("\n")}finally{await w.terminate()}}
+function dcPrep(src){
+  const L=Math.max(src.width,src.height),k=L>2800?2800/L:(L<1800?Math.min(2,1800/L):1),w=Math.max(8,Math.round(src.width*k)),h=Math.max(8,Math.round(src.height*k)),n=w*h;
+  const c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,w,h);x.imageSmoothingQuality="high";x.drawImage(src,0,0,w,h);
+  const img=x.getImageData(0,0,w,h),d=img.data,g=new Float32Array(n);
+  for(let i=0;i<n;i++)g[i]=d[i*4]*.299+d[i*4+1]*.587+d[i*4+2]*.114;
+  const gray=document.createElement("canvas");gray.width=w;gray.height=h;const gx=gray.getContext("2d"),gi=gx.createImageData(w,h);
+  for(let i=0;i<n;i++){const v=g[i];gi.data[i*4]=gi.data[i*4+1]=gi.data[i*4+2]=v;gi.data[i*4+3]=255}gx.putImageData(gi,0,0);
+  const sw=Math.max(8,Math.round(w/28)),sh=Math.max(8,Math.round(h/28)),sc=document.createElement("canvas");sc.width=sw;sc.height=sh;const sx=sc.getContext("2d");sx.imageSmoothingQuality="high";sx.drawImage(gray,0,0,sw,sh);
+  const bc=document.createElement("canvas");bc.width=w;bc.height=h;const bx=bc.getContext("2d");bx.imageSmoothingEnabled=true;bx.imageSmoothingQuality="high";bx.drawImage(sc,0,0,w,h);
+  const bd=bx.getImageData(0,0,w,h).data,A=document.createElement("canvas"),Bc=document.createElement("canvas");A.width=Bc.width=w;A.height=Bc.height=h;
+  const ai=A.getContext("2d").createImageData(w,h),bi=Bc.getContext("2d").createImageData(w,h);
+  for(let i=0;i<n;i++){const bg=Math.max(40,bd[i*4]),v=Math.min(255,g[i]/bg*235),s=Math.max(0,Math.min(255,(v-70)*255/(235-70))),t=v<165?0:255;
+    ai.data[i*4]=ai.data[i*4+1]=ai.data[i*4+2]=s;ai.data[i*4+3]=255;bi.data[i*4]=bi.data[i*4+1]=bi.data[i*4+2]=t;bi.data[i*4+3]=255}
+  A.getContext("2d").putImageData(ai,0,0);Bc.getContext("2d").putImageData(bi,0,0);return{A,B:Bc}}
 
 // ---- カメラで書類を読み取る
 function dcFields(inst){const m={};fillGroups(inst).forEach(g=>{const f=g.list[0].it,k=dcCat(f.lbl);if(k)(m[k]=m[k]||[]).push(g)});return m}
@@ -1123,10 +1161,11 @@ function camStart(){
   sheet("書類から読み取り",[["カメラで撮る",()=>{$("camIn").value="";$("camIn").click()}],["写真から選ぶ",()=>{$("camPk").value="";$("camPk").click()}]])}
 async function camPicked(f){
   if(!f)return;const inst=fillInst||curInst();
+  let c;try{c=await imgCanvas(f,3000)}catch(e){return toast("画像を読み込めませんでした")}
+  const st=$("pc").querySelector(".st"),old=st.textContent;st.textContent="読み取りたい範囲だけに絞ってください(文字が大きく写るほど正確になります)";
+  c=await cropPhoto(c);st.textContent=old;if(!c)return;
   dcShow("書類を読み込んでいます…",null,inst);
   try{
-    const im=await loadImg(f),k=Math.min(1,2600/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);
-    const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);
     const raw=await ocrCanvas(c,m=>{$("cmt").textContent=m});
     dcShow(raw.trim()?"読み取りました。内容を確認・訂正してください":"文字が読み取れませんでした。明るい場所で真上から撮り直してください",raw,inst)
   }catch(err){const M={not_granted:"AIの利用が許可されませんでした",no_ocr:"文字認識を読み込めません。通信を確認してください",no_sample:"このビューでは読み取りを使えません",no_images:"このビューでは画像での読み取りができません"};dcShow((M[err&&err.code]||"読み取れませんでした")+(err&&err.code?"("+err.code+")":""),"",inst)}}
@@ -1196,4 +1235,42 @@ window.openManual=()=>{box.style.display="flex";box.querySelector(".mb").scrollT
 })();
 
 
+
+// ---- v34: 回転ボタン長押し/縦スライダー/寸法矢印/入力欄の連続設置
+function holdRot(btn,dir,step,spin){
+  btn.classList.add("rotb");let tm=0,raf=0,last=0,held=false;
+  const stop=()=>{clearTimeout(tm);tm=0;if(raf){cancelAnimationFrame(raf);raf=0}};
+  btn.onpointerdown=()=>{held=false;stop();tm=setTimeout(()=>{held=true;last=performance.now();const loop=t=>{const dt=Math.min(60,t-last);last=t;spin(dir*dt*.1);raf=requestAnimationFrame(loop)};raf=requestAnimationFrame(loop)},350)};
+  btn.onpointerup=btn.onpointercancel=btn.onpointerleave=stop;
+  btn.oncontextmenu=e=>e.preventDefault();
+  btn.onclick=()=>{if(held){held=false;return}step()}}
+function fbUpd(){const s=$("fps"),b=$("fbar"),i=b.firstChild,n=Math.max(1,fillL.length),H=b.clientHeight||60,th=Math.max(14,H/n),mx=Math.max(1,s.scrollHeight-s.clientHeight);
+  i.style.height=th+"px";i.style.top=((H-th)*Math.min(1,Math.max(0,s.scrollTop/mx)))+"px"}
+$("dmA").onclick=()=>{
+  const r=ec.getBoundingClientRect(),w=wrap.getBoundingClientRect(),A=ang(cur),cx=clamp(((w.left+w.width/2)-r.left)/r.width,.15,.85),cy=clamp(((w.top+w.height/2)-r.top)/r.height,.15,.85),[a,b]=toUnrot(cx,cy,A);
+  const it={k:"t",a,b,str:"←",s:.05,c:col,rot:-A,sx:1,sy:1,anc:"c",halo:true};
+  addItem(it);selR=null;sel=it;emode="move";setHint();syncPanel();paint();toast("矢印を置きました。ドラッグで移動、↺↻で向き(長押しで回り続けます)",3500)};
+var qp={on:false,lastIt:null};
+function qSync(){if(!qp)return;$("tq").style.display=(qp.on&&cur&&tplEdit)?"flex":"none";$("teQ").classList.toggle("act",!!qp.on)}
+function qOff(){qp.on=false;qSync()}
+function qOpts(){tplNorm();const s2=$("tqg"),v=s2.value||"new";s2.innerHTML="";const add=(val,t)=>{const o=document.createElement("option");o.value=val;o.textContent=t;s2.appendChild(o)};
+  add("new","毎回 新しいグループ");add("same","直前と同じグループ(同時入力)");tplGroups().forEach((g,i)=>add("g"+g.no,"グループ"+LT(i+1)+"に追加"));
+  s2.value=[...s2.options].some(o=>o.value==v)?v:"new"}
+function qPlace(q){
+  tplNorm();const A=ang(cur),inp=$("tqn"),md=$("tqg").value,nm=inp.value.trim(),L=qp.lastIt;
+  const alive=L&&tplGroups().some(g=>g.list.some(x=>x.it===L));
+  let no;if(md=="same"&&alive)no=L.no;else if(md.startsWith("g"))no=+md.slice(1);else no=tplMaxNo()+1;
+  const it={k:"t",a:q[0],b:q[1],str:nm||"入力欄"+LT(no),s:.03,c:col,rot:-A,sx:1,sy:1,anc:"l",field:"input",no};
+  addItem(it);qp.lastIt=it;inp.value="";qOpts();paint();toast("「"+it.str+"」をグループ"+LT(no)+"に置きました",1300);
+  if(matchMedia("(pointer:fine)").matches)inp.focus()}
+$("teQ").onclick=()=>{
+  if(qp.on){qOff();return}
+  setMode("move");sel=null;emode=null;setHint();syncPanel();qp.on=true;qOpts();qSync();paint();
+  toast("連続設置:名称を入れてページをクリック。「直前と同じグループ」にすると別ページとも同時入力になります。名称欄でEnterを押すと下に続けて置けます",6000);
+  if(matchMedia("(pointer:fine)").matches)$("tqn").focus()};
+$("tqx").onclick=qOff;
+$("tqn").onkeydown=e=>{
+  if(e.key=="Escape")return qOff();
+  if(e.key=="Enter"){e.preventDefault();const L=qp.lastIt;
+    if(L&&cur&&cur.items.includes(L)&&ang(cur)==0)qPlace([L.a,Math.max(.02,L.b-L.s*1.7)]);else toast("先にページ上をクリックして1つ目を置いてください",1800)}};
 </script></body></html>
