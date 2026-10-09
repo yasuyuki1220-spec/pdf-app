@@ -83,7 +83,7 @@ input[type=range]{accent-color:var(--ac)}
 #tq{display:none;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 6px;background:#fff3e0;border-radius:12px;padding:6px 8px}#tq input,#tq select{font:inherit;font-size:14px;border:1px solid var(--bd);border-radius:8px;padding:6px 8px;background:var(--bg);color:var(--fg)}#tq input{flex:1;min-width:130px}#tq button{border:0;border-radius:9px;padding:7px 12px;font-size:13px;background:var(--card);box-shadow:var(--sh)}#tq small{flex-basis:100%;color:#b45309;font-size:12px;line-height:1.4}
 #dab{display:none;align-items:center;gap:8px;margin:0 0 6px}#dab button{border:0;border-radius:10px;padding:4px 20px;font-size:26px;line-height:1.2;background:var(--card);box-shadow:var(--sh);font-weight:700}#dab span{font-size:12px;color:var(--mut)}
 #ed.qp #sb{display:none!important}
-#xb{display:none;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 6px;background:#ede9fe;border-radius:12px;padding:6px 8px}#xb span{flex:1 1 100%;font-weight:700;font-size:13px;color:#5b21b6}#xb button{border:0;border-radius:9px;padding:8px 12px;font-size:13px;background:var(--card);box-shadow:var(--sh)}#xb button.p{background:#7c3aed;color:#fff}#xb button.off{opacity:.45}#ed.mv .w{touch-action:none}
+#xb{display:none;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 6px;background:#ede9fe;border-radius:12px;padding:6px 8px}#xb span{flex:1 1 100%;font-weight:700;font-size:13px;color:#5b21b6}#xb button{border:0;border-radius:9px;padding:8px 12px;font-size:13px;background:var(--card);box-shadow:var(--sh)}#xb button.p{background:#7c3aed;color:#fff}#xb button.off{opacity:.45}#szb{display:none;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 6px;background:#ede9fe;border-radius:12px;padding:6px 8px}#szb span{flex:1 1 100%;font-weight:700;font-size:13px;color:#5b21b6}#szb button{border:0;border-radius:9px;padding:8px 12px;font-size:13px;background:var(--card);box-shadow:var(--sh)}#szb button.p{background:#7c3aed;color:#fff}#szb button.off{opacity:.45}#gb{display:none;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 6px;background:#ede9fe;border-radius:12px;padding:6px 8px}#gb span{flex:1 1 100%;font-weight:700;font-size:13px;color:#5b21b6}#gb button{border:0;border-radius:9px;padding:8px 12px;font-size:13px;background:var(--card);box-shadow:var(--sh)}#gb button.p{background:#7c3aed;color:#fff}#gb button.off{opacity:.45}#ed.mv .w{touch-action:none}
 .rotb{touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 </style></head><body>
 <svg style="display:none"><defs>
@@ -114,20 +114,20 @@ input[type=range]{accent-color:var(--ac)}
 <button class="d" id="bAll"><svg><use href="#i-all"/></svg>全選択</button>
 <button class="d" id="bRot"><svg><use href="#i-rot"/></svg>回転</button>
 <button class="d" id="bDel"><svg><use href="#i-del"/></svg>削除</button>
-<button class="d" id="bUndo"><svg><use href="#i-undo"/></svg>戻る</button>
+<button class="d" id="bUndo"><svg><use href="#i-undo"/></svg>戻す</button>
 <button class="d" id="bShare"><svg><use href="#i-share"/></svg>共有</button>
 </div>
 
 <div id="ed">
-<div class="top"><button class="tb" id="un"><svg><use href="#i-undo"/></svg>戻る</button><span class="pgn"><button class="tb" id="pgP">‹</button><span id="pgl"></span><button class="tb" id="pgN">›</button></span><span style="display:flex;gap:4px"><button class="tb" id="zOut">－</button><button class="tb" id="zIn">＋</button></span><button class="tb pri" id="ok">完了</button></div>
+<div class="top"><button class="tb" id="un"><svg><use href="#i-undo"/></svg>戻す</button><span class="pgn"><button class="tb" id="pgP">‹</button><span id="pgl"></span><button class="tb" id="pgN">›</button></span><span style="display:flex;gap:4px"><button class="tb" id="zOut">－</button><button class="tb" id="zIn">＋</button></span><button class="tb pri" id="ok">完了</button></div>
 <div id="mhint"></div>
-<div id="xb"><span id="xbt"></span><button id="xbC">空欄→入力欄</button><button id="xbM">○□→切替</button><button id="xbA">全部外す</button><button id="xbX">中止</button><button class="p" id="xbOk">決定</button></div>
+<div id="szb" style="display:none"><span id="szt">入力欄の幅・高さ</span><button id="szW1">幅 −</button><button id="szW2">幅 ＋</button><button id="szH1">高さ −</button><button id="szH2">高さ ＋</button><button class="p" id="szOk">完了</button></div><div id="gb"><span id="gbt"></span><button id="gbM">同じグループにまとめる</button><button id="gbS">グループから外す</button><button id="gbD">削除</button><button class="p" id="gbOk">完了</button></div><div id="xb"><span id="xbt"></span><button id="xbC">空欄→入力欄</button><button id="xbM">○□→切替</button><button id="xbA">全部外す</button><button id="xbX">中止</button><button class="p" id="xbOk">決定</button></div>
 <div id="dab"><button id="dmA">←</button><span>押すと矢印「←」を置きます(動かす・回す・大きさ変更ができます)</span></div>
-<div id="fg"><span class="fl" id="fgl"></span><button id="fgc">📷 書類から</button><button id="fgs" class="p">スライド入力</button></div>
+<div id="fg"><span class="fl" id="fgl"></span><button id="fgc">📷 書類から</button><button id="fge">欄を整理</button><button id="fgs" class="p">スライド入力</button></div>
 <div id="te"><span class="fl">テンプレート編集中</span><button id="teQ">入力欄を連続設置</button><button id="teO">番号・順番</button><button id="teA">別名保存</button><button id="teS" class="p">上書き保存</button></div>
 <div id="tq"><input id="tqn" placeholder="名称を入れて、ページをダブルタップ(例: 住所)"><select id="tqg"></select><button id="tqx">終了</button></div>
 <div class="w" id="wrap"><canvas id="ec"></canvas></div>
-<div id="fp"><div id="fps"></div><div id="fbar"><i></i></div><div id="fpb"><button id="fpu">▲</button><span id="fpc" style="font-size:12px;font-weight:700"></span><button id="fpd">▼</button><button id="fpcam">📷</button><button class="p" id="fpx">完了</button></div></div>
+<div id="fp"><div id="fps"></div><div id="fbar"><i></i></div><div id="fpb"><button id="fpu">▲</button><span id="fpc" style="font-size:12px;font-weight:700"></span><button id="fpd">▼</button><button id="fpcam">📷</button><button id="fpe">終了</button><button class="p" id="fpx">完了</button></div></div>
 <div class="ctx" id="pr">
 <button class="col on" style="background:#111" data-c="#111111"></button><button class="col" style="background:#e11d48" data-c="#e11d48"></button><button class="col" style="background:#2563eb" data-c="#2563eb"></button><button class="col" style="background:#16a34a" data-c="#16a34a"></button><button class="col" style="background:#f59e0b" data-c="#f59e0b"></button><button class="col" style="background:#fff" data-c="#ffffff"></button>
 <input type="color" id="cc" value="#111111" style="width:28px;height:28px;padding:0;border:0;background:none"><span style="font-size:12px;color:var(--mut)">太さ</span><input id="wd" type="range" min="1" max="14" value="3" style="width:90px">
@@ -231,6 +231,7 @@ function drawMarks(x,pg,cw,ch,extra){
     x.restore();
   }catch(err){try{x.restore()}catch(_){}}}}
   if(x.canvas.id=="ec"&&xlC&&xlC.pg===pg)xlDraw(x,pg,cw,ch,A);
+  if(x.canvas.id=="ec"&&tgE&&cur===pg)tgEDraw(x,pg,cw,ch,A);
 }
 
 function draw(flash){
@@ -269,7 +270,18 @@ async function imgToPdf(f){
   let c=await imgCanvas(f,2000);c=await cropPhoto(c);if(!c)return null;const d=await PDFLib.PDFDocument.create(),im=await d.embedJpg(await bytesOf(c));
   const p=d.addPage([595,595*c.height/c.width]);p.drawImage(im,{x:0,y:0,width:p.getWidth(),height:p.getHeight()});return d.save();
 }
-$("fi").onchange=$("phi").onchange=async e=>{if(e.target.files.length)snap();
+var xlTot=[0,0];
+function xlAuto(pg,r){
+  const W=pg.W,H=pg.H,inst="xa"+Date.now(),cs=r.cells.filter(c=>c.empty).slice().sort((p,q)=>Math.abs(p.y1-q.y1)>3?q.y1-p.y1:p.x0-q.x0);let n=0,nm=0;const LB={};
+  cs.forEach((c,i)=>{let base=(xlLabel(c,r.texts)||"").replace(/[○◯〇□☐◻▢]/g,"").trim()||("入力欄"+(i+1));const cnt=(LB[base]=(LB[base]||0)+1),lbl=cnt>1?base+cnt:base,fs=Math.max(4.5,Math.min(16,(c.y1-c.y0)*.55,(c.x1-c.x0-6)/Math.max(2,lbl.length)));
+    pg.items.push({k:"t",a:(c.x0+3)/W,b:1-((c.y0+c.y1)/2)/H,str:lbl,s:fs/W,c:"#111111",rot:0,sx:1,sy:1,anc:"l",field:"input",no:++n,ph:true,lbl,inst,xlc:true})});
+  const sid="gx"+Date.now(),rows=[];r.marks.filter(m=>m.kind=="c").slice().sort((p,q)=>q.cy-p.cy).forEach(m=>{const o=rows.find(o=>Math.abs(o.cy-m.cy)<m.size*.7);if(o)o.l.push(m);else rows.push({cy:m.cy,l:[m]})});
+  let gi=0;rows.forEach(o=>{o.l.sort((p,q)=>p.cx-q.cx);let pv=null;o.l.forEach(m=>{if(!pv||m.cx-pv.cx>m.size*10)gi++;m.grp=sid+"_"+gi;pv=m})});
+  r.marks.forEach(m=>{pg.items.push({k:"t",a:m.cx/W,b:1-m.cy/H,str:m.kind=="c"?"◉":"✓",s:(m.size*(m.kind=="c"?1.15:1.35))/W,c:"#111111",rot:0,sx:1,sy:1,anc:"c",field:"toggle",off:!m.on,rd:m.kind=="c",grp:m.grp});nm++});
+  return [n,nm]}
+function xlNext(dir){const it=editing;if(!it)return;const L=cur.items.filter(i=>i.xlc&&i.field=="input"),k=L.indexOf(it),nx=L[k+dir];endEdit();if(!nx){toast(dir>0?"最後の入力欄です":"最初の入力欄です",1800);return}startEdit(nx,true)}
+
+$("fi").onchange=$("phi").onchange=async e=>{if(e.target.files.length)snap();xlTot=[0,0];
   for(const f of e.target.files){
     try{
       say("読み込み中: "+f.name);
@@ -280,15 +292,15 @@ $("fi").onchange=$("phi").onchange=async e=>{if(e.target.files.length)snap();
       const fi=files.push({name:f.name.replace(/\.[^.]+$/,""),bytes,doc,xl:xlm})-1;
       for(let i=0;i<doc.numPages;i++){
         const p=await doc.getPage(i+1),v=p.view;
-        pages.push({f:fi,i,r:0,base:p.rotate%360,W:v[2]-v[0],H:v[3]-v[1],sel:false,strokes:[],items:[]});
+        const po={f:fi,i,r:0,base:p.rotate%360,W:v[2]-v[0],H:v[3]-v[1],sel:false,strokes:[],items:[]};pages.push(po);if(xlm&&xlm.pages[i]){const [a,b]=xlAuto(po,xlm.pages[i]);xlTot[0]+=a;xlTot[1]+=b}
       }
     }catch(err){say("読み込めませんでした: "+f.name)}
   }
-  e.target.value="";say("");draw();
+  e.target.value="";say("");draw();if(xlTot[0]+xlTot[1])toast("Excelの空欄 "+xlTot[0]+" か所を入力欄に、○□ "+xlTot[1]+" か所を切替にしました。入力欄をタップして入力、Enterで次の欄へ",6000)
 };
 $("bAll").onclick=()=>{const on=!pages.every(p=>p.sel);pages.forEach(p=>p.sel=on);draw()};
 $("bRot").onclick=()=>{const s=pages.filter(p=>p.sel);if(!s.length)return say("回転するページを選択してください");snap();s.forEach(p=>p.r=(p.r+90)%360);say("");draw()};
-$("bDel").onclick=()=>{const s=pages.filter(p=>p.sel);if(!s.length)return say("削除するページを選択してください");sheet(s.length+"ページを削除しますか?",[["削除する",()=>{snap();pages=pages.filter(p=>!p.sel);say(s.length+"ページを削除しました。下の「戻る」で元に戻せます");draw()}]])};
+$("bDel").onclick=()=>{const s=pages.filter(p=>p.sel);if(!s.length)return say("削除するページを選択してください");sheet(s.length+"ページを削除しますか?",[["削除する",()=>{snap();pages=pages.filter(p=>!p.sel);say(s.length+"ページを削除しました。下の「戻す」で元に戻せます");draw()}]])};
 
 
 async function build(list){
@@ -396,9 +408,11 @@ function G(){const [a,b]=[...P.values()];return{d:Math.hypot(a.clientX-b.clientX
 ec.onpointerdown=e=>{
   if(e.pointerType=="mouse"&&e.button==2){e.preventDefault();commit();ctxMenu(e);return}
   commit();ec.setPointerCapture(e.pointerId);P.set(e.pointerId,e);
-  if(P.size==2){if(tgT)tgT.dead=true;if(xlTap)xlTap.ok=false;if(qp)qp.t=0;mvExit=false;dimSt=null;stArr=null;pendDesel=false;sdrag=null;clearTimeout(lpT);lpT=null;rz=null;createTap=null;st=null;drag=null;let onItem=false;if(!(ruler.on&&mode=="pen")){const h=(mode=='dim')?null:(hit(e)||hit([...P.values()][0]));if(h&&h===sel&&(h.k=='t'||emode=='move'))onItem=true}if(emode=='move'&&sel&&!sel.shape)onItem=true;const n=G(),r0=ec.getBoundingClientRect();g={fx:(n.mx-r0.left)/r0.width,fy:(n.my-r0.top)/r0.height,d0:n.d,a0:n.an,pm:n,zw:ec.getBoundingClientRect().width,sz:sel?(sel.k=="i"?sel.w:sel.s):0,rot:sel?sel.rot:0};g.item=onItem;if(ruler.on&&mode=="pen"&&(rdrag||isBody(e))){const m=pt({clientX:n.mx,clientY:n.my});g.ruler=true;g.deg0=ruler.deg;g.off=[ruler.a-m[0],ruler.b-m[1]];rdrag=null}paint();return}
+  if(P.size==2){if(tgEtap)tgEtap.ok=false;if(tgT)tgT.dead=true;if(xlTap)xlTap.ok=false;if(qp)qp.t=0;mvExit=false;dimSt=null;stArr=null;pendDesel=false;sdrag=null;clearTimeout(lpT);lpT=null;rz=null;createTap=null;st=null;drag=null;let onItem=false;if(!(ruler.on&&mode=="pen")){const h=(mode=='dim')?null:(hit(e)||hit([...P.values()][0]));if(h&&h===sel&&(h.k=='t'||emode=='move'))onItem=true}if(emode=='move'&&sel&&!sel.shape)onItem=true;const n=G(),r0=ec.getBoundingClientRect();g={fx:(n.mx-r0.left)/r0.width,fy:(n.my-r0.top)/r0.height,d0:n.d,a0:n.an,pm:n,zw:ec.getBoundingClientRect().width,sz:sel?(sel.k=="i"?sel.w:sel.s):0,rot:sel?sel.rot:0};g.item=onItem;if(ruler.on&&mode=="pen"&&(rdrag||isBody(e))){const m=pt({clientX:n.mx,clientY:n.my});g.ruler=true;g.deg0=ruler.deg;g.off=[ruler.a-m[0],ruler.b-m[1]];rdrag=null}paint();return}
   if(P.size>2)return;
   const q=pt(e);
+  if(fillInst){const h=hit(e);if(h&&h.field=="input"&&h.inst===fillInst){fsT={it:h,x:e.clientX,y:e.clientY,off:[q[0]-h.a,q[1]-h.b],mv:false};return}if(!(h&&h.field=="toggle")){fsT=null;return}}
+  if(tgE){tgEtap={x:e.clientX,y:e.clientY,ok:true};return}
   if(xlC){xlTap={x:e.clientX,y:e.clientY,ok:true};return}
   {const ht=(mode=='dim'||(ruler.on&&mode=='pen'))?null:hit(e);if(ht&&ht.field=='toggle'&&!(emode=='move'&&sel===ht)){tgT={it:ht,x:e.clientX,y:e.clientY};moved=false;dp={x:e.clientX,y:e.clientY};clearTimeout(lpT);lpT=setTimeout(()=>{lpT=null;if(tgT){tgT=null;sel=ht;setEmode('move')}},400);return}}
   if(qp&&qp.on&&tplEdit&&!sel&&!hit(e)){const now=Date.now();if(qp.t&&now-qp.t<420&&Math.hypot(e.clientX-qp.x,e.clientY-qp.y)<40){qp.t=0;qPlace(q)}else{qp.t=now;qp.x=e.clientX;qp.y=e.clientY}return}
@@ -446,6 +460,7 @@ ec.onpointermove=e=>{
   }
   if(P.size>1)return;
   const q=pt(e);
+  if(fsT){if(!fsT.mv&&Math.hypot(e.clientX-fsT.x,e.clientY-fsT.y)>8)fsT.mv=true;if(fsT.mv){fsT.it.a=q[0]-fsT.off[0];fsT.it.b=q[1]-fsT.off[1];paint()}return}
   if(dp&&Math.hypot(e.clientX-dp.x,e.clientY-dp.y)>10){moved=true;createTap=null;if(lpT){clearTimeout(lpT);lpT=null}}
   if(stArr){stArr.p[1]=q;paint();return}
   if(dimSt){dimSt.p[1]=axisSnap(dimSt.p[0],q);paint();return}
@@ -461,7 +476,7 @@ ec.onpointermove=e=>{
   else if(drag&&sel){sel.a=q[0]-drag[0];sel.b=q[1]-drag[1];moved=true;paint()}
   else if(rdrag){ruler.a=q[0]-rdrag[0];ruler.b=q[1]-rdrag[1];paint()}
 };
-const up=e=>{if(e.pointerType=="mouse"&&e.button==2)return;if(tgT){const t=tgT;tgT=null;clearTimeout(lpT);lpT=null;if(!t.dead&&Math.hypot(e.clientX-t.x,e.clientY-t.y)<10){togFlip(t.it)}}if(xlC&&xlTap){const c=xlTap;xlTap=null;if(c.ok&&Math.hypot(e.clientX-c.x,e.clientY-c.y)<12)xlToggle(e)}P.delete(e.pointerId);if(P.size<2)g=null;if(st){addStroke(st);st=null}if(!P.size&&moved&&shI<0&&sel&&sel.shape&&sel.shape.m=="mosaic")bakeShape(sel,cur,sel.shape.rel.map(r=>[sel.a+r[0],sel.b+r[1]]));shI=-1;drag=null;rdrag=null;rz=null;blocked=null;clearTimeout(lpT);lpT=null;if(stArr&&!P.size)stArrEnd();if(dimSt&&!P.size)dimEnd();if(sdrag&&!P.size)selEnd();if(!P.size&&pendDesel&&sel&&(!moved||mode=="move")){sel=null;emode=null;setHint();syncPanel()}if(!P.size&&mvExit&&!moved&&sel&&emode=='move'&&!sel.shape){const L=loc(e,sel);if(Math.abs(L.lx)>L.bw*(sel.sx||1)/2||Math.abs(L.ly)>L.bh*(sel.sy||1)/2){tapEdit=false;sel=null;emode=null;setHint();syncPanel()}}if(!P.size){pendDesel=false;mvExit=false}if(!P.size){if(tapEdit&&!moved&&sel&&sel.k=="t"){emode=null;setHint();startEdit(sel)}else if(createTap&&!moved)newText(createTap)}tapEdit=false;createTap=null;paint();if(editing&&document.activeElement!==tin)tin.focus()};
+const up=e=>{if(e.pointerType=="mouse"&&e.button==2)return;if(fsT){const t=fsT;fsT=null;P.delete(e.pointerId);if(P.size<2)g=null;if(!t.mv){const now=Date.now(),dbl=fsLast&&fsLast.it===t.it&&now-fsLast.t<450;fsLast={it:t.it,t:now};if(dbl){fsLast=null;fsMenu(t.it)}else{const k=fillL.findIndex(x=>x.list.some(y=>y.it===t.it));if(k>=0&&k!==fpI)fpGo(k,true);else if(k>=0)$("fps").children[k].querySelector("input").focus();sel=t.it;paint()}}return}if(tgE&&tgEtap){const c=tgEtap;tgEtap=null;if(c.ok&&Math.hypot(e.clientX-c.x,e.clientY-c.y)<12)tgETap(e)}if(tgT){const t=tgT;tgT=null;clearTimeout(lpT);lpT=null;if(!t.dead&&Math.hypot(e.clientX-t.x,e.clientY-t.y)<10){togFlip(t.it)}}if(xlC&&xlTap){const c=xlTap;xlTap=null;if(c.ok&&Math.hypot(e.clientX-c.x,e.clientY-c.y)<12)xlToggle(e)}P.delete(e.pointerId);if(P.size<2)g=null;if(st){addStroke(st);st=null}if(!P.size&&moved&&shI<0&&sel&&sel.shape&&sel.shape.m=="mosaic")bakeShape(sel,cur,sel.shape.rel.map(r=>[sel.a+r[0],sel.b+r[1]]));shI=-1;drag=null;rdrag=null;rz=null;blocked=null;clearTimeout(lpT);lpT=null;if(stArr&&!P.size)stArrEnd();if(dimSt&&!P.size)dimEnd();if(sdrag&&!P.size)selEnd();if(!P.size&&pendDesel&&sel&&(!moved||mode=="move")){sel=null;emode=null;setHint();syncPanel()}if(!P.size&&mvExit&&!moved&&sel&&emode=='move'&&!sel.shape){const L=loc(e,sel);if(Math.abs(L.lx)>L.bw*(sel.sx||1)/2||Math.abs(L.ly)>L.bh*(sel.sy||1)/2){tapEdit=false;sel=null;emode=null;setHint();syncPanel()}}if(!P.size){pendDesel=false;mvExit=false}if(!P.size){if(tapEdit&&!moved&&sel&&sel.k=="t"){emode=null;setHint();startEdit(sel)}else if(createTap&&!moved)newText(createTap)}tapEdit=false;createTap=null;paint();if(editing&&document.activeElement!==tin)tin.focus()};
 ec.onpointerup=ec.onpointercancel=up;
 document.querySelectorAll(".col").forEach(b=>b.onclick=()=>{
   col=b.dataset.c;document.querySelectorAll(".col").forEach(x=>x.classList.toggle("on",x==b));
@@ -487,7 +502,7 @@ $("empty").onclick=()=>$("bAdd").click();
 $("bAdd").onclick=()=>sheet("追加",[["ファイルから",()=>$("fi").click()],["写真から",()=>$("phi").click()],["テンプレートから",()=>tplList()]]);
 $("bShare").onclick=()=>sheet("共有・書き出し",[["選択したページ",()=>exp(true)],["すべてのページ",()=>exp(false)],["選択ページをテンプレートに保存",()=>tplSave(true)],["全ページをテンプレートに保存",()=>tplSave(false)]]);
 $("eAdd").onclick=()=>sheet("ページに追加",[["ファイルから(PDF・画像)",()=>$("pf").click()],["写真から",()=>$("pi").click()]]);
-$("eMore").onclick=()=>sheet("その他",[["ページを回転",()=>$("rt").click()],...(cur&&cur._undo?[["トリミングを元に戻す",undoCrop]]:[]),["拡大",()=>$("zi").click()],["縮小",()=>$("zo").click()],["ペンの書き込みを全消去",()=>$("cl").click()],["テキストを全消去",()=>clearText()],["範囲選択で作った囲い・斜線を全消去",()=>clearShapes()],["選択ボタン(◯→◉)を置く",()=>tgMenu()],["表の空欄・○□を自動検出",()=>xlStart()],["説明書",()=>openManual()],...(cur&&cur.items.some(i=>i.lock)?[["固定した画像を解除",()=>{cur.items.forEach(i=>{delete i.lock});paint();toast("固定を解除しました")}]]:[])]);
+$("eMore").onclick=()=>sheet("その他",[["ページを回転",()=>$("rt").click()],...(cur&&cur._undo?[["トリミングを元に戻す",undoCrop]]:[]),["拡大",()=>$("zi").click()],["縮小",()=>$("zo").click()],["ペンの書き込みを全消去",()=>$("cl").click()],["テキストを全消去",()=>clearText()],["範囲選択で作った囲い・斜線を全消去",()=>clearShapes()],["選択ボタン(◯→◉)を置く",()=>tgMenu()],["◯を認識して◉に置き換え(選択ボタン化)",()=>xlStart({m:1})],["選択ボタンのグループを編集",()=>tgEStart()],["表の空欄・○□を自動検出",()=>xlStart()],["説明書",()=>openManual()],...(cur&&cur.items.some(i=>i.lock)?[["固定した画像を解除",()=>{cur.items.forEach(i=>{delete i.lock});paint();toast("固定を解除しました")}]]:[])]);
 async function addItemFile(f){
   try{
     let c,w=.5;
@@ -557,6 +572,8 @@ function startEdit(it,all){if(it.str==="テキスト")all=true;if(fillInst&&it.i
 function endEdit(){
   if(!editing)return;const it=editing;editing=null;tin.style.display="none";tin.blur();$("ed").classList.remove("kb");if(edPrevW)ec.style.width=Math.max(baseW,edPrevW)+"px";if(edPrevW<=baseW+1){wrap.scrollLeft=0;wrap.scrollTop=0}
   if(!it.str.trim()){if(it.field=="input"&&it.lbl){it.str=it.lbl;it.ph=true}else{cur.items=cur.items.filter(i=>i!==it);sel=null;syncPanel()}}paint()}
+tin.setAttribute("enterkeyhint","next");
+tin.addEventListener("keydown",e=>{if(!editing||!editing.xlc||e.isComposing||e.keyCode==229)return;if(e.key=="Enter"&&e.shiftKey)return;if(e.key=="Enter"||e.key=="Tab"){e.preventDefault();xlNext(e.key=="Tab"&&e.shiftKey?-1:1)}});
 tin.oninput=()=>{if(!editing)return;const v=tin.innerText.replace(/\n$/,"");editing.ph=false;setItemStr(editing,cur,v);placeEdit()};
 document.addEventListener("pointerdown",e=>{if(editing&&!e.target.closest("#tin,.ctx,#op"))endEdit()},true);
 
@@ -569,7 +586,7 @@ function setEmode(m){emode=m;setHint();syncPanel();paint()}
 function itemMenu(it){
   if(navigator.vibrate)navigator.vibrate(12);
   sel=it;syncPanel();paint();
-  sheet("文字の操作",[["移動モード(ドラッグで移動)",()=>setEmode("move")],["枠サイズ変更モード(角の丸をドラッグ)",()=>setEmode("size")],["全体を拡大縮小(比率そのまま)",()=>setEmode("scale")],["文字を編集",()=>startEdit(it)],["削除",()=>$("dl").click()]])}
+  sheet("文字の操作",[["移動モード(ドラッグで移動)",()=>setEmode("move")],["幅・高さを変える",()=>szbOpen(it)],["文字を編集",()=>startEdit(it)],["削除",()=>$("dl").click()]])}
 function loc(e,it){
   const r=ec.getBoundingClientRect(),A=ang(cur),bm=bmOf(it),s=sc(it,cur)*(A%180==0?r.width:r.height)/cur.W,[u,v]=toDisp(it.a,it.b,A);
   const dx=e.clientX-r.left-u*r.width,dy=e.clientY-r.top-v*r.height,f=(it.rot+A)*PI/180;
@@ -947,10 +964,11 @@ function fillStart(inst){
     const d=document.createElement("div"),b=document.createElement("b"),inp=document.createElement("input"),f=g.list[0].it;
     d.className="fs";b.textContent="入力欄 "+(i+1)+" / "+fillL.length+"  "+(f.lbl||"")+(g.list.length>1?"(同時入力 "+g.list.length+"か所)":"");
     inp.type="text";inp.placeholder=(f.lbl||"")+"を入力";inp.value=f.ph?"":f.str;
+    inp.setAttribute("enterkeyhint",i<fillL.length-1?"next":"done");inp.onkeydown=e=>{if(e.key!="Enter"||e.isComposing||e.keyCode==229)return;e.preventDefault();if(i<fillL.length-1)fpGo(i+1,true);else{inp.blur();toast("最後の入力欄です。「終了」で未入力の欄を消せます",3500)}};
     inp.oninput=()=>{const v=inp.value;g.list.forEach(x=>{x.it.ph=!v.trim();setItemStr(x.it,x.pg,v.trim()?v:x.it.lbl)});paint()};
     inp.onfocus=()=>{if(!fpLock&&fpI!==i)fpGo(i,false)};
     d.append(b,inp);box.appendChild(d)});
-  $("ed").classList.add("fill");$("fp").style.display="flex";fpI=-1;fbUpd();fpGo(0,false)}
+  if(mode!="text")setMode("text");$("ed").classList.add("fill");$("fp").style.display="flex";fpI=-1;fbUpd();fpGo(0,false)}
 async function fpGo(i,focus){
   i=Math.max(0,Math.min(fillL.length-1,i));const g=fillL[i];if(!g)return;
   if(i===fpI&&!focus)return;
@@ -964,6 +982,25 @@ function fillStop(){
   if(!fillInst)return;fillInst=null;fillL=[];$("ed").classList.remove("fill");$("fp").style.display="none";
   if(cur){ec.style.width=baseW+"px";wrap.scrollLeft=0;wrap.scrollTop=0;sel=null;syncPanel();paint()}}
 $("fps").addEventListener("scroll",()=>{fbUpd();clearTimeout(fpT);fpT=setTimeout(()=>{if(fpLock)return;const i=Math.round($("fps").scrollTop/86);if(i!==fpI)fpGo(i,false)},120)},{passive:true});
+
+// ---- v38: スライド入力モードの改善(欄のドラッグ移動・ダブルタップ設定・Enterで次へ・終了ボタン・幅/高さ変更)
+var fsT=null,fsLast=null,szbIt=null;
+const pgOf=it=>pages.find(p=>p.items.includes(it));
+function setAnc(it,anc){const pg=pgOf(it)||cur,W=pg.W,H=pg.H,s0=sc(it,pg),b0=bmOf(it),w=b0.width*s0*(it.sx||1),h=b0.height*s0*(it.sy||1),th=(it.rot||0)*PI/180,c=Math.cos(th),n=Math.sin(th),f0={l:-.5,c:0,r:.5}[it.anc||"l"],f1={l:-.5,c:0,r:.5}[anc];
+  const Px=it.a*W+f0*w*c+h/2*n,Py=it.b*H+f0*w*n-h/2*c;it.anc=anc;it.a=(Px-f1*w*c-h/2*n)/W;it.b=(Py-f1*w*n+h/2*c)/H;paint()}
+function szbOpen(it){szbIt=it;sel=it;$("szb").style.display="flex";paint()}
+function szbDo(k,f){if(!szbIt)return;if(k=="w")szbIt.sx=clamp((szbIt.sx||1)*f,.2,8);else szbIt.sy=clamp((szbIt.sy||1)*f,.2,8);paint()}
+$("szW1").onclick=()=>szbDo("w",.9);$("szW2").onclick=()=>szbDo("w",1.1);$("szH1").onclick=()=>szbDo("h",.9);$("szH2").onclick=()=>szbDo("h",1.1);$("szOk").onclick=()=>{szbIt=null;$("szb").style.display="none"};
+function fsRebuild(keep){if(!fillInst)return;const inst=fillInst,i=fpI;fillStart(inst);if(keep&&fillL.length)setTimeout(()=>fpGo(Math.min(i,fillL.length-1),false),50)}
+function fsMenu(it){const pg=pgOf(it)||cur;sheet("入力欄の設定:"+(it.lbl||""),[
+  ["名前を変える",()=>{const v=prompt("入力欄の名前",it.lbl||"");if(v&&v.trim()){it.lbl=v.trim();if(it.ph)setItemStr(it,pg,it.lbl);fsRebuild(true);paint()}}],
+  ["文字の基準位置:左端(右へ伸びる)",()=>setAnc(it,"l")],["文字の基準位置:中央",()=>setAnc(it,"c")],["文字の基準位置:右端(左へ伸びる)",()=>setAnc(it,"r")],
+  ["幅・高さを変える",()=>szbOpen(it)],
+  ["この入力欄を消す",()=>{pg.items=pg.items.filter(x=>x!==it);sel=null;fsRebuild(true);paint()}]])}
+function fillClean(inst){let d=0,k=0;pages.forEach(pg=>{const n0=pg.items.length;pg.items=pg.items.filter(it=>!(it.inst===inst&&it.field=="input"&&it.ph));d+=n0-pg.items.length;pg.items.forEach(it=>{if(it.inst===inst&&it.field=="input"){delete it.field;delete it.inst;delete it.no;delete it.lbl;delete it.xlc;delete it.ph;k++}})});
+  fillStop();sel=null;syncPanel();fgUI();paint();toast("未入力の欄 "+d+" か所を消し、入力した "+k+" か所は文字として残しました",4500)}
+function fillEnd(){const inst=fillInst||curInst();if(!inst)return;sheet("入力欄モードを終わらせる",[["未入力の欄を消して終了(入力した文字は残る)",()=>fillClean(inst)],["欄を残したままスライド入力だけ中断",()=>fillStop()]])}
+$("fpe").onclick=fillEnd;$("fge").onclick=fillEnd;
 $("fpx").onclick=fillStop;$("fpu").onclick=()=>fpGo(fpI-1,true);$("fpd").onclick=()=>fpGo(fpI+1,true);
 // ---- テンプレートを他の人に渡す(ファイルで書き出し・取り込み)
 function b64(u){let s="";for(let i=0;i<u.length;i+=32768)s+=String.fromCharCode.apply(null,u.subarray(i,i+32768));return btoa(s)}
@@ -1221,10 +1258,10 @@ const C="#f59e0b",S="style=\"fill:var(--card);stroke:var(--bd)\"",T=(x,y,t,sz=9,
 const home=SVG(220,260,
  R(4,4,212,252,16)+T(110,24,"PDFまとめ編集",11)+
  [0,1,2,3].map(i=>R(18+(i%2)*96,40+Math.floor(i/2)*84,84,74,6)+T(60+(i%2)*96,84+Math.floor(i/2)*84,"ページ "+(i+1),9)).join("")+
- R(14,214,192,34,12,"style=\"fill:var(--ac2);stroke:none\"")+["追加","全選択","回転","削除","戻る","共有"].map((t,i)=>T(31+i*31.5,235,t,7.5)).join("")+
+ R(14,214,192,34,12,"style=\"fill:var(--ac2);stroke:none\"")+["追加","全選択","回転","削除","戻す","共有"].map((t,i)=>T(31+i*31.5,235,t,7.5)).join("")+
  N(1,60,50)+[2,3,4,5,6,7].map((n,i)=>N(n,31+i*31.5,210)).join(""));
 const editor=SVG(220,280,
- R(4,4,212,272,16)+R(12,10,40,16,6)+T(32,21,"戻る",8)+T(110,21,"1 / 1",8)+R(130,10,22,16,6)+T(141,21,"－",9)+R(156,10,22,16,6)+T(167,21,"＋",9)+R(182,10,28,16,6,"style=\"fill:var(--ac);stroke:none\"")+T(196,21,"完了",8).replace("var(--fg)","#fff")+
+ R(4,4,212,272,16)+R(12,10,40,16,6)+T(32,21,"戻す",8)+T(110,21,"1 / 1",8)+R(130,10,22,16,6)+T(141,21,"－",9)+R(156,10,22,16,6)+T(167,21,"＋",9)+R(182,10,28,16,6,"style=\"fill:var(--ac);stroke:none\"")+T(196,21,"完了",8).replace("var(--fg)","#fff")+
  R(14,34,192,150,6)+T(110,110,"PDFのページ",10)+
  [["#111"],["#e11d48"],["#2563eb"],["#16a34a"]].map((c,i)=>`<circle cx="${28+i*22}" cy="198" r="7" fill="${c[0]}"/>`).join("")+T(150,201,"太さ ──●─",8)+
  R(10,214,200,54,14,"style=\"fill:var(--card);stroke:var(--bd)\"")+["ペン","定規","文字","寸法","範囲","追加","その他"].map((t,i)=>T(26+i*28,246,t,7.5)).join("")+
@@ -1237,9 +1274,9 @@ const tpl=SVG(220,130,R(8,8,204,114,10)+[0,1].map(i=>`<rect x="${22+i*100}" y="2
  [[40,50,"A","氏名"],[40,76,"B","住所"],[140,50,"A","氏名"],[140,76,"C","電話"]].map(f=>`<rect x="${f[0]}" y="${f[1]-8}" width="46" height="18" fill="none" stroke="${C}" stroke-dasharray="3 2"/><circle cx="${f[0]}" cy="${f[1]-8}" r="7" fill="${C}"/><text x="${f[0]}" y="${f[1]-5}" font-size="9" font-weight="700" text-anchor="middle" fill="#fff">${f[2]}</text>`+T(f[0]+24,f[1]+5,f[3],8)).join("")+T(110,124,"同じ文字(A・A)は同時に入力",8));
 const MAN=[
 ["start","はじめに",null,["PDFの結合・分割・回転・手書き・文字入れ・画像や写真の追加・共有を、1つのアプリでできます。","目次の項目をタップすると、その説明へ飛びます。各項目に図があります。","データは端末の中だけで処理されます(外部に送られません)。"]],
-["home","ホーム画面",home,["① ページの一覧です。ページをタップすると選択(もう一度で解除)。各ページ下の「◀ ✎ ▶」で、◀▶=前後へ並べ替え、✎=そのページの編集画面を開きます。","② 追加:PDF・写真・テンプレートを追加。","③ 全選択 ④ 回転(選んだページ) ⑤ 削除 ⑥ 戻る(直前の操作を取り消し) ⑦ 共有:PDF/JPEG/PNGで書き出し。","ページ番号は左上に表示されます。回転・削除は、選択したページに対して働きます。"]],
-["edit","編集画面の見かた",editor,["① 戻る:1操作ずつ取り消します。","② ページ番号の左右の ‹ › で前後のページへ移動。","③ ＋－:画面の拡大縮小(PCは Ctrl+ホイール)。二本指でも拡大でき、動かすのも二本指です。","④ 完了:ホーム画面へ戻ります。","⑤ 色や太さ(選んだモードで内容が変わります)。","⑥ 下のボタン列は左右にスライドできます(スクロールバーが数秒出ます)。","⑦ その他:全消去・拡大縮小・この説明書など。"]],
-["pen","ペン・手書き",null,["「ペン」を選んで指でなぞると手書きできます。色・太さは画面下で変更。","間違えたら「戻る」で1つずつ取り消し。「その他」→「ペンの書き込みを全消去」で一括削除。"]],
+["home","ホーム画面",home,["① ページの一覧です。ページをタップすると選択(もう一度で解除)。各ページ下の「◀ ✎ ▶」で、◀▶=前後へ並べ替え、✎=そのページの編集画面を開きます。","② 追加:PDF・写真・テンプレートを追加。","③ 全選択 ④ 回転(選んだページ) ⑤ 削除 ⑥ 戻す(直前の操作を取り消し) ⑦ 共有:PDF/JPEG/PNGで書き出し。","ページ番号は左上に表示されます。回転・削除は、選択したページに対して働きます。"]],
+["edit","編集画面の見かた",editor,["① 戻す:1操作ずつ取り消します。","② ページ番号の左右の ‹ › で前後のページへ移動。","③ ＋－:画面の拡大縮小(PCは Ctrl+ホイール)。二本指でも拡大でき、動かすのも二本指です。","④ 完了:ホーム画面へ戻ります。","⑤ 色や太さ(選んだモードで内容が変わります)。","⑥ 下のボタン列は左右にスライドできます(スクロールバーが数秒出ます)。","⑦ その他:全消去・拡大縮小・この説明書など。"]],
+["pen","ペン・手書き",null,["「ペン」を選んで指でなぞると手書きできます。色・太さは画面下で変更。","間違えたら「戻す」で1つずつ取り消し。「その他」→「ペンの書き込みを全消去」で一括削除。"]],
 ["ruler","定規",ruler,["① 「定規」を押すと半透明の定規が出ます。本体をドラッグで移動、二本指で回転。水平・垂直ボタンで一発で整えられます。","② 縁のそばをなぞると、縁に沿ってまっすぐな線が引けます。定規の上には書き込めません。","「長さ」ボタンで定規を2倍・3倍にできます(15cm→30cm→45cm)。"]],
 ["text","文字",null,["「文字」を押して、ページ上の置きたい場所をタップ。そのまま入力します。","最初は配置モードです。ドラッグで移動、タップで文字を直せます。","「サイズ変更」を押すと 大きさ・幅・高さ のゲージが出ます。「枠サイズ」「全体拡大」「基準(左・中央・右)」「白フチ」もあります。","長押しでメニュー。「その他」→「テキストを全消去」で文字だけ一括削除。"]],
 ["dim","寸法(車庫証明などに)",dim,["① 「寸法」を選び、測りたいところを指でなぞって線を引きます(ほぼ水平・垂直なら自動でまっすぐに)。","② 名前(出入口・道路幅・横・縦…)を選び、数字(m)を入れて「入れる」。矢印つきの寸法線が入ります。","③ 「保管場所」だけは文字のみ。線を引かず短くタップしても置けます。","置いた直後は指でドラッグして動かせます。タップで文字の直し。"]],
@@ -1250,7 +1287,7 @@ const MAN=[
 ["tpl","テンプレート",tpl,["よく使うPDFと入力欄を保存して、何度も呼び出せます。","① 作り方:文字を置いて「入力欄にする」→ ホーム画面の「共有」→「テンプレートに保存」。","② 使い方:「追加」→「テンプレートから」→「使う」。入力欄を順に入力できます。","③ 編集:一覧の「編集」。「番号・順番」でグループ(A・B・C)を設定。同じ文字の欄は別ページでも同時に入力されます。‹ › でページ移動、「上書き保存」で保存。","④ 共有:「共有」でファイルにして相手に送れます。相手は「他の人のテンプレートを取り込む」で読み込みます。"]],
 ["camera","書類から自動入力(カメラ)",null,["テンプレートを呼び出した入力画面の「📷」を押すと、カメラで撮った書類から文字を読み取り、住所・氏名・電話番号を入力欄へ自動で入れます(入力欄の名前に「住所」「氏名」「電話」を含むときに使えます)。","電話番号:099・090・03 など、ハイフンの有無にかかわらず探します。","住所:「〒」の近く、「◯◯市」「◯◯郡」を目印に探します(県は無くてもOK)。","氏名:「氏名・名前・お名前」の横、「◯◯ △△様」の様の前を拾います。","読み取り結果は一覧で出るので、直してから「入力欄に入れる」を押します。候補が複数あるときは、下に候補が並びます。","うまく読めないときは、明るい場所で書類を真上から撮ってください。"]],
 ["share","共有・書き出し",null,["ホーム画面の「共有」。ファイル名をタップして自由に変更できます。","形式はPDF、JPEG画像、PNG画像から選べます(複数ページの画像はZIPにまとめます)。"]],
-["undo","戻す・消す",null,["「戻る」は1動作ずつ取り消し。ページ削除も戻せます。","その他:ペンの全消去/テキストの全消去/範囲選択で作った囲い・斜線の全消去。"]],
+["undo","戻す・消す",null,["「戻す」は1動作ずつ取り消し。ページ削除も戻せます。","その他:ペンの全消去/テキストの全消去/範囲選択で作った囲い・斜線の全消去。"]],
 ["pc","パソコンで使うとき",null,["拡大縮小:Ctrl(Mac は ⌘)+ホイール、または Ctrl + / -。Ctrl+0 で元の大きさ。","Ctrl+Z で戻る、Delete で選んだ文字・画像を削除。","拡大してもボタンは動かず、PDFだけが拡大されます。"]]
 ];
 const box=document.createElement("div");box.id="mn";
@@ -1413,7 +1450,7 @@ function xlLabel(c,texts){
   texts.forEach(t=>{const tcx=t.x+t.w/2,tcy=t.y+t.h/2;if(tcy>c.y0&&tcy<c.y1&&t.x+t.w<=c.x0+2){const d=c.x0-(t.x+t.w);if(d<160&&d<bd){bd=d;best=t}}});
   if(!best){texts.forEach(t=>{const tcx=t.x+t.w/2,tcy=t.y+t.h/2;if(tcx>c.x0&&tcx<c.x1&&tcy>=c.y1-1){const d=tcy-c.y1;if(d<60&&d<bd){bd=d;best=t}}})}
   return best?best.s.slice(0,12):""}
-async function xlStart(){
+async function xlStart(o){
   if(!cur)return;const f=files[cur.f];if(!f)return;
   say("表を解析中…");let r;
   try{if(f.xl&&f.xl.pages[cur.i])r=f.xl.pages[cur.i];else{const pj=await f.doc.getPage(cur.i+1);r=await xlDetect(f.bytes,cur.i,pj)}}catch(e){say("");return toast("検出に失敗しました")}
@@ -1423,9 +1460,10 @@ async function xlStart(){
   r.widgets.filter(w=>w.kind=="tx").forEach(w=>cells.push({x0:w.x0,y0:w.y0,x1:w.x1,y1:w.y1,on:true,lbl:(w.name||"").slice(0,12)}));
   const marks=r.marks.map(m=>({kind:m.kind,cx:m.cx,cy:m.cy,size:m.size,on:!!m.on}));
   r.widgets.filter(w=>w.kind=="btn").forEach(w=>marks.push({kind:w.radio?"c":"s",cx:(w.x0+w.x1)/2,cy:(w.y0+w.y1)/2,size:Math.max(w.x1-w.x0,w.y1-w.y0),on:w.on}));
+  if(o&&o.m){cells.length=0;if(!marks.length)return toast("◯・□が見つかりませんでした。文字の◯や、PDF・Excelのボタンが対象です",4200)}
   if(!cells.length&&!marks.length)return toast("検出できませんでした。罫線のある表や○□が見つかりません",4200);
   endEdit();sel=null;emode=null;setMode("text");syncPanel();setHint();
-  xlC={pg:cur,cells,marks,useC:true,useM:true,vx:r.view[0],vy:r.view[1]};xlUI();paint();
+  xlC={pg:cur,cells,marks,useC:!(o&&o.m),useM:true,vx:r.view[0],vy:r.view[1]};xlUI();paint();
   toast("紫の枠が入力欄になります。いらない枠はタップで外せます",4200)}
 function xlUI(){const C=xlC;if(!C){$("xb").style.display="none";return}
   const n=C.cells.filter(c=>c.on).length;
@@ -1459,6 +1497,20 @@ function xlOk(){
     addItem(it);nm++});
   sel=null;emode=null;setHint();syncPanel();paint();
   toast("入力欄 "+nc+" か所、切替 "+nm+" か所を作りました。○や□は1タップで切り替わります",4500)}
+
+var tgE=null,tgEtap=null;const GC=["#7c3aed","#e11d48","#0891b2","#16a34a","#d97706","#2563eb","#c026d3","#65a30d"];
+function tgEStart(){if(!cur)return;endEdit();sel=null;emode=null;setMode("text");tgE={s:new Set()};tgEUI();paint();toast("グループを直したい◯をタップで選んで、下のボタンを押してください",4000)}
+function tgEUI(){if(!tgE){$("gb").style.display="none";return}$("gb").style.display="flex";const n=tgE.s.size;$("gbt").textContent="選択ボタンをタップして選ぶ("+n+"個選択中)。同じ色・番号=同じグループ(1つだけ◉になります)"}
+function tgEGroups(pg){const gs=[];pg.items.forEach(i=>{if(i.field=="toggle"&&i.grp&&gs.indexOf(i.grp)<0)gs.push(i.grp)});return gs}
+function tgEDraw(x,pg,cw,ch,A){const gs=tgEGroups(pg);x.save();pg.items.forEach(i=>{if(i.field!="toggle")return;const [u,v]=toDisp(i.a,i.b,A),px=u*cw,py=v*ch,sz=i.s*(A%180==0?cw:ch),r=Math.max(7,sz*.95),gi=i.grp?gs.indexOf(i.grp):-1,col=gi<0?"#6b7280":GC[gi%GC.length],on=tgE.s.has(i);
+  x.lineWidth=on?4:2.2;x.strokeStyle=col;x.fillStyle=on?col+"44":"rgba(255,255,255,.01)";x.beginPath();x.arc(px,py,r,0,7);x.fill();x.stroke();
+  if(gi>=0){const fs=Math.max(9,r*.9);x.font="bold "+fs+"px sans-serif";x.fillStyle=col;x.textAlign="center";x.textBaseline="middle";const bx=px-r,by=py-r;x.beginPath();x.arc(bx,by,fs*.62,0,7);x.fillStyle="#fff";x.fill();x.stroke();x.fillStyle=col;x.fillText(String(gi+1),bx,by)}});x.restore()}
+function tgETap(e){const r=ec.getBoundingClientRect(),A=ang(cur);let best=null,bd=1e9;cur.items.forEach(i=>{if(i.field!="toggle")return;const [u,v]=toDisp(i.a,i.b,A),d=Math.hypot(e.clientX-(r.left+u*r.width),e.clientY-(r.top+v*r.height)),lim=Math.max(18,i.s*(A%180==0?r.width:r.height)*1.1);if(d<lim&&d<bd){best=i;bd=d}});
+  if(best){tgE.s.has(best)?tgE.s.delete(best):tgE.s.add(best);tgEUI();paint()}}
+$("gbM").onclick=()=>{if(!tgE||tgE.s.size<2)return toast("2つ以上選んでください");const g="gm"+Date.now();let on=false;[...tgE.s].sort((p,q)=>p.a-q.a).forEach(i=>{i.rd=true;i.grp=g;if(!i.off){if(on)i.off=true;else on=true}});tgE.s.clear();tgEUI();paint();toast("1つのグループにまとめました")};
+$("gbS").onclick=()=>{if(!tgE||!tgE.s.size)return toast("外したいものを選んでください");[...tgE.s].forEach((i,n)=>{i.grp="gs"+Date.now()+"_"+n});tgE.s.clear();tgEUI();paint();toast("それぞれ別のグループにしました")};
+$("gbD").onclick=()=>{if(!tgE||!tgE.s.size)return toast("消したいものを選んでください");cur.items=cur.items.filter(i=>!tgE.s.has(i));tgE.s.clear();tgEUI();paint()};
+$("gbOk").onclick=()=>{tgE=null;tgEUI();paint()};
 $("xbOk").onclick=xlOk;
 $("xbX").onclick=()=>{xlC=null;xlUI();paint()};
 $("xbC").onclick=()=>{if(xlC){xlC.useC=!xlC.useC;xlUI();paint()}};
