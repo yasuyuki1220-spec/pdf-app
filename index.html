@@ -950,10 +950,10 @@ async function tplMake(r){
   let n=0,first=null;
   r.fields.forEach(f=>{
     const pg=pgs[f.page];if(!pg)return;
-    const it={k:"t",a:f.a,b:f.b,str:f.str,s:f.s,c:f.c,rot:f.rot,sx:f.sx,sy:f.sy,anc:f.anc};
+    const it={k:"t",a:f.a,b:f.b,str:f.str,s:f.s,c:f.c,rot:f.rot,sx:f.sx,sy:f.sy,anc:f.anc};if(f.cell){it.cell={...f.cell};it.s0=f.s0||f.s;it.s=it.s0}
     if(f.type=="toggle"){it.field="toggle";it.off=true;it.rd=f.rd;it.grp=f.grp?f.grp+"@"+inst:undefined}
     if(f.type=="input"){it.field="input";it.no=f.no||++n;it.ph=true;it.lbl=f.str;it.inst=inst;if(!first)first=pg}
-    pg.items.push(it)});
+    if(it.cell)fitItem(it,pg);pg.items.push(it)});
   pages.push(...pgs);say("");draw();
   if(first){await openEd(first);fillStart(inst);toast("上下にスライドして、入力欄を順に入力できます",4500)}
   else say("「"+r.name+"」を追加しました")}
@@ -1112,7 +1112,7 @@ $("tlf").onchange=async e=>{
   try{
     const o=JSON.parse(await f.text());if(o.app!=="pdfmatome"||typeof o.pdf!=="string"||!Array.isArray(o.fields))throw 0;
     const bin=atob(o.pdf),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
-    const fields=o.fields.slice(0,200).map(x=>({page:+x.page||0,a:+x.a,b:+x.b,s:+x.s||.03,c:/^#[0-9a-f]{6}$/i.test(x.c)?x.c:"#111111",sx:+x.sx||1,sy:+x.sy||1,rot:+x.rot||0,anc:["l","c","r"].includes(x.anc)?x.anc:"l",type:x.type=="input"?"input":"fixed",str:String(x.str||"").slice(0,200)}));
+    const fields=o.fields.slice(0,200).map(x=>({page:+x.page||0,a:+x.a,b:+x.b,s:+x.s||.03,c:/^#[0-9a-f]{6}$/i.test(x.c)?x.c:"#111111",sx:+x.sx||1,sy:+x.sy||1,rot:+x.rot||0,anc:["l","c","r"].includes(x.anc)?x.anc:"l",type:x.type=="input"?"input":x.type=="toggle"?"toggle":"fixed",no:+x.no||undefined,rd:!!x.rd,grp:x.grp?String(x.grp).slice(0,60):undefined,cell:x.cell&&[x.cell.x0,x.cell.x1,x.cell.y0,x.cell.y1].every(Number.isFinite)?{x0:+x.cell.x0,x1:+x.cell.x1,y0:+x.cell.y0,y1:+x.cell.y1}:undefined,s0:+x.s0||undefined,str:String(x.str||"").slice(0,200)}));
     await tdb("put",{id:String(Date.now()),name:String(o.name||"取り込み").slice(0,60),created:Date.now(),pdf:u,fields,pages:+o.pages||1});
     toast("取り込みました");tplList()
   }catch(err){toast("このファイルは取り込めません")}};
@@ -1129,7 +1129,7 @@ function fieldsFrom(list){
   list.forEach((p,pi)=>p.items.forEach(it=>{if(it.k=="t"){if(it.field=="input"&&it.no)mx=Math.max(mx,it.no);raw.push({pi,it,no:it.field=="input"?it.no:0})}}));
   raw.forEach(x=>{if(x.it.field=="input"&&!x.no)x.no=++mx});
   const nos=[...new Set(raw.filter(x=>x.it.field=="input").map(x=>x.no))].sort((a,b)=>a-b),rank=Object.fromEntries(nos.map((n,i)=>[n,i+1]));
-  return raw.map(({pi,it,no})=>({page:pi,a:it.a,b:it.b,s:it.s,c:it.c,sx:it.sx||1,sy:it.sy||1,rot:it.rot||0,anc:it.anc,type:it.field=="input"?"input":it.field=="toggle"?"toggle":"fixed",no:it.field=="input"?rank[no]:undefined,str:it.str,grp:it.grp,rd:it.rd}))}
+  return raw.map(({pi,it,no})=>({page:pi,a:it.a,b:it.b,s:it.s,c:it.c,sx:it.sx||1,sy:it.sy||1,rot:it.rot||0,anc:it.anc,cell:it.cell?{...it.cell}:undefined,s0:it.cell?(it.s0||it.s):undefined,type:it.field=="input"?"input":it.field=="toggle"?"toggle":"fixed",no:it.field=="input"?rank[no]:undefined,str:it.str,grp:it.grp,rd:it.rd}))}
 $("tsok").onclick=async()=>{
   const name=$("tsn").value.trim()||"テンプレート",list=tsList;$("ts").style.display="none";
   let ex=null;try{ex=(await tdb("all")).find(r=>r.name==name)}catch(_){}
@@ -1149,10 +1149,10 @@ async function tplEditStart(r){
   for(let i=0;i<doc.numPages;i++){const p=await doc.getPage(i+1),v=p.view;pgs.push({f:fi,i,r:0,base:p.rotate%360,W:v[2]-v[0],H:v[3]-v[1],sel:false,strokes:[],items:[]})}
   let n=0;
   r.fields.forEach(f=>{const pg=pgs[f.page];if(!pg)return;
-    const it={k:"t",a:f.a,b:f.b,str:f.str,s:f.s,c:f.c,rot:f.rot,sx:f.sx,sy:f.sy,anc:f.anc};
+    const it={k:"t",a:f.a,b:f.b,str:f.str,s:f.s,c:f.c,rot:f.rot,sx:f.sx,sy:f.sy,anc:f.anc};if(f.cell){it.cell={...f.cell};it.s0=f.s0||f.s;it.s=it.s0}
     if(f.type=="toggle"){it.field="toggle";it.off=true;it.rd=f.rd;it.grp=f.grp}
-    if(f.type=="input"){it.field="input";it.no=f.no||++n}
-    pg.items.push(it)});
+    if(f.type=="input"){it.field="input";it.no=f.no||++n;it.lbl=f.str}
+    if(it.cell)fitItem(it,pg);pg.items.push(it)});
   pages.push(...pgs);tplEdit={r,pgs};say("");draw();await openEd(pgs[0]);
   toast("テンプレート編集中:文字を動かしたり、番号で入力順を変えられます",4500)}
 function tplGroups(){
