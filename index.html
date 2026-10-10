@@ -435,7 +435,7 @@ const pgList=()=>tplEdit?tplEdit.pgs:pages;
 function pgLabel(){const L=pgList();$("pgl").textContent=(L.indexOf(cur)+1)+" / "+L.length}
 function goPage(d){if(!cur)return;const L=pgList(),n=L[L.indexOf(cur)+d];if(!n)return toast(d>0?"最後のページです":"最初のページです",1200);endEdit();commit();openEd(n)}
 $("pgP").onclick=()=>goPage(-1);$("pgN").onclick=()=>goPage(1);
-async function openEd(pg){if(smOn&&!(files[pg.f]&&files[pg.f].xl))smEnd();sbAll();cur=pg;emode=null;ruler={on:false,a:.5,b:.4,deg:0};rotInfo=null;rulerUI();pgLabel();sel=null;$("ed").style.display="flex";setMode(qp&&qp.on&&tplEdit?"text":"pen");await redrawBase();qSync();if(qp&&qp.on)qOpts()}
+async function openEd(pg){let kz=null;if(qp&&qp.on&&tplEdit&&cur&&ec.width&&baseW){kz={z:ec.getBoundingClientRect().width/baseW,fx:(wrap.scrollLeft+wrap.clientWidth/2)/Math.max(1,wrap.scrollWidth),fy:(wrap.scrollTop+wrap.clientHeight/2)/Math.max(1,wrap.scrollHeight)}}if(smOn&&!(files[pg.f]&&files[pg.f].xl))smEnd();sbAll();cur=pg;emode=null;ruler={on:false,a:.5,b:.4,deg:0};rotInfo=null;rulerUI();pgLabel();sel=null;$("ed").style.display="flex";setMode(qp&&qp.on&&tplEdit?"text":"pen");await redrawBase();if(kz&&kz.z>1.02){ec.style.width=baseW*kz.z+"px";wrap.scrollLeft=kz.fx*wrap.scrollWidth-wrap.clientWidth/2;wrap.scrollTop=kz.fy*wrap.scrollHeight-wrap.clientHeight/2}qSync();if(qp&&qp.on)qOpts()}
 const baseCv=document.createElement("canvas");
 async function redrawBase(){selR=null;if(!cur._base)cur._base=snapOf(cur);
   {const A0=ang(cur),pw=A0%180==0?cur.W:cur.H,ph=A0%180==0?cur.H:cur.W;baseW=Math.max(120,Math.min(wrap.clientWidth-4,(wrap.clientHeight-4)*pw/ph,900))}
@@ -479,11 +479,11 @@ ec.onpointerdown=e=>{
     if(!smMulti){smSet.clear();sel=null}smT=null;smSync();paint();return}
   {const ht=(mode=='dim'||(ruler.on&&mode=='pen'))?null:hit(e);if(ht&&ht.field=='toggle'&&!(emode=='move'&&sel===ht)){tgT={it:ht,x:e.clientX,y:e.clientY};moved=false;dp={x:e.clientX,y:e.clientY};clearTimeout(lpT);return}}
   if(qp&&qp.on&&tplEdit&&qp.cp){const h=hit(e);
-    if(qp.cp==1){if(h&&h.k=="t"&&h.field=="input"){qp.clip={it:h,cell:h.cell&&{...h.cell}};qp.cp=2;sel=h;syncPanel();$("tqc").textContent="貼り付け中";qSync();paint();toast("コピーしました。貼り付けたい場所をタップ(別ページでもOK、何度でも)",3500)}else toast("コピーしたい連投欄をタップしてください",2000);return}
+    if(qp.cp==1){if(h&&h.k=="t"&&h.field=="input"){qpClip(h);toast("コピーしました。貼り付けたい場所をタップ(別ページでもOK、何度でも)。欄の長押しで移動もできます",3500)}else{toast("コピーしたい連投欄をタップしてください",2000);return}}
     if(qp.cp==2&&!h&&qp.clip){const s0=qp.clip.it,sc0=qp.clip.cell,it={...s0,a:q[0],b:q[1],ph:true,str:s0.lbl||s0.str,lbl:s0.lbl||s0.str};delete it.arr;
       if(sc0){const cw=sc0.x1-sc0.x0,ch=sc0.y1-sc0.y0;it.cell={x0:q[0]-cw/2,x1:q[0]+cw/2,y0:q[1]-ch/2,y1:q[1]+ch/2};it.a=s0.a+(it.cell.x0-sc0.x0);it.b=s0.b+(it.cell.y0-sc0.y0);if(!(s0.cell&&s0.cell.y0<s0.cell.y1)){it.cell.y0=q[1]+ch/2;it.cell.y1=q[1]-ch/2;it.b=s0.b+(it.cell.y0-sc0.y0)}}
       addItem(it);if(it.cell)fitItem(it,cur);sel=it;qp.lastIt=it;qOpts();syncPanel();paint();toast("グループ"+LT(it.no||1)+"として貼り付けました",1500);return}
-    if(qp.cp==2&&h&&h.k=="t"&&h.field=="input"){qp.clip={it:h,cell:h.cell&&{...h.cell}};sel=h;syncPanel();paint();toast("この欄に切り替えてコピーしました",1500);return}}
+    else if(qp.cp==2&&h&&h.k=="t"&&h.field=="input"&&h!==sel){qpClip(h);toast("この欄に切り替えてコピーしました",1500)}}
   if(qp&&qp.on&&tplEdit&&!sel&&!hit(e)){const now=Date.now();if(qp.t&&now-qp.t<420&&Math.hypot(e.clientX-qp.x,e.clientY-qp.y)<40){qp.t=0;qPlace(q)}else{qp.t=now;qp.x=e.clientX;qp.y=e.clientY}return}
   if(sArm&&sel===sArm){const c=stampCorner(sArm),r=ec.getBoundingClientRect(),A=ang(cur),[u,v]=toDisp(c[0],c[1],A);if(Math.hypot(e.clientX-(r.left+u*r.width),e.clientY-(r.top+v*r.height))<Math.min(hitR()*1.8,Math.max(14,bmOf(sArm).width*sc(sArm,cur)*(r.width/cur.W)*(sArm.sx||1)*.22))){stArr={c:sArm.c,w:.0035,p:[c,q],it:sArm};paint();return}}
   if(mode=="dim"){const hT=hit(e);if(hT&&hT.k=="t"&&!hT.field&&!(emode=="move"&&sel===hT)){sel=hT;sArm=hT.halo?hT:null;emode=null;moved=false;tapEdit=false;dp={x:e.clientX,y:e.clientY};clearTimeout(lpT);lpT=setTimeout(()=>{lpT=null;if(navigator.vibrate)navigator.vibrate(12);emode="move";setHint();drag=[q[0]-hT.a,q[1]-hT.b];lift=hT;syncPanel();paint()},350);setHint();syncPanel();paint();return}
@@ -1490,7 +1490,8 @@ $("dmA").onclick=()=>{
 var qp={on:false,lastIt:null};
 function qSync(){if(!qp)return;$("ed").classList.toggle("qp",!!(qp.on&&cur&&tplEdit));$("tq").style.display=(qp.on&&cur&&tplEdit)?"flex":"none";$("teQ").classList.toggle("act",!!qp.on);$("tqc").classList.toggle("act",!!qp.cp)}
 function qOff(){qp.on=false;qp.cp=0;qp.clip=null;$("tqc").textContent="選択コピー";qSync()}
-$("tqc").onclick=()=>{if(qp.cp){qp.cp=0;qp.clip=null;$("tqc").textContent="選択コピー";qSync();return toast("コピーをやめました",1500)}qp.cp=1;sel=null;syncPanel();qSync();paint();toast("コピーしたい連投欄をタップしてください",3000)};
+function qpClip(h){const c=h.cell&&{...h.cell};qp.clip={it:{...h,cell:c},cell:c};qp.cp=2;$("tqc").textContent="貼り付け中";qSync()}
+$("tqc").onclick=()=>{if(qp.cp){qp.cp=0;qp.clip=null;$("tqc").textContent="選択コピー";qSync();return toast("コピーをやめました",1500)}if(sel&&sel.k=="t"&&sel.field=="input"){qpClip(sel);paint();return toast("選んだ欄をコピーしました。貼り付けたい場所をタップ",3000)}qp.cp=1;sel=null;syncPanel();qSync();paint();toast("コピーしたい連投欄をタップしてください",3000)};
 $("tqs").onclick=()=>{if(sel&&sel.k=="t")szbOpen(sel);else toast("先に連投欄をタップして選んでください",2000)};
 function qOpts(){tplNorm();const s2=$("tqg"),v=s2.value||"new";s2.innerHTML="";const add=(val,t)=>{const o=document.createElement("option");o.value=val;o.textContent=t;s2.appendChild(o)};
   add("new","毎回 新しいグループ");add("same","直前と同じグループ(同時入力)");tplGroups().forEach((g,i)=>add("g"+g.no,"グループ"+LT(i+1)+"に追加"));
