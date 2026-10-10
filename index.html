@@ -1021,14 +1021,16 @@ async function tplMake(r){
     if(it.cell)fitItem(it,pg);pg.items.push(it)});
   pages.push(...pgs);say("");draw();
   if(first){await openEd(first);fillStart(inst);toast("連投モード:画面の連投欄をタップして入力、Enterで次の欄へ進みます",4500)}
-  else say("「"+r.name+"」を追加しました")}
+  else{await openEd(pgs[0]||pages[pages.length-1]);say("");toast("「"+r.name+"」を開きました(連投欄なし)。編集モードで欄を追加できます",4000)}}
 // ---- 連投欄ガイド(①②…の順に入力)
 const curInst=()=>(sel&&sel.inst)||((cur&&cur.items.find(i=>i.inst))||{}).inst;
 function fillList(inst){const L=[];if(!inst)return L;pages.forEach(pg=>pg.items.forEach(it=>{if(it.inst===inst&&it.field=="input")L.push({pg,it})}));return L.sort((a,b)=>a.it.no-b.it.no)}
 function fgUI(){
   const g=$("fg");$("te").style.display=(cur&&tplEdit)?"flex":"none";qSync();
   if(!cur||fillInst||tplEdit){g.style.display="none";return}
-  const L=fillList(curInst());if(!L.length){g.style.display="none";return}
+  const L=fillList(curInst());
+  if(!L.length){if(cur.items.some(i=>i.field)){g.style.display="flex";$("fgl").textContent="フォーム項目あり";$("fgs").style.display=$("fgo").style.display="none";return}g.style.display="none";return}
+  $("fgs").style.display=$("fgo").style.display="";
   const grp=new Set(L.map(x=>x.it.no)).size,rest=new Set(L.filter(x=>x.it.ph).map(x=>x.it.no)).size;
   g.style.display="flex";$("fgl").textContent="連投欄 "+grp+"か所"+(rest?"(未入力 "+rest+")":"(すべて入力済み)")}
 $("fgs").onclick=()=>{const i=curInst();if(i)fillStart(i)};
