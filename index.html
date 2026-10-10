@@ -993,7 +993,7 @@ async function tplList(){
   L.forEach(r=>{
     const row=document.createElement("div"),tn=document.createElement("div"),sm=document.createElement("small"),b1=document.createElement("button"),b2=document.createElement("button");
     row.className="tr";tn.className="tn";tn.textContent=r.name;sm.textContent="連投欄 "+r.fields.filter(f=>f.type=="input").length+"・固定 "+r.fields.filter(f=>f.type!="input").length+"・"+(r.pages||1)+"ページ";tn.appendChild(sm);
-    const b3=document.createElement("button");b3.textContent="共有";b3.onclick=()=>tplShare(r);b1.className="p";b1.textContent="使う";b1.onclick=()=>{$("tl").style.display="none";tplMake(r)};b2.textContent="削除";
+    const b3=document.createElement("button");b3.textContent="共有";b3.onclick=()=>tplShare(r);b1.className="p";b1.textContent="使う";b1.onclick=()=>{kbPre();$("tl").style.display="none";tplMake(r)};b2.textContent="削除";
     b2.onclick=()=>sheet("「"+r.name+"」を削除しますか?",[["削除する",async()=>{await tdb("del",r.id);tplList()}]]);
     const cv=document.createElement("canvas");cv.style.cssText="width:44px;height:auto;min-height:56px;border:1px solid var(--bd);border-radius:4px;background:#fff";
     const bE=document.createElement("button");bE.textContent="編集";bE.onclick=()=>tplEditStart(r);const tb=document.createElement("div");tb.className="tb";tb.append(b1,bE,b3,b2);row.append(cv,tn,tb);c.appendChild(row);
@@ -1005,9 +1005,10 @@ function tplForm(r){
   r.fields.forEach((f,k)=>{if(f.type!="input")return;const w=document.createElement("label"),sp=document.createElement("span"),i=document.createElement("input");
     w.className="tfr";sp.textContent=f.str;i.type="text";i.placeholder=f.str+"を入力";w.append(sp,i);c.appendChild(w);ins.push([k,i])});
   if(!ins.length){const d=document.createElement("div");d.style.cssText="padding:10px 4px;color:var(--mut);font-size:14px";d.textContent="連投欄はありません。固定の文字だけが入ります。";c.appendChild(d)}
-  $("tfok").onclick=async()=>{const vals={};ins.forEach(([k,i])=>vals[k]=i.value);$("tf").style.display="none";try{await tplMake(r,vals)}catch(e){say("テンプレートを開けませんでした")}};
+  $("tfok").onclick=async()=>{kbPre();const vals={};ins.forEach(([k,i])=>vals[k]=i.value);$("tf").style.display="none";try{await tplMake(r,vals)}catch(e){say("テンプレートを開けませんでした")}};
   $("tf").style.display="flex"}
 $("tfx").onclick=()=>{$("tf").style.display="none"};
+function kbPre(){try{let k=$("kbp");if(!k){k=document.createElement("input");k.id="kbp";k.type="text";k.setAttribute("aria-hidden","true");k.style.cssText="position:fixed;left:0;bottom:0;width:1px;height:1px;opacity:0;border:0;padding:0;font-size:16px;z-index:-1";document.body.appendChild(k)}k.focus()}catch(_){}}
 async function tplMake(r){
   snap();say("開いています…");
   const bytes=new Uint8Array(r.pdf),doc=await pdfjsLib.getDocument({data:bytes.slice()}).promise,fi=files.push({name:r.name,bytes,doc})-1,pgs=[],inst="t"+Date.now();
