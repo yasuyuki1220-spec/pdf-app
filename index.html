@@ -114,6 +114,8 @@ input[type=range]{accent-color:var(--ac)}
 #cg li i{flex:0 0 22px;height:22px;border-radius:50%;background:#f59e0b;color:#fff;font-style:normal;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;margin-top:1px}
 #cg u{text-decoration:none;font-weight:700;color:#4338ca}#cg small{display:block;margin-top:6px;color:#6b7280;font-size:12px}
 #cg #cgx{position:absolute;right:8px;top:8px;border:0;background:#eef0f6;border-radius:50%;width:28px;height:28px;font-size:14px}
+#cg textarea{display:block;width:100%;box-sizing:border-box;margin-top:8px;border:2px solid #4338ca;border-radius:10px;padding:8px 10px;font-size:16px;font-family:inherit;resize:none;background:#fff;color:#1a1d24}
+#cg .cgr{display:flex;align-items:center;gap:8px;margin-top:6px}#cg .cgr small{flex:1;margin:0}#cg #cgok{border:0;border-radius:10px;background:#4338ca;color:#fff;padding:8px 18px;font-size:14px;font-weight:700}
 </style></head><body>
 <svg style="display:none"><defs>
 <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
@@ -150,7 +152,7 @@ input[type=range]{accent-color:var(--ac)}
 
 <div id="ed">
 <div class="top"><span style="display:flex;gap:4px"><button class="tb" id="un" title="戻す" aria-label="戻す"><svg><use href="#i-undo"/></svg></button><button class="tb" id="re" title="進む" aria-label="進む"><svg style="transform:scaleX(-1)"><use href="#i-undo"/></svg></button></span><span class="pgn"><button class="tb" id="pgP">‹</button><span id="pgl"></span><button class="tb" id="pgN">›</button></span><span style="display:flex;gap:4px"><button class="tb" id="zOut">－</button><button class="tb" id="zIn">＋</button></span><button class="tb pri" id="ok">ホーム</button></div>
-<div id="mhint"></div><div id="cg"><button id="cgx" aria-label="閉じる">✕</button><b>📷 iPhoneのカメラで書類から入力</b><ol><li><i>1</i><span>下に出たキーボードの <u>📷(テキストを読み取り)</u> をタップ</span></li><li><i>2</i><span>書類にカメラを向けて、文字が黄色く囲まれたら止める</span></li><li><i>3</i><span>下の <u>「挿入」</u> をタップ → 選んだ欄に文字が入ります</span></li></ol><small>キーボードに📷が見えないときは、入力欄を長押し →「テキストを読み取り」</small></div>
+<div id="mhint"></div><div id="cg"><button id="cgx" aria-label="閉じる">✕</button><b>📷 iPhoneのカメラで書類から入力</b><ol><li><i>1</i><span>下の <u>白い枠</u> をタップ(キーボードが出ます)</span></li><li><i>2</i><span>キーボードの <u>📷(テキストを読み取り)</u> をタップ</span></li><li><i>3</i><span>書類にカメラを向けて、文字が黄色く囲まれたら <u>「挿入」</u> をタップ</span></li></ol><textarea id="cgt" rows="2" placeholder="ここに読み取った文字が入ります(欄にも同時に入ります)" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea><div class="cgr"><small>📷が見えないときは、白い枠を長押し →「テキストを読み取り」</small><button id="cgok">OK</button></div></div>
 <div id="te"><span class="fl">テンプレート編集中</span><button id="teQ">連投欄を連続設置</button><button id="teO">番号・順番</button><button id="teA">別名保存</button><button id="teS" class="p">上書き保存</button></div>
 <div id="tq"><input id="tqn" placeholder="名称を入れて、ページをダブルタップ(例: 住所)"><select id="tqg"></select><button id="tqx">終了</button></div>
 <div class="w" id="wrap"><canvas id="ec"></canvas></div>
@@ -627,9 +629,9 @@ function placeEdit(){
   S.left=(ec.offsetLeft+u*r.width)+"px";S.top=(ec.offsetTop+v*r.height)+"px";const fs=60*k,bs=Math.max(16,fs),m=bs/fs;tin._e=1/m;S.fontSize=bs+"px";S.color=it.c;S.padding=6*k*m+"px "+8*k*m+"px";
   S.transform=`translate(-50%,-50%) rotate(${it.rot+A}deg) scale(${(it.sx||1)/m},${(it.sy||1)/m})`;
   tin._w=tin.offsetWidth;tin._h=tin.offsetHeight}
-function kbUp(){const v=window.visualViewport;return !!v&&innerHeight-v.height>120}
+var camHold=false;function kbUp(){const v=window.visualViewport;return !!v&&innerHeight-v.height>120}
 function startEdit(it,all,raw){if(it.str==="テキスト")all=true;if(!raw&&fillInst&&it.inst===fillInst){const k=fillL.findIndex(g=>g.list.some(x=>x.it===it));if(k>=0){fpGo(k,true);return}}
-  if(!editing)edPrevW=ec.getBoundingClientRect().width;$("ed").classList.add("kb");editing=it;sel=it;emode=null;setHint();syncPanel();tin.style.display="block";tin.textContent=it.str;paint();if(document.activeElement===tin&&!kbUp())tin.blur();tin.focus();
+  if(!editing)edPrevW=ec.getBoundingClientRect().width;$("ed").classList.add("kb");editing=it;sel=it;emode=null;setHint();syncPanel();tin.style.display="block";tin.textContent=it.str;paint();if(document.activeElement===tin&&!kbUp())tin.blur();tin.focus();if(camHold)$("cgt").focus();
   const r=document.createRange();r.selectNodeContents(tin);if(!all&&!it.ph)r.collapse(false);const g2=getSelection();g2.removeAllRanges();g2.addRange(r);
   setTimeout(focusEdit,350);setTimeout(focusEdit,800)}
 function endEdit(keep){
@@ -639,9 +641,9 @@ tin.setAttribute("enterkeyhint","next");
 tin.addEventListener("keydown",e=>{if(!editing||!editing.xlc||fillInst||e.isComposing||e.keyCode==229)return;if(e.key=="Enter"&&e.shiftKey)return;if(e.key=="Enter"||e.key=="Tab"){e.preventDefault();xlNext(e.key=="Tab"&&e.shiftKey?-1:1)}});
 tin.addEventListener("keydown",e=>{if(!editing||!fillInst||editing.inst!==fillInst||e.isComposing||e.keyCode==229)return;if(e.key=="Enter"&&e.shiftKey)return;if(e.key=="Enter"||e.key=="Tab"){e.preventDefault();fpStep(e.key=="Tab"&&e.shiftKey?-1:1)}});
 tin.addEventListener("keydown",e=>{if(!editing||fillInst||editing.xlc||e.isComposing||e.keyCode==229)return;if(e.key=="Enter"&&!e.shiftKey){e.preventDefault();endEdit()}});
-tin.oninput=()=>{if(!editing)return;cgHide();const v=tin.innerText.replace(/\n$/,"");editing.ph=false;if(fillInst&&editing.inst===fillInst&&colPick){editing.c=col;tin.style.color=col}setItemStr(editing,cur,v);placeEdit();
+tin.oninput=()=>{if(!editing)return;if(!tin._cg)cgHide();const v=tin.innerText.replace(/\n$/,"");editing.ph=false;if(fillInst&&editing.inst===fillInst&&colPick){editing.c=col;tin.style.color=col}setItemStr(editing,cur,v);placeEdit();
   if(fillInst&&editing.inst===fillInst){const g=fillL[fpI];if(g)g.list.forEach(x=>{if(x.it!==editing){if(colPick)x.it.c=col;x.it.ph=!v.trim();setItemStr(x.it,x.pg,v.trim()?v:x.it.lbl)}})}};
-document.addEventListener("pointerdown",e=>{if(editing&&!e.target.closest("#tin,.ctx,#op,#fpb"))endEdit()},true);
+document.addEventListener("pointerdown",e=>{if(editing&&!e.target.closest("#tin,.ctx,#op,#fpb,#cg"))endEdit()},true);
 
 var mvExit=false;let emode=null,lpT=null,lpPt=null,dp=null,rz=null,createTap=null;
 function prVis(){$("pr").style.display=((sel&&sel.shape)||(mode=="move"&&!(sel&&sel.k=="t")))?"none":""}
@@ -1055,7 +1057,7 @@ async function fpGo(i,focus){
   i=Math.max(0,Math.min(fillL.length-1,i));const g=fillL[i];if(!g)return;
   const t=g.list.find(x=>x.pg===cur)||g.list[0];
   endEdit(!!focus);fpI=i;$("fpc").textContent=(i+1)+"/"+fillL.length;
-  if(t.pg!==cur){if(focus){$("ed").classList.add("kb");tin.style.display="block";tin.textContent="";tin.focus()}await openEd(t.pg)}
+  if(t.pg!==cur){if(focus){$("ed").classList.add("kb");tin.style.display="block";tin.textContent="";(camHold?$("cgt"):tin).focus()}await openEd(t.pg)}
   sel=t.it;emode=null;syncPanel();centerOn(t.it,2.2);paint();
   if(focus)startEdit(t.it,true,true)}
 function fpStep(d){cgHide();const n=fpI+d;if(n<0)return toast("最初の欄です",1500);if(n>=fillL.length){endEdit();return toast("最後の欄です。右上の「完了」で終わります",3000)}fpGo(n,true)}
@@ -1396,10 +1398,12 @@ function dcShow(title,raw,inst){
     $("cm").style.display="none";paint();toast(n?n+"か所に入力しました。訂正は連投欄をタップ":"入力する内容がありません",3200)}}
 $("cmx").onclick=()=>{$("cm").style.display="none"};
 function camGuide(){const inst=fillInst||curInst();if(!inst)return toast("連投欄のあるファイルで使えます");
-  if(!fillInst)fillStart(inst);else if(!editing)fpGo(Math.max(0,fpI),true);else{if(!kbUp())tin.blur();tin.focus()}
-  $("cg").style.display="block";clearTimeout(camGuide._t);camGuide._t=setTimeout(()=>{$("cg").style.display="none"},60000)}
-function cgHide(){$("cg").style.display="none"}
-$("cgx").onclick=cgHide;
+  camHold=true;if(!fillInst)fillStart(inst);else if(!editing)fpGo(Math.max(0,fpI),true);
+  const t=$("cgt");t.value=editing&&!editing.ph?editing.str:"";$("cg").style.display="block";$("toast").style.opacity=0;t.focus();
+  clearTimeout(camGuide._t);camGuide._t=setTimeout(cgHide,120000)}
+function cgHide(){$("cg").style.display="none";camHold=false}
+$("cgx").onclick=()=>{cgHide();if(editing)tin.focus()};$("cgok").onclick=()=>{cgHide();if(editing)tin.focus()};
+$("cgt").addEventListener("input",()=>{if(!editing)return;tin.textContent=$("cgt").value;tin._cg=1;tin.oninput();tin._cg=0});
 function camDirect(){const inst=fillInst||curInst();if(!inst)return toast("先にテンプレートを呼び出してください");if(!Object.keys(dcFields(inst)).length)return toast("連投欄の名前に「住所」「氏名」「電話」を含むテンプレートで使えます",4200);$("camIn").value="";$("camIn").click()}
 $("fgc").onclick=camGuide;$("fpcam").onclick=camGuide;
 $("camIn").onchange=e=>camPicked(e.target.files[0]);$("camPk").onchange=e=>camPicked(e.target.files[0]);
