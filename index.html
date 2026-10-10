@@ -78,7 +78,8 @@ input[type=range]{accent-color:var(--ac)}
 .col{width:28px;height:28px;border-radius:50%;border:2px solid var(--bd);padding:0}.col.on{outline:2px solid var(--ac);outline-offset:2px}
 .dock.ed{position:static;margin:4px auto calc(10px + env(safe-area-inset-bottom,0px));width:100%}
 #ov{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:flex-end;z-index:70}
-#sh{background:var(--card);width:100%;border-radius:22px 22px 0 0;padding:12px 14px calc(14px + env(safe-area-inset-bottom,0px));max-width:620px;margin:0 auto}
+#sh{background:var(--card);width:100%;border-radius:22px 22px 0 0;padding:12px 14px calc(14px + env(safe-area-inset-bottom,0px));max-width:620px;margin:0 auto;max-height:82vh;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.tg{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}.tg.lift{background:#dbeafe!important;box-shadow:0 6px 16px rgba(0,0,0,.28);outline:2px solid #2563eb;position:relative;z-index:5}
 .st{font-size:13px;color:var(--mut);padding:6px 10px}.sr{display:block;width:100%;text-align:left;padding:15px 10px;border:0;border-bottom:1px solid var(--bd);background:none;font-size:16px}.sr:last-child{border:0;color:var(--mut)}
 #op #bmv{order:-4}#op #bsz{order:-3}#op #ex{order:-2}#op #bfd{order:-1}
 #op #bmv,#op #bsz,#op #ex,#op #bfd{padding:11px 15px!important;font-size:14px!important;font-weight:700;background:#fff3e0!important;color:#b45309}
@@ -155,8 +156,8 @@ input[type=range]{accent-color:var(--ac)}
 <div id="ed">
 <div class="top"><span style="display:flex;gap:4px"><button class="tb" id="un" title="戻す" aria-label="戻す"><svg><use href="#i-undo"/></svg></button><button class="tb" id="re" title="進む" aria-label="進む"><svg style="transform:scaleX(-1)"><use href="#i-undo"/></svg></button></span><span class="pgn"><button class="tb" id="pgP">‹</button><span id="pgl"></span><button class="tb" id="pgN">›</button></span><span style="display:flex;gap:4px"><button class="tb" id="zOut">－</button><button class="tb" id="zIn">＋</button></span><button class="tb pri" id="ok">ホーム</button></div>
 <div id="mhint"></div><div id="cg"><button id="cgx" aria-label="閉じる">✕</button><b>📷 iPhoneのカメラで書類から入力</b><ol><li><i>1</i><span>下の <u>白い枠</u> をタップ(キーボードが出ます)</span></li><li><i>2</i><span>キーボードの <u>📷(テキストを読み取り)</u> をタップ</span></li><li><i>3</i><span>書類にカメラを向けて、文字が黄色く囲まれたら <u>「挿入」</u> をタップ</span></li></ol><textarea id="cgt" rows="2" placeholder="ここに読み取った文字が入ります(欄にも同時に入ります)" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea><div class="cgr"><button id="cgpa">📋 コピーした文字を貼り付け</button><button id="cgok">OK</button></div><small class="cgs">キーボードに📷が出ないとき: 標準の「カメラ」アプリで書類に向け、文字を長押し →「コピー」→ ここに戻って「貼り付け」</small></div>
-<div id="te"><span class="fl">テンプレート編集中</span><button id="teQ">連投欄を連続設置</button><button id="teO">番号・順番</button><button id="teA">別名保存</button><button id="teS" class="p">上書き保存</button></div>
-<div id="tq"><input id="tqn" placeholder="名称を入れて、ページをダブルタップ(例: 住所)"><select id="tqg"></select><button id="tqx">終了</button></div>
+<div id="te"><span class="fl">テンプレート編集中</span><button id="teQ">連投欄の連続編集</button><button id="teO">番号・順番</button><button id="teA">別名保存</button><button id="teS" class="p">上書き保存</button></div>
+<div id="tq"><input id="tqn" placeholder="名称を入れて、ページをダブルタップ(例: 住所)"><select id="tqg"></select><button id="tqs">枠・文字サイズ</button><button id="tqc">選択コピー</button><button id="tqx">終了</button></div>
 <div class="w" id="wrap"><canvas id="ec"></canvas></div>
 <div id="szb" style="display:none"><span id="szt">連投欄の幅・高さ</span><button id="szW1">幅 −</button><button id="szW2">幅 ＋</button><button id="szH1">高さ −</button><button id="szH2">高さ ＋</button><button id="szF1">文字 −</button><button id="szF2">文字 ＋</button><button class="p" id="szOk">完了</button></div><div id="gb"><span id="gbt"></span><button id="gbM">同じグループにまとめる</button><button id="gbS">グループから外す</button><button id="gbD">削除</button><button class="p" id="gbOk">完了</button></div><div id="xb"><span id="xbt"></span><button id="xbC">空欄→連投欄</button><button id="xbM">○□ ON</button><button id="xbA">全部外す</button><button id="xbX">中止</button><button class="p" id="xbOk">決定</button></div>
 <div id="dab"><button id="dmA">←</button><button id="dmS" style="font-size:13px;padding:8px 12px">スタンプ</button><span>「←」「スタンプ」を置けます。動かす・回す・大きさ変更ができます</span></div>
@@ -268,7 +269,7 @@ function drawMarks(x,pg,cw,ch,extra){
       if(it.no){const rr=Math.max(4,cw/125),bx=-dw/2-pd-rr*.15,by=-dh/2-pd-rr*.15;x.fillStyle="rgba(245,158,11,.5)";x.beginPath();x.arc(bx,by,rr,0,7);x.fill();x.fillStyle="#fff";x.font="bold "+rr*1.25+"px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText(LT(it.no),bx,by)}}
     if(it===sel&&x.canvas.id=="ec"){x.lineWidth=Math.max(2,cw/250);x.strokeStyle=emode=="size"?"#16a34a":emode=="scale"?"#f59e0b":emode=="move"?"#e11d48":"#2563eb";x.setLineDash(emode?[]:[6,4]);x.strokeRect(-w/2,-h/2,w,h);if(emode=="size"||emode=="scale"){x.fillStyle=emode=="size"?"#16a34a":"#f59e0b";x.beginPath();x.arc(w/2,h/2,hr(),0,7);x.fill()}if(it.k=="t"&&!it.field&&!editing&&!it.cell){const rr=hr()*1.7;x.setLineDash([]);x.fillStyle="#16a34a";x.beginPath();x.arc(w/2,h/2,rr,0,7);x.fill()}}
     x.restore();
-    if(it===sel&&x.canvas.id=="ec"&&it.k=="t"&&!it.field&&it.cell&&!editing){const b=cellBR(it,pg),rr=hr()*1.7;x.save();x.setLineDash([]);x.fillStyle="#16a34a";x.beginPath();x.arc(b.u*cw,b.v*ch,rr,0,7);x.fill();x.restore()}
+    if(it===sel&&x.canvas.id=="ec"&&it.k=="t"&&(!it.field||tplEdit)&&it.cell&&!editing){const b=cellBR(it,pg),rr=hr()*1.7;x.save();x.setLineDash([]);x.fillStyle="#16a34a";x.beginPath();x.arc(b.u*cw,b.v*ch,rr,0,7);x.fill();x.restore()}
   }catch(err){try{x.restore()}catch(_){}}}}
   if(x.canvas.id=="ec"&&xlC&&xlC.pg===pg)xlDraw(x,pg,cw,ch,A);
   if(x.canvas.id=="ec"&&tgE&&cur===pg)tgEDraw(x,pg,cw,ch,A);
@@ -477,6 +478,12 @@ ec.onpointerdown=e=>{
     if(!smTry)o.lp=setTimeout(()=>{if(smT===o&&!o.mv){o.long=true;if(navigator.vibrate)navigator.vibrate(12);szbOpen(h);smSync()}},450);smT=o;sel=h;smSync();paint();return}
     if(!smMulti){smSet.clear();sel=null}smT=null;smSync();paint();return}
   {const ht=(mode=='dim'||(ruler.on&&mode=='pen'))?null:hit(e);if(ht&&ht.field=='toggle'&&!(emode=='move'&&sel===ht)){tgT={it:ht,x:e.clientX,y:e.clientY};moved=false;dp={x:e.clientX,y:e.clientY};clearTimeout(lpT);return}}
+  if(qp&&qp.on&&tplEdit&&qp.cp){const h=hit(e);
+    if(qp.cp==1){if(h&&h.k=="t"&&h.field=="input"){qp.clip={it:h,cell:h.cell&&{...h.cell}};qp.cp=2;sel=h;syncPanel();$("tqc").textContent="貼り付け中";qSync();paint();toast("コピーしました。貼り付けたい場所をタップ(別ページでもOK、何度でも)",3500)}else toast("コピーしたい連投欄をタップしてください",2000);return}
+    if(qp.cp==2&&!h&&qp.clip){const s0=qp.clip.it,sc0=qp.clip.cell,it={...s0,a:q[0],b:q[1],ph:true,str:s0.lbl||s0.str,lbl:s0.lbl||s0.str};delete it.arr;
+      if(sc0){const cw=sc0.x1-sc0.x0,ch=sc0.y1-sc0.y0;it.cell={x0:q[0]-cw/2,x1:q[0]+cw/2,y0:q[1]-ch/2,y1:q[1]+ch/2};it.a=s0.a+(it.cell.x0-sc0.x0);it.b=s0.b+(it.cell.y0-sc0.y0);if(!(s0.cell&&s0.cell.y0<s0.cell.y1)){it.cell.y0=q[1]+ch/2;it.cell.y1=q[1]-ch/2;it.b=s0.b+(it.cell.y0-sc0.y0)}}
+      addItem(it);if(it.cell)fitItem(it,cur);sel=it;qp.lastIt=it;qOpts();syncPanel();paint();toast("グループ"+LT(it.no||1)+"として貼り付けました",1500);return}
+    if(qp.cp==2&&h&&h.k=="t"&&h.field=="input"){qp.clip={it:h,cell:h.cell&&{...h.cell}};sel=h;syncPanel();paint();toast("この欄に切り替えてコピーしました",1500);return}}
   if(qp&&qp.on&&tplEdit&&!sel&&!hit(e)){const now=Date.now();if(qp.t&&now-qp.t<420&&Math.hypot(e.clientX-qp.x,e.clientY-qp.y)<40){qp.t=0;qPlace(q)}else{qp.t=now;qp.x=e.clientX;qp.y=e.clientY}return}
   if(sArm&&sel===sArm){const c=stampCorner(sArm),r=ec.getBoundingClientRect(),A=ang(cur),[u,v]=toDisp(c[0],c[1],A);if(Math.hypot(e.clientX-(r.left+u*r.width),e.clientY-(r.top+v*r.height))<Math.min(hitR()*1.8,Math.max(14,bmOf(sArm).width*sc(sArm,cur)*(r.width/cur.W)*(sArm.sx||1)*.22))){stArr={c:sArm.c,w:.0035,p:[c,q],it:sArm};paint();return}}
   if(mode=="dim"){const hT=hit(e);if(hT&&hT.k=="t"&&!hT.field&&!(emode=="move"&&sel===hT)){sel=hT;sArm=hT.halo?hT:null;emode=null;moved=false;tapEdit=false;dp={x:e.clientX,y:e.clientY};clearTimeout(lpT);lpT=setTimeout(()=>{lpT=null;if(navigator.vibrate)navigator.vibrate(12);emode="move";setHint();drag=[q[0]-hT.a,q[1]-hT.b];lift=hT;syncPanel();paint()},350);setHint();syncPanel();paint();return}
@@ -492,14 +499,14 @@ ec.onpointerdown=e=>{
     moved=false;tapEdit=false;createTap=null;dp={x:e.clientX,y:e.clientY};
     if(emode=="shape"&&sel&&sel.shape&&(shI=shapeHit(e))>=0){shLast=shI;shOff=[q[0]-(sel.a+sel.shape.rel[shI][0]),q[1]-(sel.b+sel.shape.rel[shI][1])]}
     else if(emode=="shape"&&sel&&sel.shape&&addVertexAt(e,q)){}
-    else if(sel&&sel.k=="t"&&!sel.field&&(rzm=cornerHit(e,sel))){rz=sel;rz0=rzStart(sel,q)}
+    else if(sel&&sel.k=="t"&&(!sel.field||tplEdit)&&(rzm=cornerHit(e,sel))){rz=sel;rz0=rzStart(sel,q)}
     else if((emode=="size"||emode=="scale")&&sel&&sel.k=="t"&&hitHandle(e,sel)){rz=sel;rz0=null;if(emode=="scale"){const L=loc(e,sel);rz0={s:sel.s,d:Math.max(1,Math.hypot(L.lx,L.ly))}}}
     else if(emode=="move"&&sel&&sel.k=="t"&&(!h||h===sel)){drag=[q[0]-sel.a,q[1]-sel.b];tapEdit=(h===sel);mvExit=true;}
     else if(h){
       if(h!==sel){sel=h;emode=null;setHint()}
       if(h.k=="t"){
         tapEdit=(h===was||(h.ph&&h.field=="input"));lpPt=dp;clearTimeout(lpT);
-        if(!(h.field=="input"||h.field=="toggle"))lpT=setTimeout(()=>{lpT=null;tapEdit=false;if(navigator.vibrate)navigator.vibrate(12);sel=h;setEmode("move");drag=[q[0]-h.a,q[1]-h.b];lift=h;paint()},350);
+        if(!(h.field=="input"||h.field=="toggle")||tplEdit)lpT=setTimeout(()=>{lpT=null;tapEdit=false;if(navigator.vibrate)navigator.vibrate(12);sel=h;setEmode("move");drag=[q[0]-h.a,q[1]-h.b];lift=h;paint()},350);
         if(emode=="move")drag=[q[0]-h.a,q[1]-h.b];
       }else if(h.shape||emode=="move")drag=[q[0]-h.a,q[1]-h.b];
     }else if(mode=="move"){if(sel)pendDesel=true;selStart(e)}
@@ -1021,7 +1028,7 @@ async function tplMake(r){
     if(f.type=="input"){it.field="input";it.no=f.no||++n;it.ph=true;it.lbl=f.str;it.inst=inst;if(!first)first=pg}
     if(it.cell)fitItem(it,pg);pg.items.push(it)});
   pages.push(...pgs);say("");draw();
-  if(first){await openEd(first);fillStart(inst);toast("連投モード:画面の連投欄をタップして入力、Enterで次の欄へ進みます",4500)}
+  if(first){await openEd(first);fillStart(inst);if("ontouchstart" in window)setTimeout(()=>{if(fillInst===inst&&!kbUp()&&$("ov").style.display!="flex")sheet("入力を始めます(キーボードを出します)",[["入力を始める",()=>fpGo(Math.max(0,fpI),true)]])},1000)}
   else{await openEd(pgs[0]||pages[pages.length-1]);say("");toast("「"+r.name+"」を開きました(連投欄なし)。編集モードで欄を追加できます",4000)}}
 // ---- 連投欄ガイド(①②…の順に入力)
 const curInst=()=>(sel&&sel.inst)||((cur&&cur.items.find(i=>i.inst))||{}).inst;
@@ -1227,16 +1234,16 @@ function toOpen(){
   tplNorm();const c=$("toc");c.innerHTML="";const G=tplGroups();
   if(!G.length){c.textContent="連投欄がありません。文字を選んで「連投欄にする」を押してください";$("to").style.display="flex";return}
   G.forEach((g,i)=>{
-    const box=document.createElement("div");box.className="tg"+(g.list.length>1?" multi":"");
+    const box=document.createElement("div");box.className="tg"+(g.list.length>1?" multi":"");box._g=g;
     const hd=document.createElement("div");hd.className="tgh";
     const bd=document.createElement("b");bd.className="tgn";bd.textContent=cn(i+1);
     const lb=document.createElement("span");lb.className="tgl";lb.textContent=g.list.length>1?"グループ"+cn(i+1)+"(同時入力 "+g.list.length+"か所)":"グループ"+cn(i+1)+"(1か所)";
     const up=document.createElement("button"),dn=document.createElement("button");up.textContent="▲ 前へ";dn.textContent="▼ 後ろへ";up.disabled=i==0;dn.disabled=i==G.length-1;
     const sw=j=>{const o=G[j];if(!o)return;g.list.forEach(x=>x.it.no=j+1);o.list.forEach(x=>x.it.no=i+1);toOpen();paint()};
-    up.onclick=()=>sw(i-1);dn.onclick=()=>sw(i+1);hd.append(bd,lb,up,dn);box.appendChild(hd);
+    up.onclick=()=>sw(i-1);dn.onclick=()=>sw(i+1);lb.textContent+="  ≡長押しで移動";hd.append(bd,lb,up,dn);box.appendChild(hd);
     g.list.forEach(x=>{
       const r=document.createElement("div");r.className="tgr";
-      const nm=document.createElement("span");nm.className="tgt";nm.textContent=x.it.str+"  ・ページ"+(x.pi+1);nm.onclick=()=>tplJump(x);
+      const nm=document.createElement("span");nm.className="tgt";nm.textContent=x.it.str+"  ・ページ"+(x.pi+1);nm.onclick=()=>{if(box._nc)return;tplJump(x)};
       r.appendChild(nm);
       const bb=document.createElement("button");bb.className="tgg";bb.textContent="グループ "+cn(i+1)+" ▾";
       bb.onclick=()=>{const items=[];G.forEach((o,j)=>{if(j==i)return;items.push(["グループ"+cn(j+1)+" に入れる("+o.list.map(y=>y.it.str).join("・")+")",()=>{x.it.no=j+1;tplNorm();toOpen();paint()}])});
@@ -1246,6 +1253,7 @@ function toOpen(){
       box.appendChild(r)});
     c.appendChild(box)});
   $("to").style.display="flex"}
+if(!window._toSort){window._toSort=1;makeSortable($("toc"),{sel:".tg",scr:true,sbox:()=>$("toc").parentNode,ms:380,drop:(c,order)=>{const gs=order.map(x=>x._g).filter(Boolean);if(!gs.length)return;gs.forEach((g,i)=>g.list.forEach(x=>x.it.no=i+1));toOpen();paint()}})}
 $("teO").onclick=toOpen;$("tox").onclick=()=>{$("to").style.display="none"};
 async function tplEditSave(exit){
   try{
@@ -1480,8 +1488,10 @@ $("dmA").onclick=()=>{
   const it={k:"t",a,b,str:"←",s:.05,c:col,rot:-A,sx:1,sy:1,anc:"c",halo:true};
   addItem(it);selR=null;sel=it;emode="move";setHint();syncPanel();paint();toast("矢印を置きました。ドラッグで移動、↺↻で向き(長押しで回り続けます)",3500)};
 var qp={on:false,lastIt:null};
-function qSync(){if(!qp)return;$("ed").classList.toggle("qp",!!(qp.on&&cur&&tplEdit));$("tq").style.display=(qp.on&&cur&&tplEdit)?"flex":"none";$("teQ").classList.toggle("act",!!qp.on)}
-function qOff(){qp.on=false;qSync()}
+function qSync(){if(!qp)return;$("ed").classList.toggle("qp",!!(qp.on&&cur&&tplEdit));$("tq").style.display=(qp.on&&cur&&tplEdit)?"flex":"none";$("teQ").classList.toggle("act",!!qp.on);$("tqc").classList.toggle("act",!!qp.cp)}
+function qOff(){qp.on=false;qp.cp=0;qp.clip=null;$("tqc").textContent="選択コピー";qSync()}
+$("tqc").onclick=()=>{if(qp.cp){qp.cp=0;qp.clip=null;$("tqc").textContent="選択コピー";qSync();return toast("コピーをやめました",1500)}qp.cp=1;sel=null;syncPanel();qSync();paint();toast("コピーしたい連投欄をタップしてください",3000)};
+$("tqs").onclick=()=>{if(sel&&sel.k=="t")szbOpen(sel);else toast("先に連投欄をタップして選んでください",2000)};
 function qOpts(){tplNorm();const s2=$("tqg"),v=s2.value||"new";s2.innerHTML="";const add=(val,t)=>{const o=document.createElement("option");o.value=val;o.textContent=t;s2.appendChild(o)};
   add("new","毎回 新しいグループ");add("same","直前と同じグループ(同時入力)");tplGroups().forEach((g,i)=>add("g"+g.no,"グループ"+LT(i+1)+"に追加"));
   s2.value=[...s2.options].some(o=>o.value==v)?v:"new"}
@@ -1876,7 +1886,7 @@ function makeSortable(gr,o){let G=null;
     if(tg){const after=(G.card.compareDocumentPosition(tg)&Node.DOCUMENT_POSITION_FOLLOWING)!==0;G.t0=Date.now();flip(()=>gr.insertBefore(G.card,after?tg.nextSibling:tg),G.card);place()}}
   function lift(){if(!G)return;G.on=true;G.card._nc=true;G.card.classList.add("lift");G.card.style.transition="none";try{gr.setPointerCapture(G.id)}catch(_){}if(navigator.vibrate)navigator.vibrate(12);
     const r=G.card.getBoundingClientRect();G.gx=G.px-r.left;G.gy=G.py-r.top;G.t0=0;place();
-    G.sc=setInterval(()=>{if(!G)return;if(o.scr){const b=gr.getBoundingClientRect();if(G.py<b.top+30)gr.scrollTop-=10;else if(G.py>b.bottom-30)gr.scrollTop+=10}else{if(G.py<90)window.scrollBy(0,-14);else if(G.py>innerHeight-120)window.scrollBy(0,14)}move()},30)}
+    G.sc=setInterval(()=>{if(!G)return;if(o.scr){const sb=o.sbox?o.sbox():gr,b=sb.getBoundingClientRect();if(G.py<b.top+30)sb.scrollTop-=10;else if(G.py>b.bottom-30)sb.scrollTop+=10}else{if(G.py<90)window.scrollBy(0,-14);else if(G.py>innerHeight-120)window.scrollBy(0,14)}move()},30)}
   function end(){if(!G)return;const g=G;G=null;clearTimeout(g.tm);clearInterval(g.sc);if(!g.on)return;const c=g.card;c.style.transition="transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .22s";c.style.transform="";c.classList.remove("lift");setTimeout(()=>{c.style.transition="";c._nc=false},300);o.drop(c,kids())}
   gr.addEventListener("pointerdown",e=>{if(G)return;if(e.pointerType=="mouse"&&e.button!=0)return;const c=e.target.closest(o.sel);if(!c||!gr.contains(c))return;const gp=o.grip&&e.target.closest(o.grip);if(!gp&&e.target.closest("button"))return;if(o.ok&&!o.ok(c))return;
     G={card:c,id:e.pointerId,px:e.clientX,py:e.clientY,sx:e.clientX,sy:e.clientY,on:false,tm:0};if(gp)lift();else G.tm=setTimeout(lift,o.ms||380)});
