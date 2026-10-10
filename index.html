@@ -116,6 +116,8 @@ input[type=range]{accent-color:var(--ac)}
 #cg #cgx{position:absolute;right:8px;top:8px;border:0;background:#eef0f6;border-radius:50%;width:28px;height:28px;font-size:14px}
 #cg textarea{display:block;width:100%;box-sizing:border-box;margin-top:8px;border:2px solid #4338ca;border-radius:10px;padding:8px 10px;font-size:16px;font-family:inherit;resize:none;background:#fff;color:#1a1d24}
 #cg .cgr{display:flex;align-items:center;gap:8px;margin-top:6px}#cg .cgr small{flex:1;margin:0}#cg #cgok{border:0;border-radius:10px;background:#4338ca;color:#fff;padding:8px 18px;font-size:14px;font-weight:700}
+#cg .cgs{display:block;margin-top:6px}#cg #cgpa{flex:1;border:0;border-radius:10px;background:#eef0f6;color:#4338ca;padding:9px 10px;font-size:14px;font-weight:700}
+#fpcam,#fgc{display:none!important}
 </style></head><body>
 <svg style="display:none"><defs>
 <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
@@ -152,7 +154,7 @@ input[type=range]{accent-color:var(--ac)}
 
 <div id="ed">
 <div class="top"><span style="display:flex;gap:4px"><button class="tb" id="un" title="戻す" aria-label="戻す"><svg><use href="#i-undo"/></svg></button><button class="tb" id="re" title="進む" aria-label="進む"><svg style="transform:scaleX(-1)"><use href="#i-undo"/></svg></button></span><span class="pgn"><button class="tb" id="pgP">‹</button><span id="pgl"></span><button class="tb" id="pgN">›</button></span><span style="display:flex;gap:4px"><button class="tb" id="zOut">－</button><button class="tb" id="zIn">＋</button></span><button class="tb pri" id="ok">ホーム</button></div>
-<div id="mhint"></div><div id="cg"><button id="cgx" aria-label="閉じる">✕</button><b>📷 iPhoneのカメラで書類から入力</b><ol><li><i>1</i><span>下の <u>白い枠</u> をタップ(キーボードが出ます)</span></li><li><i>2</i><span>キーボードの <u>📷(テキストを読み取り)</u> をタップ</span></li><li><i>3</i><span>書類にカメラを向けて、文字が黄色く囲まれたら <u>「挿入」</u> をタップ</span></li></ol><textarea id="cgt" rows="2" placeholder="ここに読み取った文字が入ります(欄にも同時に入ります)" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea><div class="cgr"><small>📷が見えないときは、白い枠を長押し →「テキストを読み取り」</small><button id="cgok">OK</button></div></div>
+<div id="mhint"></div><div id="cg"><button id="cgx" aria-label="閉じる">✕</button><b>📷 iPhoneのカメラで書類から入力</b><ol><li><i>1</i><span>下の <u>白い枠</u> をタップ(キーボードが出ます)</span></li><li><i>2</i><span>キーボードの <u>📷(テキストを読み取り)</u> をタップ</span></li><li><i>3</i><span>書類にカメラを向けて、文字が黄色く囲まれたら <u>「挿入」</u> をタップ</span></li></ol><textarea id="cgt" rows="2" placeholder="ここに読み取った文字が入ります(欄にも同時に入ります)" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea><div class="cgr"><button id="cgpa">📋 コピーした文字を貼り付け</button><button id="cgok">OK</button></div><small class="cgs">キーボードに📷が出ないとき: 標準の「カメラ」アプリで書類に向け、文字を長押し →「コピー」→ ここに戻って「貼り付け」</small></div>
 <div id="te"><span class="fl">テンプレート編集中</span><button id="teQ">連投欄を連続設置</button><button id="teO">番号・順番</button><button id="teA">別名保存</button><button id="teS" class="p">上書き保存</button></div>
 <div id="tq"><input id="tqn" placeholder="名称を入れて、ページをダブルタップ(例: 住所)"><select id="tqg"></select><button id="tqx">終了</button></div>
 <div class="w" id="wrap"><canvas id="ec"></canvas></div>
@@ -1403,6 +1405,7 @@ function camGuide(){const inst=fillInst||curInst();if(!inst)return toast("連投
   clearTimeout(camGuide._t);camGuide._t=setTimeout(cgHide,120000)}
 function cgHide(){$("cg").style.display="none";camHold=false}
 $("cgx").onclick=()=>{cgHide();if(editing)tin.focus()};$("cgok").onclick=()=>{cgHide();if(editing)tin.focus()};
+$("cgpa").onclick=async()=>{let t="";try{t=await navigator.clipboard.readText()}catch(_){}if(!t||!t.trim()){$("cgt").focus();return toast("コピーした文字がありません。入力枠を長押し →「ペースト」でも貼れます",3600)}$("cgt").value=t.trim();$("cgt").dispatchEvent(new Event("input"))};
 $("cgt").addEventListener("input",()=>{if(!editing)return;tin.textContent=$("cgt").value;tin._cg=1;tin.oninput();tin._cg=0});
 function camDirect(){const inst=fillInst||curInst();if(!inst)return toast("先にテンプレートを呼び出してください");if(!Object.keys(dcFields(inst)).length)return toast("連投欄の名前に「住所」「氏名」「電話」を含むテンプレートで使えます",4200);$("camIn").value="";$("camIn").click()}
 $("fgc").onclick=camGuide;$("fpcam").onclick=camGuide;
