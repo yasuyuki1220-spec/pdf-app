@@ -340,7 +340,7 @@ $("fi").onchange=$("phi").onchange=async e=>{if(e.target.files.length)snap();xlT
   for(const f of e.target.files){
     try{
       say("読み込み中: "+f.name);
-      let xlm=null;if(/\.(xdw|xbd)$/i.test(f.name)){say("");sheet("DocuWorks(."+f.name.split(".").pop().toLowerCase()+")は、このアプリでは直接読めません",[["変換のしかたを見る",()=>sheet("PDFにしてから追加してください",[["DocuWorks Viewerで開く→「印刷」→プリンターを「Microsoft Print to PDF」にして印刷(保存)すると、PDFができます。そのPDFを「追加」で読み込んでください",()=>{}]])]]);continue}if(/\.xls$/i.test(f.name)){say("古い.xls形式は読めません。Excelで「.xlsx」として保存し直してください");continue}
+      let xlm=null;if(/\.(xdw|xbd)$/i.test(f.name)){say("");xdwGuide(f.name);continue}if(/\.xls$/i.test(f.name)){say("古い.xls形式は読めません。Excelで「.xlsx」として保存し直してください");continue}
       const bytes=/\.xls[xm]$/i.test(f.name)?await(async()=>{const r=await xlsxToPdf(f);xlm=r.model;return r.bytes})():(f.type.startsWith("image/")||/\.tiff?$/i.test(f.name))?await imgToPdf(f):new Uint8Array(await f.arrayBuffer());
       if(!bytes){say("");continue}
       const doc=await pdfjsLib.getDocument({data:bytes.slice()}).promise;
@@ -576,7 +576,27 @@ function sheet(t,items){const s=$("sh");s.innerHTML="";const h=document.createEl
   [...items,["キャンセル",()=>{}]].forEach(([n,fn])=>{const b=document.createElement("button");b.className="sr";b.textContent=n;b.onclick=()=>{$("ov").style.display="none";fn()};s.appendChild(b)});$("ov").style.display="flex"}
 $("ov").onclick=e=>{if(e.target.id=="ov")e.target.style.display="none"};
 $("empty").onclick=()=>$("bAdd").click();
-$("bAdd").onclick=()=>sheet("追加",[["ファイルから",()=>$("fi").click()],["写真から",()=>$("phi").click()]]);
+$("bAdd").onclick=()=>sheet("追加",[["ファイルから",()=>$("fi").click()],["写真から",()=>$("phi").click()],[wdir?"DocuWorks用の見張りをやめる":"DocuWorks(.xdw)用:PDFの受け取りフォルダを見張る",()=>wdir?xdwStop():xdwWatch()]]);
+// ---- DocuWorks(.xdw)対応: Viewerで「印刷→Microsoft Print to PDF」したPDFを、指定フォルダから自動で取り込む
+var wdir=null,wT=null,wSeen=new Set(),wPend=new Map(),wBusy=false;
+function xdwGuide(name){say("");sheet("「"+name+"」はこのアプリでは直接読めません",[["受け取りフォルダを決めて、PDFを自動で取り込む",()=>xdwWatch(true)],["手順だけ見る",()=>sheet("手順",[["① DocuWorks Viewerでファイルを開く ② ファイル→印刷 ③ プリンターを「Microsoft Print to PDF」にして印刷 ④ 保存先を、先ほど決めた「受け取りフォルダ」にする → 自動でここに追加されます",()=>{}]])]])}
+async function xdwWatch(guide){
+  if(!window.showDirectoryPicker){say("");return toast("この機能はWindowsのEdge・Chromeで使えます(iPhoneは非対応)",4000)}
+  try{wdir=await showDirectoryPicker({id:"xdwin",mode:"read"})}catch(_){wdir=null;return}
+  wSeen=new Set();wPend=new Map();
+  try{for await(const [n,h] of wdir.entries()){if(h.kind=="file"&&/\.pdf$/i.test(n)){const fl=await h.getFile();wSeen.add(n+"|"+fl.lastModified+"|"+fl.size)}}}catch(_){}
+  clearInterval(wT);wT=setInterval(xdwPoll,1500);
+  sheet("見張りを始めました「"+wdir.name+"」",[["DocuWorks Viewerで開いた.xdwを、印刷(Microsoft Print to PDF)で、このフォルダに保存してください。PDFができると自動でこの画面に追加されます",()=>{}]])}
+function xdwStop(){clearInterval(wT);wT=null;wdir=null;toast("見張りをやめました",2000)}
+async function xdwPoll(){
+  if(!wdir||wBusy)return;wBusy=true;
+  try{for await(const [n,h] of wdir.entries()){if(h.kind!="file"||!/\.pdf$/i.test(n))continue;
+    const fl=await h.getFile(),k=n+"|"+fl.lastModified+"|"+fl.size;if(wSeen.has(k)||!fl.size)continue;
+    const pv=wPend.get(n);if(pv!==fl.size){wPend.set(n,fl.size);continue}
+    wPend.delete(n);wSeen.add(k);
+    await $("fi").onchange({target:{files:[fl],value:""}});toast("「"+n+"」を追加しました",3500)}}
+  catch(e){xdwStop();toast("フォルダを読めなくなったので見張りをやめました",3000)}
+  wBusy=false}
 $("bShare").onclick=()=>sheet("共有・書き出し",[["選択したページ",()=>exp(true)],["すべてのページ",()=>exp(false)],["選択ページをテンプレートに保存",()=>tplSave(true)],["全ページをテンプレートに保存",()=>tplSave(false)]]);
 $("eAdd").onclick=()=>sheet("ページに追加",[["ファイルから(PDF・画像)",()=>$("pf").click()],["写真から",()=>$("pi").click()]]);
 $("eMore").onclick=()=>sheet("その他",[["ページを回転",()=>$("rt").click()],...(cur&&cur._undo?[["トリミングを元に戻す",undoCrop]]:[]),["ペンの書き込みを全消去",()=>$("cl").click()],["テキストを全消去",()=>clearText()],["範囲選択を全消去",()=>clearShapes()],...(isXl()?[["シート編集(Excelの欄・◯◉を整える)",()=>smStart()]]:[["◉フォーム設置",()=>tgMenu()],["◉フォーム自動認識(◯□を見つけて◉に)",()=>xlStart({m:1})],["◉フォームグループ編集",()=>tgEStart()],["空欄+◉フォームをまとめて自動認識",()=>xlStart()]]),["説明書",()=>openManual()],...(cur&&cur.items.some(i=>i.lock)?[["固定した画像を解除",()=>{cur.items.forEach(i=>{delete i.lock});paint();toast("固定を解除しました")}]]:[])]);
