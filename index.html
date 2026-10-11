@@ -75,6 +75,7 @@ body.edopen{position:fixed;left:0;right:0;width:100%;overflow:hidden;overscroll-
 .tg{border:1px solid var(--bd);border-radius:14px;padding:8px 10px;margin:8px 0}.tg.multi{border-color:#f59e0b;background:rgba(245,158,11,.08)}.tgh{display:flex;align-items:center;gap:8px}.tgn{font-size:22px;color:#f59e0b;min-width:30px}.tgl{flex:1;font-weight:700;font-size:14px}.tgg{font-weight:700;color:#b45309}.tg button{border:1px solid var(--bd);background:none;border-radius:10px;padding:8px 10px;font-size:13px}.tg button:disabled{opacity:.3}.tgr{display:flex;align-items:center;gap:8px;padding:8px 2px 2px}.tgt{flex:1;font-size:14px;text-decoration:underline dotted}
 .tr{flex-wrap:wrap}.tr .tb{flex-basis:100%;display:flex;gap:8px;justify-content:flex-end}
 input[type=range]{accent-color:var(--ac)}
+.mkc{width:30px;height:20px;border-radius:5px;border:2px solid var(--bd);padding:0;opacity:.9}.mkc.on{outline:2px solid var(--ac);outline-offset:2px;opacity:1}
 .col{width:28px;height:28px;border-radius:50%;border:2px solid var(--bd);padding:0}.col.on{outline:2px solid var(--ac);outline-offset:2px}
 .dock.ed{position:static;margin:4px auto calc(10px + env(safe-area-inset-bottom,0px));width:100%}
 #ov{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:flex-end;z-index:70}
@@ -107,7 +108,7 @@ input[type=range]{accent-color:var(--ac)}
 #sf button.on{background:#7c3aed;color:#fff}
 #sf{margin:6px 0 0}#ed.smf #sm{margin-top:4px;padding:5px 6px;gap:3px;border-radius:14px}#ed.smf #sm .smb{gap:3px}#ed.smf #sm button{padding:5px 8px;font-size:11.5px;border-radius:8px}#ed.smf #sm span{font-size:11px}#ed.smf #sf button{padding:7px 9px}
 #fg #fge{border:0;border-radius:10px;padding:9px 12px;font-size:13px;background:var(--ac2);color:var(--ac)}
-#toast{bottom:auto!important;top:calc(78px + env(safe-area-inset-top,0px))}#sm button.dis,#sf button.dis,#xb button.dis{display:none!important}
+#toast{bottom:auto!important;top:calc(78px + env(safe-area-inset-top,0px))}#toast.mid{top:50%!important;transform:translate(-50%,-50%)!important}#sm button.dis,#sf button.dis,#xb button.dis{display:none!important}
 #fg{flex-wrap:wrap;row-gap:6px}#fg #fgt,#fg #fgo{border:0;border-radius:10px;padding:9px 12px;font-size:13px;background:var(--ac2);color:var(--ac)}
 #cg{display:none;position:absolute;left:10px;right:10px;top:calc(62px + env(safe-area-inset-top,0px));z-index:70;background:#fff;color:#1a1d24;border-radius:16px;box-shadow:0 8px 28px rgba(0,0,0,.28);padding:12px 40px 10px 14px;font-size:14px;line-height:1.45}
 #cg b{display:block;font-size:15px;margin-bottom:6px;color:#4338ca}
@@ -141,7 +142,7 @@ input[type=range]{accent-color:var(--ac)}
 <div id="msg"></div>
 <div id="grid"></div>
 <div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集</div>
-<input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls" multiple hidden>
+<input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
 <button class="d pri" id="bAdd"><svg><use href="#i-plus"/></svg>追加</button>
@@ -159,14 +160,14 @@ input[type=range]{accent-color:var(--ac)}
 <div id="te"><span class="fl">テンプレート編集中</span><button id="teQ">連投欄の連続編集</button><button id="teO">番号・順番</button><button id="teA">別名保存</button><button id="teS" class="p">上書き保存</button></div>
 <div id="tq"><input id="tqn" placeholder="名称を入れて、ページをダブルタップ(例: 住所)"><select id="tqg"></select><button id="tqs">枠・文字サイズ</button><button id="tqc">選択コピー</button><button id="tqx">終了</button></div>
 <div class="w" id="wrap"><canvas id="ec"></canvas></div>
-<div id="szb" style="display:none"><span id="szt">連投欄の幅・高さ</span><button id="szW1">幅 −</button><button id="szW2">幅 ＋</button><button id="szH1">高さ −</button><button id="szH2">高さ ＋</button><button id="szF1">文字 −</button><button id="szF2">文字 ＋</button><button class="p" id="szOk">完了</button></div><div id="gb"><span id="gbt"></span><button id="gbM">同じグループにまとめる</button><button id="gbS">グループから外す</button><button id="gbD">削除</button><button class="p" id="gbOk">完了</button></div><div id="xb"><span id="xbt"></span><button id="xbC">空欄→連投欄</button><button id="xbM">○□ ON</button><button id="xbA">全部外す</button><button id="xbX">中止</button><button class="p" id="xbOk">決定</button></div>
+<div id="szb" style="display:none"><span id="szt">連投欄の幅・高さ</span><button id="szW1">幅 −</button><button id="szW2">幅 ＋</button><button id="szH1">高さ −</button><button id="szH2">高さ ＋</button><button id="szF1">文字 −</button><button id="szF2">文字 ＋</button><button class="p" id="szOk">完了</button></div><div id="gb"><span id="gbt"></span><button id="gbM">同じグループにまとめる</button><button id="gbS">グループから外す</button><button id="gbD">削除</button><button class="p" id="gbOk">完了</button></div><div id="xb"><span id="xbt"></span><button id="xbC">空欄→連投欄</button><button id="xbM">○ ON</button><button id="xbQ">□ ON</button><button id="xbA">全部外す</button><button id="xbX">中止</button><button class="p" id="xbOk">決定</button></div>
 <div id="dab"><button id="dmA">←</button><button id="dmS" style="font-size:13px;padding:8px 12px">スタンプ</button><span>「←」「スタンプ」を置けます。動かす・回す・大きさ変更ができます</span></div>
 <div id="fg"><span class="fl" id="fgl"></span><button id="fgc">📷 書類から</button><button id="fgs" class="p">連投モード</button><button id="fge">編集モード</button><button id="fgt">◉選択ボタン追加</button><button id="fgo">連投順</button></div>
 
 <div id="sm"><span id="smt"></span><div class="smb"><button id="smN">名称</button><button id="smS">サイズ</button><button id="smU">選択</button><button id="smA">基準位置</button><button id="smD">削除</button><button id="smE">追加</button><button id="smO">連投順</button><button id="smY">試し入力</button><button id="smZ">入力を消す</button><button id="smL">全選択</button><button id="smC">空欄認識</button><button id="smM">◉フォーム</button><button class="p" id="smX">完了</button></div></div><div id="sf"><span>◉フォーム:◯をタップで選んで動かせます(ドラッグ)</span><button id="sfR">◉自動認識</button><button id="sfN">◯を追加(新グループ)</button><button id="sfG">同じグループに◯追加</button><button id="sfS">☑を追加</button><button id="sfU">選択</button><button id="sfL">全選択</button><button id="sfD">選択を削除</button><button id="sfE">グループ編集</button><button class="p" id="sfX">閉じる</button></div><div id="smo"></div><div id="fp"><div id="fps"></div><div id="fbar"><i></i></div><div id="fpb"><button id="fpu">←</button><button id="fpk">空欄</button><button id="fpcam">📷</button><button id="fpd">→</button><span id="fpc"></span><button id="fpe" style="display:none">終了</button><button class="p" id="fpx">完了</button></div></div>
 <div class="ctx" id="pr">
 <button class="col on" style="background:#111" data-c="#111111"></button><button class="col" style="background:#e11d48" data-c="#e11d48"></button><button class="col" style="background:#2563eb" data-c="#2563eb"></button><button class="col" style="background:#16a34a" data-c="#16a34a"></button><button class="col" style="background:#f59e0b" data-c="#f59e0b"></button><button class="col" style="background:#fff" data-c="#ffffff"></button>
-<input type="color" id="cc" value="#111111" style="width:28px;height:28px;padding:0;border:0;background:none"><span style="font-size:12px;color:var(--mut)">太さ</span><input id="wd" type="range" min="1" max="14" value="3" style="width:90px">
+<button class="mkc" id="mkp" data-c="#ff9ec7" title="薄いピンクのマーカー" style="background:#ff9ec7"></button><button class="mkc" id="mky" data-c="#fff04d" title="黄色のマーカー" style="background:#fff04d"></button><button class="mkc" id="mkg" data-c="#9ff0b4" title="薄い緑のマーカー" style="background:#9ff0b4"></button><button class="mkc" id="mkb" data-c="#8fd3ff" title="水色のマーカー" style="background:#8fd3ff"></button><span id="mkt" style="font-size:12px;color:var(--mut)">←マーカー</span><input type="color" id="cc" value="#111111" style="width:28px;height:28px;padding:0;border:0;background:none"><span style="font-size:12px;color:var(--mut)">太さ</span><input id="wd" type="range" min="1" max="14" value="3" style="width:90px">
 </div>
 <div id="szp"><label>大きさ<input id="sz" type="range" min="1" max="100" value="20"></label><label>幅<input id="sx" type="range" min="20" max="300" value="100"></label><label>高さ<input id="sy" type="range" min="20" max="300" value="100"></label></div>
 <div class="ctx" id="op"><button id="bac">基準:左</button><button id="bfs">枠・文字サイズ</button><span id="opg" style="display:contents"><button id="bgz">サイズ変更</button>
@@ -252,10 +253,10 @@ const LT=n=>(n>=1&&n<=26&&Math.floor(n)==n)?String.fromCharCode(64+n):String(n);
 function drawMarks(x,pg,cw,ch,extra){
   const A=ang(pg);x.lineCap=x.lineJoin="round";
   const dS=()=>{for(const s of pg.strokes.concat(extra?[extra]:[])){
-    x.strokeStyle=s.c;x.lineWidth=s.w*(A%180==0?cw:ch);x.beginPath();
+    x.save();if(s.hl){x.globalAlpha=.4;x.globalCompositeOperation="multiply";x.lineCap="butt"}x.strokeStyle=s.c;x.lineWidth=s.w*(A%180==0?cw:ch);x.beginPath();
     s.p.forEach(([a,b],k)=>{const [u,v]=toDisp(a,b,A);k?x.lineTo(u*cw,v*ch):x.moveTo(u*cw,v*ch)});
     if(s.p.length==1){const [u,v]=toDisp(...s.p[0],A);x.lineTo(u*cw+.1,v*ch)}
-    x.stroke();
+    x.stroke();x.restore();x.lineCap=x.lineJoin="round";
   }};
   const ppp=(A%180==0?cw:ch)/pg.W;
   for(const pass of [0,1,2]){if(pass==1){dS();continue}
@@ -335,22 +336,22 @@ function xlAuto(pg,r){
 function xlNext(dir){const it=editing;if(!it)return;const L=cur.items.filter(i=>i.xlc&&i.field=="input").sort((p,q)=>(p.no||0)-(q.no||0)),k=L.indexOf(it),nx=L[k+dir];endEdit();if(!nx){toast(dir>0?"最後の連投欄です":"最初の連投欄です",1800);return}startEdit(nx,true)}
 
 function xlReset(){try{if(smOn)smEnd();if(fillInst)fillStop();xlC=null;xlUI();tgE=null;tgEUI();tgLast=null;szbIt=null;$("szb").style.display="none";smSet=new Set();smLast=null;smTapOrd=null;smBadge=false;smForm=false;xlLast=null;$("smo").style.display="none";sel=null;emode=null}catch(_){}}
-$("fi").onchange=$("phi").onchange=async e=>{if(e.target.files.length)snap();xlTot=[0,0];if([...e.target.files].some(f=>/\.xls[xm]$/i.test(f.name)))xlReset();
+$("fi").onchange=$("phi").onchange=async e=>{if(e.target.files.length)snap();xlTot=[0,0];const hadXl=[...e.target.files].some(f=>/\.xls[xm]$/i.test(f.name));if(hadXl)xlReset();
   for(const f of e.target.files){
     try{
       say("読み込み中: "+f.name);
-      let xlm=null;if(/\.xls$/i.test(f.name)){say("古い.xls形式は読めません。Excelで「.xlsx」として保存し直してください");continue}
+      let xlm=null;if(/\.(xdw|xbd)$/i.test(f.name)){say("");sheet("DocuWorks(."+f.name.split(".").pop().toLowerCase()+")は、このアプリでは直接読めません",[["変換のしかたを見る",()=>sheet("PDFにしてから追加してください",[["DocuWorks Viewerで開く→「印刷」→プリンターを「Microsoft Print to PDF」にして印刷(保存)すると、PDFができます。そのPDFを「追加」で読み込んでください",()=>{}]])]]);continue}if(/\.xls$/i.test(f.name)){say("古い.xls形式は読めません。Excelで「.xlsx」として保存し直してください");continue}
       const bytes=/\.xls[xm]$/i.test(f.name)?await(async()=>{const r=await xlsxToPdf(f);xlm=r.model;return r.bytes})():(f.type.startsWith("image/")||/\.tiff?$/i.test(f.name))?await imgToPdf(f):new Uint8Array(await f.arrayBuffer());
       if(!bytes){say("");continue}
       const doc=await pdfjsLib.getDocument({data:bytes.slice()}).promise;
       const fi=files.push({name:f.name.replace(/\.[^.]+$/,""),bytes,doc,xl:xlm})-1;
       for(let i=0;i<doc.numPages;i++){
         const p=await doc.getPage(i+1),v=p.view;
-        const po={f:fi,i,r:0,base:p.rotate%360,W:v[2]-v[0],H:v[3]-v[1],sel:false,strokes:[],items:[]};pages.push(po);if(xlm&&xlm.pages[i]){const [a,b]=xlAuto(po,xlm.pages[i]);xlTot[0]+=a;xlTot[1]+=b}
+        const po={f:fi,i,r:0,base:p.rotate%360,W:v[2]-v[0],H:v[3]-v[1],sel:false,strokes:[],items:[]};pages.push(po);
       }
     }catch(err){say("読み込めませんでした: "+f.name)}
   }
-  e.target.value="";say("");draw();if(xlTot[0]+xlTot[1])toast("Excelの空欄 "+xlTot[0]+" か所を連投欄に、○□ "+xlTot[1]+" か所を切替にしました。連投欄をタップして入力、Enterで次の欄へ",6000)
+  e.target.value="";say("");draw();if(hadXl)toast("Excelを読み込みました。編集画面の「空欄認識」「◉フォーム」から連投欄・選択ボタンにできます",5000)
 };
 $("bTpl").onclick=()=>tplList();
 $("bAll").onclick=()=>{const on=!pages.every(p=>p.sel);pages.forEach(p=>p.sel=on);draw()};
@@ -359,7 +360,7 @@ $("bDel").onclick=()=>{const s=pages.filter(p=>p.sel);if(!s.length)return say("�
 
 
 async function build(list){
-  const {PDFDocument,rgb,degrees,LineCapStyle}=PDFLib,out=await PDFDocument.create(),cache={};
+  const {PDFDocument,rgb,degrees,LineCapStyle,BlendMode}=PDFLib,out=await PDFDocument.create(),cache={};
   for(const pg of list){
     if(!(pg.f in cache)){try{cache[pg.f]=await PDFDocument.load(files[pg.f].bytes,{ignoreEncryption:true})}catch(_){cache[pg.f]=null}}
     const {W,H}=pg;let cp,added=false;
@@ -371,7 +372,8 @@ async function build(list){
     for(const s of pg.strokes){
       const h=s.c.slice(1),cl=rgb(parseInt(h.slice(0,2),16)/255,parseInt(h.slice(2,4),16)/255,parseInt(h.slice(4,6),16)/255);
       const P=s.p.map(([a,b])=>({x:a*W,y:H*(1-b)}));if(P.length==1)P.push({x:P[0].x+.1,y:P[0].y});
-      for(let k=1;k<P.length;k++)cp.drawLine({start:P[k-1],end:P[k],thickness:s.w*W,color:cl,lineCap:LineCapStyle.Round});
+      if(s.hl&&P.length>1){let ok=false;try{cp.drawSvgPath("M "+P.map(p=>p.x.toFixed(2)+" "+(H-p.y).toFixed(2)).join(" L "),{x:0,y:H,borderColor:cl,borderWidth:s.w*W,borderOpacity:.4,borderLineCap:LineCapStyle.Butt,blendMode:BlendMode.Multiply});ok=true}catch(_){}if(ok)continue}
+      for(let k=1;k<P.length;k++)cp.drawLine({start:P[k-1],end:P[k],thickness:s.w*W,color:cl,lineCap:LineCapStyle.Round,opacity:s.hl?.4:1});
     }
     for(const it of pg.items){if(it.ph||(it.field=="toggle"&&it.off))continue;
       if(it.arr&&it.k=="t"){const o=stampCornerP(it,pg);for(const a of it.arr){const hh=a.c.slice(1),cl=rgb(parseInt(hh.slice(0,2),16)/255,parseInt(hh.slice(2,4),16)/255,parseInt(hh.slice(4,6),16)/255);arrowPts(o,a.t,W,H).forEach(Pp=>{for(let k=1;k<Pp.length;k++)cp.drawLine({start:{x:Pp[k-1][0]*W,y:H*(1-Pp[k-1][1])},end:{x:Pp[k][0]*W,y:H*(1-Pp[k][1])},thickness:a.w*W,color:cl,lineCap:LineCapStyle.Round})})}}
@@ -421,7 +423,7 @@ async function runExport(list,name,fmt){
     await deliverFiles(fs,name)
   }catch(err){say("作成に失敗しました。暗号化PDFは非対応です")}}
 // ---- エディタ ----
-function setMode(m){sbAll();mode=m;if(m!="text"&&qp&&qp.on)qOff();if($("dab"))$("dab").style.display=m=="dim"?"flex":"none";emode=null;setHint();selR=null;sdrag=null;document.querySelectorAll("[data-m]").forEach(b=>b.classList.toggle("on",b.dataset.m==m));if(m=="pen"||m=="line"){sel=null;syncPanel()}prVis();paint()}
+function setMode(m){sbAll();mode=m;if(m!="pen"&&hl){hl=false;col="#111111";mkSync()}if(m!="text"&&qp&&qp.on)qOff();if($("dab"))$("dab").style.display=m=="dim"?"flex":"none";emode=null;setHint();selR=null;sdrag=null;document.querySelectorAll("[data-m]").forEach(b=>b.classList.toggle("on",b.dataset.m==m));if(m=="pen"||m=="line"){sel=null;syncPanel()}prVis();paint()}
 document.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{setMode(b.dataset.m);if(b.dataset.m=="move")toast("画面をなぞって範囲を選びます");if(b.dataset.m=="dim")toast("線をなぞると寸法線になります(水平・垂直に自動で合います)");if(b.dataset.m=="text"){if(sel&&sel.k=="t")startEdit(sel);else newText(vpCenter())}});
 let szOpen=false;
 let sArm=null,stArr=null;
@@ -471,7 +473,7 @@ ec.onpointerdown=e=>{
   if(smTapOrd){const h=smPick(e,1);if(h&&h.field=="input")smTapAdd(h);return}
   if(fillInst){let h=hit(e);if(!(h&&(h.field=="toggle"||(h.field=="input"&&h.inst===fillInst)))){const pk=smPick(e,1);if(pk&&pk.field=="input"&&pk.inst===fillInst)h=pk}if(h&&h.field=="input"&&h.inst===fillInst){fsT={it:h,x:e.clientX,y:e.clientY,off:[q[0]-h.a,q[1]-h.b],mv:false};return}if(!(h&&h.field=="toggle")){fsT=null;return}}
   if(tgE&&!smGrab(e)){tgEtap={x:e.clientX,y:e.clientY,ok:true};return}
-  if(xlC&&!smGrab(e)){xlTap={x:e.clientX,y:e.clientY,ok:true};return}
+  if(xlC&&!smGrab(e)){xlTap={x:e.clientX,y:e.clientY,ok:true,q0:q};return}
   if(smOn){const h=smPick(e);if(h){const o={it:h,x:e.clientX,y:e.clientY,q0:q,mv:false,long:false,multi:smMulti};
     if(smMulti){smT=o;paint();return}
     if(!smSet.has(h))smSet=new Set([h]);o.st=[...smSet].map(i=>[i,i.a,i.b,i.cell&&{...i.cell}]);
@@ -492,7 +494,7 @@ ec.onpointerdown=e=>{
   if(mode=="pen"){
     const A=ang(cur),dw=(A%180==0?baseW:baseW*ec.height/ec.width),z=ruler.on?rulerHit(e):null;
     if(z&&z.zone=="body"){rdrag=[q[0]-ruler.a,q[1]-ruler.b];paint();return}
-    st={c:col,w:(+$("wd").value)/dw,p:[q]};
+    st={c:col,w:(+$("wd").value)*(hl?3.2:1)/dw,p:[q]};if(hl)st.hl=true;
     if(z&&z.edge){st.edge=z.edge;st.tmin=st.tmax=edgeT(e);st.p=[edgeAt(z.edge,st.tmin),edgeAt(z.edge,st.tmax)]}
   }else{
     const h=hit(e),was=sel;
@@ -519,6 +521,7 @@ ec.onpointerdown=e=>{
 ec.onpointermove=e=>{
   if(e.pointerType=="mouse"&&e.buttons==2)return;
   if(!P.has(e.pointerId))return;P.set(e.pointerId,e);
+  if(xlTap&&xlTap.ok&&xlC&&P.size==1&&(xlTap.rect||Math.hypot(e.clientX-xlTap.x,e.clientY-xlTap.y)>12)){xlTap.rect=true;xlC.rect={a:xlTap.q0,b:pt(e)};paint();return}
   if(P.size==2&&g){
     const n=G();
     if(g.ruler){const m=pt({clientX:n.mx,clientY:n.my});ruler.deg=snapRot(g.deg0+(n.an-g.a0)*180/PI);ruler.a=m[0]+g.off[0];ruler.b=m[1]+g.off[1];rotShow(ruler.a,ruler.b,ruler.deg);paint();return}
@@ -548,10 +551,12 @@ ec.onpointermove=e=>{
   else if(drag&&sel){const na=q[0]-drag[0],nb=q[1]-drag[1];if(sel.cell){const da=na-sel.a,db=nb-sel.b,c=sel.cell;c.x0+=da;c.x1+=da;c.y0+=db;c.y1+=db}sel.a=na;sel.b=nb;moved=true;paint()}
   else if(rdrag){ruler.a=q[0]-rdrag[0];ruler.b=q[1]-rdrag[1];paint()}
 };
-const up=e=>{if(e.pointerType=="mouse"&&e.button==2)return;if(smT){const t=smT;smT=null;clearTimeout(t.lp);P.delete(e.pointerId);if(P.size<2)g=null;if(!t.mv&&!t.long){if(t.multi){smSet.has(t.it)?smSet.delete(t.it):smSet.add(t.it);sel=t.it;smSync();paint()}else if(smTry&&t.it.field=="input"){startEdit(t.it)}else if(smTry&&t.it.field=="toggle"){togFlip(t.it)}else{const now=Date.now(),dbl=smLast&&smLast.it===t.it&&now-smLast.t<450;smLast={it:t.it,t:now};if(dbl){smLast=null;smRename(t.it)}}}return}if(fsT){const t=fsT;fsT=null;P.delete(e.pointerId);if(P.size<2)g=null;if(!t.mv){const now=Date.now(),dbl=fsLast&&fsLast.it===t.it&&now-fsLast.t<450;fsLast={it:t.it,t:now};if(dbl){fsLast=null;fsMenu(t.it)}else{const k=fillL.findIndex(x=>x.list.some(y=>y.it===t.it));if(k>=0&&k!==fpI)fpGo(k,true);else if(k>=0)startEdit(t.it,true,true);sel=t.it;paint()}}return}if(tgE&&tgEtap){const c=tgEtap;tgEtap=null;if(c.ok&&Math.hypot(e.clientX-c.x,e.clientY-c.y)<12)tgETap(e)}if(tgT){const t=tgT;tgT=null;clearTimeout(lpT);lpT=null;if(!t.dead&&Math.hypot(e.clientX-t.x,e.clientY-t.y)<10){togFlip(t.it)}}if(xlC&&xlTap){const c=xlTap;xlTap=null;if(c.ok&&Math.hypot(e.clientX-c.x,e.clientY-c.y)<12)xlToggle(e)}P.delete(e.pointerId);if(P.size<2)g=null;if(st){addStroke(st);st=null}if(!P.size&&moved&&shI<0&&sel&&sel.shape&&sel.shape.m=="mosaic")bakeShape(sel,cur,sel.shape.rel.map(r=>[sel.a+r[0],sel.b+r[1]]));shI=-1;drag=null;rdrag=null;rz=null;rzm=null;blocked=null;clearTimeout(lpT);lpT=null;if(stArr&&!P.size)stArrEnd();if(dimSt&&!P.size)dimEnd();if(sdrag&&!P.size)selEnd();if(!P.size&&pendDesel&&sel&&(!moved||mode=="move")){sel=null;emode=null;setHint();syncPanel()}if(!P.size&&mvExit&&!moved&&sel&&emode=='move'&&!sel.shape){const L=loc(e,sel);if(Math.abs(L.lx)>L.bw*(sel.sx||1)/2||Math.abs(L.ly)>L.bh*(sel.sy||1)/2){tapEdit=false;sel=null;emode=null;setHint();syncPanel()}}if(!P.size){pendDesel=false;mvExit=false}if(!P.size){let dbl=false;if(!moved&&sel&&sel.k=="t"&&!sel.field){const now=Date.now();dbl=!!(txLast&&txLast.it===sel&&now-txLast.t<450);txLast=dbl?null:{it:sel,t:now}}if(tapEdit&&!moved&&sel&&sel.k=="t"&&(sel.field?true:dbl)){emode=null;setHint();startEdit(sel)}else if(createTap&&!moved)newText(createTap)}tapEdit=false;createTap=null;if(!P.size)lift=null;paint();if(editing&&document.activeElement!==tin)tin.focus()};
+const up=e=>{if(e.pointerType=="mouse"&&e.button==2)return;if(smT){const t=smT;smT=null;clearTimeout(t.lp);P.delete(e.pointerId);if(P.size<2)g=null;if(!t.mv&&!t.long){if(t.multi){smSet.has(t.it)?smSet.delete(t.it):smSet.add(t.it);sel=t.it;smSync();paint()}else if(smTry&&t.it.field=="input"){startEdit(t.it)}else if(smTry&&t.it.field=="toggle"){togFlip(t.it)}else{const now=Date.now(),dbl=smLast&&smLast.it===t.it&&now-smLast.t<450;smLast={it:t.it,t:now};if(dbl){smLast=null;smRename(t.it)}}}return}if(fsT){const t=fsT;fsT=null;P.delete(e.pointerId);if(P.size<2)g=null;if(!t.mv){const now=Date.now(),dbl=fsLast&&fsLast.it===t.it&&now-fsLast.t<450;fsLast={it:t.it,t:now};if(dbl){fsLast=null;fsMenu(t.it)}else{const k=fillL.findIndex(x=>x.list.some(y=>y.it===t.it));if(k>=0&&k!==fpI)fpGo(k,true);else if(k>=0)startEdit(t.it,true,true);sel=t.it;paint()}}return}if(tgE&&tgEtap){const c=tgEtap;tgEtap=null;if(c.ok&&Math.hypot(e.clientX-c.x,e.clientY-c.y)<12)tgETap(e)}if(tgT){const t=tgT;tgT=null;clearTimeout(lpT);lpT=null;if(!t.dead&&Math.hypot(e.clientX-t.x,e.clientY-t.y)<10){togFlip(t.it)}}if(xlC&&xlTap){const c=xlTap;xlTap=null;if(c.ok&&c.rect)xlRange();else if(c.ok&&Math.hypot(e.clientX-c.x,e.clientY-c.y)<12)xlToggle(e)}P.delete(e.pointerId);if(P.size<2)g=null;if(st){addStroke(st);st=null}if(!P.size&&moved&&shI<0&&sel&&sel.shape&&sel.shape.m=="mosaic")bakeShape(sel,cur,sel.shape.rel.map(r=>[sel.a+r[0],sel.b+r[1]]));shI=-1;drag=null;rdrag=null;rz=null;rzm=null;blocked=null;clearTimeout(lpT);lpT=null;if(stArr&&!P.size)stArrEnd();if(dimSt&&!P.size)dimEnd();if(sdrag&&!P.size)selEnd();if(!P.size&&pendDesel&&sel&&(!moved||mode=="move")){sel=null;emode=null;setHint();syncPanel()}if(!P.size&&mvExit&&!moved&&sel&&emode=='move'&&!sel.shape){const L=loc(e,sel);if(Math.abs(L.lx)>L.bw*(sel.sx||1)/2||Math.abs(L.ly)>L.bh*(sel.sy||1)/2){tapEdit=false;sel=null;emode=null;setHint();syncPanel()}}if(!P.size){pendDesel=false;mvExit=false}if(!P.size){let dbl=false;if(!moved&&sel&&sel.k=="t"&&!sel.field){const now=Date.now();dbl=!!(txLast&&txLast.it===sel&&now-txLast.t<450);txLast=dbl?null:{it:sel,t:now}}if(tapEdit&&!moved&&sel&&sel.k=="t"&&(sel.field?true:dbl)){emode=null;setHint();startEdit(sel)}else if(createTap&&!moved)newText(createTap)}tapEdit=false;createTap=null;if(!P.size)lift=null;paint();if(editing&&document.activeElement!==tin)tin.focus()};
 ec.onpointerup=ec.onpointercancel=up;
+var hl=false;function mkSync(){document.querySelectorAll(".mkc").forEach(b=>b.classList.toggle("on",hl&&col==b.dataset.c));$("ed").classList.toggle("hl",hl)}
+document.querySelectorAll(".mkc").forEach(b=>b.onclick=()=>{if(hl&&col==b.dataset.c){hl=false;col="#111111";colPick=true;document.querySelectorAll(".col").forEach(x=>x.classList.toggle("on",x.dataset.c=="#111111"));mkSync();return toast("マーカーをやめました",1500)}hl=true;col=b.dataset.c;colPick=true;document.querySelectorAll(".col").forEach(x=>x.classList.remove("on"));mkSync();toast("マーカー:文字の上をなぞってください(太さは右のバー)",2500)});
 document.querySelectorAll(".col").forEach(b=>b.onclick=()=>{
-  col=b.dataset.c;colPick=true;document.querySelectorAll(".col").forEach(x=>x.classList.toggle("on",x==b));
+  col=b.dataset.c;colPick=true;hl=false;mkSync();document.querySelectorAll(".col").forEach(x=>x.classList.toggle("on",x==b));
   if(sel&&sel.k=="t"){sel.c=col;paint()}
 });
 $("bgz").onclick=()=>{szOpen=!szOpen;syncPanel()};
@@ -592,7 +597,7 @@ function vpCenter(){const r=ec.getBoundingClientRect(),w=wrap.getBoundingClientR
 function newText(q){const z=Math.max(1,ec.getBoundingClientRect().width/baseW),it={k:"t",a:q[0],b:q[1],str:"テキスト",s:Math.max(.01,.03/z),c:col,rot:0,sx:1,sy:1};addItem(it);sel=it;syncPanel();emode="move";setHint();syncPanel();paint()}
 $("sx").oninput=()=>{if(sel){sel.sx=+$("sx").value/100;paint()}};
 $("sy").oninput=()=>{if(sel){sel.sy=+$("sy").value/100;paint()}};
-$("cc").oninput=()=>{col=$("cc").value;colPick=true;document.querySelectorAll(".col").forEach(x=>x.classList.remove("on"));if(sel&&sel.k=="t"){sel.c=col;paint()}};
+$("cc").oninput=()=>{hl=false;mkSync();col=$("cc").value;colPick=true;document.querySelectorAll(".col").forEach(x=>x.classList.remove("on"));if(sel&&sel.k=="t"){sel.c=col;paint()}};
 if(window.visualViewport){const fit=()=>{const v=visualViewport;if(v.scale>1.02)return;for(const id of["ed","fn","tm","tf","ts","dm","cm"]){const e=$(id);e.style.top=v.offsetTop+"px";e.style.height=v.height+"px";e.style.bottom="auto"}};visualViewport.addEventListener("resize",fit);visualViewport.addEventListener("scroll",fit)}
 
 let ruler={on:false,a:.5,b:.4,deg:0},rdrag=null,blocked=null,rotInfo=null,rotT=null;
@@ -691,7 +696,7 @@ function resizeBy(e){const it=rz;
   moved=true;syncPanel();paint()}
 
 let selR=null,sdrag=null,clipCv=null,toastT=null;
-function toast(t,ms=2600){const e=$("toast");e.textContent=t;e.style.opacity=1;clearTimeout(toastT);toastT=setTimeout(()=>e.style.opacity=0,ms)}
+function toast(t,ms=2600){const e=$("toast");e.textContent=t;e.classList.toggle("mid",!!(typeof fillInst!="undefined"&&fillInst||typeof qp!="undefined"&&qp&&qp.on));e.style.opacity=1;clearTimeout(toastT);toastT=setTimeout(()=>e.style.opacity=0,ms)}
 const selBox=()=>({a:Math.min(selR.x0,selR.x1),b:Math.min(selR.y0,selR.y1),c:Math.max(selR.x0,selR.x1),d:Math.max(selR.y0,selR.y1)});
 const nrm=e=>{const r=ec.getBoundingClientRect();return[(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height]};
 function selStart(e){
@@ -1641,14 +1646,15 @@ async function xlStart(o){
   if(o&&o.m){cells.length=0;if(!marks.length)return toast("◯・□が見つかりませんでした。文字の◯や、PDF・Excelのボタンが対象です",4200)}
   if(!cells.length&&!marks.length)return toast("検出できませんでした。罫線のある表や○□が見つかりません",4200);
   endEdit();sel=null;emode=null;setMode("text");syncPanel();setHint();
-  xlC={pg:cur,mo:!!(o&&o.m),cells,marks,useC:!(o&&o.m),useM:!(o&&o.c),vx:r.view[0],vy:r.view[1]};xlUI();paint();
+  xlC={pg:cur,mo:!!(o&&o.m),cells,marks,useC:!(o&&o.m),useM:!(o&&o.c),useQ:!(o&&o.c),vx:r.view[0],vy:r.view[1]};xlUI();paint();
   toast("紫の枠が連投欄になります。いらない枠はタップで外せます",4200)}
 function xlUI(){const C=xlC;$("smC").classList.toggle("dis",!!C||smForm);$("sfR").classList.toggle("dis",!!C);if(!C){$("xb").style.display="none";return}
   const n=C.cells.filter(c=>c.on).length;
-  $("xb").style.display="flex";$("xbt").textContent=C.mo?"○□ "+C.marks.length+" か所を◉フォーム化":"空欄 "+C.cells.length+" か所中 "+(C.useC?n:0)+" か所を連投欄に ・ ○□ "+C.marks.length+" か所を切替に";
+  $("xb").style.display="flex";const nO=C.marks.filter(m=>m.kind=="c").length,nQ=C.marks.length-nO,aO=C.useM?C.marks.filter(m=>m.kind=="c"&&!m.skip).length:0,aQ=C.useQ?C.marks.filter(m=>m.kind!="c"&&!m.skip).length:0;
+  $("xbt").textContent=C.mo?"◉フォーム化: ○ "+aO+"/"+nO+"か所・□ "+aQ+"/"+nQ+"か所(タップで個別に外せます)":"空欄 "+C.cells.length+" か所中 "+(C.useC?n:0)+" か所を連投欄に ・ ○ "+aO+"か所・□ "+aQ+"か所を切替に";
   const tg=(id,on,t)=>{const b=$(id);b.classList.add("tg");b.classList.toggle("on",on);b.classList.toggle("off",!on);b.textContent=t+(on?" ON":" OFF")};
-  tg("xbC",C.useC,"空欄");tg("xbM",C.useM,"○□");
-  $("xbM").style.display=C.marks.length?"":"none";$("xbC").style.display=C.cells.length&&!C.mo?"":"none";
+  tg("xbC",C.useC,"空欄");tg("xbM",C.useM,"○("+nO+")");tg("xbQ",C.useQ,"□("+nQ+")");
+  $("xbM").style.display=nO?"":"none";$("xbQ").style.display=nQ?"":"none";$("xbC").style.display=C.cells.length&&!C.mo?"":"none";
   $("xbA").textContent=n?"全部外す":"全部入れる";$("xbA").style.display=C.cells.length&&!C.mo?"":"none"}
 function xlDraw(x,pg,cw,ch,A){
   const C=xlC,W=pg.W,H=pg.H,k=(A%180==0?cw:ch)/W,P=(px,py)=>{const [u,v]=toDisp((px-C.vx)/W,1-(py-C.vy)/H,A);return[u*cw,v*ch]};
@@ -1657,10 +1663,21 @@ function xlDraw(x,pg,cw,ch,A){
     if(c.on){x.fillStyle="rgba(124,58,237,.22)";x.fillRect(X,Y,w,h);x.strokeStyle="#7c3aed";x.setLineDash([5,3])}else{x.fillStyle="rgba(120,120,120,.08)";x.fillRect(X,Y,w,h);x.strokeStyle="rgba(120,120,120,.6)";x.setLineDash([2,3])}
     x.strokeRect(X+1,Y+1,Math.max(1,w-2),Math.max(1,h-2))});
   x.setLineDash([]);x.strokeStyle="#7c3aed";
-  if(C.useM)C.marks.forEach(m=>{const p=P(m.cx,m.cy),r=m.size*k*.62;x.beginPath();if(m.kind=="c")x.arc(p[0],p[1],r,0,7);else x.rect(p[0]-r,p[1]-r,2*r,2*r);x.stroke()});
+  C.marks.forEach(m=>{if(!(m.kind=="c"?C.useM:C.useQ))return;const p=P(m.cx,m.cy),r=m.size*k*.62;x.beginPath();x.strokeStyle=m.skip?"rgba(120,120,120,.7)":(m.kind=="c"?"#7c3aed":"#db2777");x.lineWidth=m.skip?Math.max(1,cw/500):Math.max(2,cw/260);x.setLineDash(m.skip?[2,3]:[]);if(m.kind=="c")x.arc(p[0],p[1],r,0,7);else x.rect(p[0]-r,p[1]-r,2*r,2*r);x.stroke()});x.setLineDash([]);
+  if(C.rect){const p=toDisp(C.rect.a[0],C.rect.a[1],A),q=toDisp(C.rect.b[0],C.rect.b[1],A),X=Math.min(p[0],q[0])*cw,Y=Math.min(p[1],q[1])*ch,w=Math.abs(p[0]-q[0])*cw,h=Math.abs(p[1]-q[1])*ch;x.setLineDash([6,4]);x.lineWidth=Math.max(1.5,cw/350);x.strokeStyle="#2563eb";x.fillStyle="rgba(37,99,235,.14)";x.fillRect(X,Y,w,h);x.strokeRect(X,Y,w,h)}
   x.restore()}
+function xlRange(){
+  const C=xlC;if(!C||!C.rect)return;const W=C.pg.W,H=C.pg.H,R=C.rect;C.rect=null;
+  const ax=R.a[0]*W+C.vx,ay=(1-R.a[1])*H+C.vy,bx=R.b[0]*W+C.vx,by=(1-R.b[1])*H+C.vy,x0=Math.min(ax,bx),x1=Math.max(ax,bx),y0=Math.min(ay,by),y1=Math.max(ay,by);
+  const inR=(cx,cy)=>cx>=x0&&cx<=x1&&cy>=y0&&cy<=y1;let nc=0,nm=0,onC=0,onM=0;
+  if(C.useC){const L=C.cells.filter(c=>inR((c.x0+c.x1)/2,(c.y0+c.y1)/2));if(L.length){const on=L.some(c=>!c.on);L.forEach(c=>c.on=on);nc=L.length;onC=on?1:0}}
+  const M=C.marks.filter(m=>(m.kind=="c"?C.useM:C.useQ)&&inR(m.cx,m.cy));if(M.length){const on=M.some(m=>m.skip);M.forEach(m=>m.skip=!on);nm=M.length;onM=on?1:0}
+  xlUI();paint();
+  toast(nc||nm?(nc?"空欄 "+nc+" か所を"+(onC?"連投欄に入れました":"外しました"):"")+(nc&&nm?" / ":"")+(nm?"○□ "+nm+" か所を"+(onM?"入れました":"外しました"):"")+"(もう一度同じ範囲を囲むと反対になります)":"範囲内に何もありません",3000)}
 function xlToggle(e){
-  const C=xlC;if(!C||!C.useC)return;const q=pt(e),W=C.pg.W,H=C.pg.H,px=q[0]*W+C.vx,py=(1-q[1])*H+C.vy;let best=null;
+  const C=xlC;if(!C)return;const q=pt(e),W=C.pg.W,H=C.pg.H,px=q[0]*W+C.vx,py=(1-q[1])*H+C.vy;
+  {let bm=null,bd=1e9;C.marks.forEach(m=>{if(!(m.kind=="c"?C.useM:C.useQ))return;const d=Math.hypot(px-m.cx,py-m.cy);if(d<Math.max(m.size*.75,5)&&d<bd){bd=d;bm=m}});if(bm){bm.skip=!bm.skip;xlUI();paint();return}}
+  if(!C.useC)return;let best=null;
   C.cells.forEach(c=>{if(px>=c.x0&&px<=c.x1&&py>=c.y0&&py<=c.y1&&(!best||(c.x1-c.x0)*(c.y1-c.y0)<(best.x1-best.x0)*(best.y1-best.y0)))best=c});
   if(best){const now=Date.now(),dbl=xlLast&&xlLast.c===best&&now-xlLast.t<450;xlLast={c:best,t:now};
     if(dbl){xlLast=null;best.on=true;szbOpenCand(best);xlUI();paint();toast("下の「幅・高さ」ボタンで、この枠の大きさを変えられます。終わったら「完了」",3500);return}
@@ -1672,9 +1689,10 @@ function xlOk(){
     const fs=Math.max(6,Math.min(16,(c.y1-c.y0)*.55));let base=(c.lbl||"").replace(/[○◯〇□☐◻▢]/g,"").trim()||("連投欄"+(nc+1));const cnt=(LB[base]=(LB[base]||0)+1),lbl=cnt>1?base+cnt:base;
     const it={k:"t",a:(c.x0+3-C.vx)/W,b:1-(((c.y0+c.y1)/2)-C.vy)/H,str:lbl,s:fs/W,c:"#111111",rot:0,sx:1,sy:1,anc:"l",field:"input",no:++n,ph:true,lbl,inst,xlc:true,s0:fs/W,cell:{x0:(c.x0-C.vx)/W,x1:(c.x1-C.vx)/W,y0:1-(c.y1-C.vy)/H,y1:1-(c.y0-C.vy)/H}};
     fitItem(it,pg);addItem(it);nc++});
-  if(C.useM){const sid="gx"+Date.now(),rows=[];C.marks.filter(m=>m.kind=="c").slice().sort((p,q)=>q.cy-p.cy).forEach(m=>{const r=rows.find(r=>Math.abs(r.cy-m.cy)<m.size*.7);if(r)r.l.push(m);else rows.push({cy:m.cy,l:[m]})});
+  const MK=C.marks.filter(m=>!m.skip&&(m.kind=="c"?C.useM:C.useQ));
+  if(MK.length){const sid="gx"+Date.now(),rows=[];MK.filter(m=>m.kind=="c").slice().sort((p,q)=>q.cy-p.cy).forEach(m=>{const r=rows.find(r=>Math.abs(r.cy-m.cy)<m.size*.7);if(r)r.l.push(m);else rows.push({cy:m.cy,l:[m]})});
     let gi=0;rows.forEach(r=>{r.l.sort((p,q)=>p.cx-q.cx);let pv=null;r.l.forEach(m=>{if(!pv||m.cx-pv.cx>m.size*10)gi++;m.grp=sid+"_"+gi;pv=m})})}
-  if(C.useM)C.marks.forEach(m=>{
+  MK.forEach(m=>{
     const it={k:"t",a:(m.cx-C.vx)/W,b:1-(m.cy-C.vy)/H,str:m.kind=="c"?"◉":"✓",s:(m.size*(m.kind=="c"?1.15:1.35))/W,c:"#111111",rot:0,sx:1,sy:1,anc:"c",field:"toggle",off:!m.on,rd:m.kind=="c",grp:m.grp};
     addItem(it);nm++});
   sel=null;emode=null;setHint();syncPanel();paint();
@@ -1698,6 +1716,7 @@ $("xbOk").onclick=xlOk;
 $("xbX").onclick=()=>{xlC=null;xlUI();paint()};
 $("xbC").onclick=()=>{if(xlC){xlC.useC=!xlC.useC;xlUI();paint()}};
 $("xbM").onclick=()=>{if(xlC){xlC.useM=!xlC.useM;xlUI();paint()}};
+$("xbQ").onclick=()=>{if(xlC){xlC.useQ=!xlC.useQ;xlUI();paint()}};
 $("xbA").onclick=()=>{if(xlC){const any=xlC.cells.some(c=>c.on);xlC.cells.forEach(c=>c.on=!any);xlUI();paint()}};
 
 // ---- v37: .xlsx を直接読み込み(表を画像PDFにして、空欄・○□・フォーム部品は別モデルで保持)
