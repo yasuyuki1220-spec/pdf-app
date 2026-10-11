@@ -164,7 +164,7 @@ input[type=range]{accent-color:var(--ac)}
 <div id="dab"><button id="dmA">←</button><button id="dmS" style="font-size:13px;padding:8px 12px">スタンプ</button><span>「←」「スタンプ」を置けます。動かす・回す・大きさ変更ができます</span></div>
 <div id="fg"><span class="fl" id="fgl"></span><button id="fgc">📷 書類から</button><button id="fgs" class="p">連投モード</button><button id="fge">編集モード</button><button id="fgt">◉選択ボタン追加</button><button id="fgo">連投順</button></div>
 
-<div id="sm"><span id="smt"></span><div class="smb"><button id="smN">名称</button><button id="smS">サイズ</button><button id="smU">選択</button><button id="smA">基準位置</button><button id="smD">削除</button><button id="smE">追加</button><button id="smO">連投順</button><button id="smY">試し入力</button><button id="smZ">入力を消す</button><button id="smL">全選択</button><button id="smC">空欄認識</button><button id="smM">◉フォーム</button><button class="p" id="smX">完了</button></div></div><div id="sf"><span>◉フォーム:◯をタップで選んで動かせます(ドラッグ)</span><button id="sfR">◉自動認識</button><button id="sfN">◯を追加(新グループ)</button><button id="sfG">同じグループに◯追加</button><button id="sfS">☑を追加</button><button id="sfU">選択</button><button id="sfL">全選択</button><button id="sfD">選択を削除</button><button id="sfE">グループ編集</button><button class="p" id="sfX">閉じる</button></div><div id="smo"></div><div id="fp"><div id="fps"></div><div id="fbar"><i></i></div><div id="fpb"><button id="fpu">←</button><button id="fpk">空欄</button><button id="fpcam">📷</button><button id="fpd">→</button><span id="fpc"></span><button id="fpe" style="display:none">終了</button><button class="p" id="fpx">完了</button></div></div>
+<div id="sm"><span id="smt"></span><div class="smb"><button id="smN">名称</button><button id="smS">サイズ</button><button id="smU">選択</button><button id="smA">基準位置</button><button id="smD">削除</button><button id="smE">追加</button><button id="smO">連投順</button><button id="smY">試し入力</button><button id="smZ">入力を消す</button><button id="smL">全選択</button><button id="smC">空欄認識</button><button id="smM">◉フォーム</button><button class="p" id="smX">完了</button></div></div><div id="sf"><span>◉フォーム:◯をタップで選んで動かせます(ドラッグ)</span><button id="sfR">◉自動認識</button><button id="sfN">◯を追加(新グループ)</button><button id="sfG">同じグループに◯追加</button><button id="sfS">☑を追加</button><button id="sfK">丸で囲む欄を追加</button><button id="sfU">選択</button><button id="sfL">全選択</button><button id="sfD">選択を削除</button><button id="sfE">グループ編集</button><button class="p" id="sfX">閉じる</button></div><div id="smo"></div><div id="fp"><div id="fps"></div><div id="fbar"><i></i></div><div id="fpb"><button id="fpu">←</button><button id="fpk">空欄</button><button id="fpcam">📷</button><button id="fpd">→</button><span id="fpc"></span><button id="fpe" style="display:none">終了</button><button class="p" id="fpx">完了</button></div></div>
 <div class="ctx" id="pr">
 <button class="col on" style="background:#111" data-c="#111111"></button><button class="col" style="background:#e11d48" data-c="#e11d48"></button><button class="col" style="background:#2563eb" data-c="#2563eb"></button><button class="col" style="background:#16a34a" data-c="#16a34a"></button><button class="col" style="background:#f59e0b" data-c="#f59e0b"></button><button class="col" style="background:#fff" data-c="#ffffff"></button>
 <button class="mkc" id="mkp" data-c="#ff9ec7" title="薄いピンクのマーカー" style="background:#ff9ec7"></button><button class="mkc" id="mky" data-c="#fff04d" title="黄色のマーカー" style="background:#fff04d"></button><button class="mkc" id="mkg" data-c="#9ff0b4" title="薄い緑のマーカー" style="background:#9ff0b4"></button><button class="mkc" id="mkb" data-c="#8fd3ff" title="水色のマーカー" style="background:#8fd3ff"></button><span id="mkt" style="font-size:12px;color:var(--mut)">←マーカー</span><input type="color" id="cc" value="#111111" style="width:28px;height:28px;padding:0;border:0;background:none"><span style="font-size:12px;color:var(--mut)">太さ</span><input id="wd" type="range" min="1" max="14" value="3" style="width:90px">
@@ -225,8 +225,9 @@ const bytesOf=(c,t="image/jpeg")=>new Promise(r=>c.toBlob(async b=>r(new Uint8Ar
 
 function bmOf(it){
   if(it.k=="i")return it.bm;
-  const key=it.str+"|"+it.c+"|"+(it.halo?1:0);
+  const key=it.str+"|"+it.c+"|"+(it.halo?1:0)+(it.ring?"r":"");
   if(it.key!==key){
+    if(it.ring){const c=document.createElement("canvas");c.width=200;c.height=120;drawTxt(c.getContext("2d"),it);it.bmc=c;it.key=key;return c}
     const L=it.str.split("\n"),f=60,c=document.createElement("canvas"),x=c.getContext("2d");
     x.font=f+"px sans-serif";
     c.width=Math.ceil(Math.max(...L.map(l=>x.measureText(l).width)))+16;c.height=Math.ceil(L.length*f*1.25)+12;
@@ -265,7 +266,7 @@ function drawMarks(x,pg,cw,ch,extra){
     if(it.cell&&x.canvas.id=="ec"){const c=it.cell,p0=toDisp(c.x0,c.y0,A),p1=toDisp(c.x1,c.y1,A);x.save();x.strokeStyle=it.ph?"#f59e0b":"#3b82f6";x.lineWidth=Math.max(1,cw/450);x.setLineDash([5,3]);x.strokeRect(Math.min(p0[0],p1[0])*cw,Math.min(p0[1],p1[1])*ch,Math.abs(p1[0]-p0[0])*cw,Math.abs(p1[1]-p0[1])*ch);x.restore()}
     x.save();x.translate(u*cw,v*ch);x.rotate((it.rot+A)*PI/180);if(it===lift&&!ghost){x.shadowColor="rgba(0,0,0,.4)";x.shadowBlur=cw/30;x.shadowOffsetY=cw/110;x.scale(1.07,1.07)}if(ghost){x.strokeStyle="#f59e0b";x.lineWidth=Math.max(1.5,cw/160);x.setLineDash([6,4]);x.strokeRect(-w/2,-h/2,w,h);x.setLineDash([]);if(it.no){const rr=Math.max(9,cw/18);x.fillStyle="#f59e0b";x.beginPath();x.arc(-w/2,-h/2,rr,0,7);x.fill();x.fillStyle="#fff";x.font="bold "+rr*1.3+"px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText(LT(it.no),-w/2,-h/2)}x.restore();continue}const onE=x.canvas.id=="ec",isIn=it.field=="input"&&onE,k0=(it.ph&&onE)?.72:1,dw=w*k0,dh=h*k0,pd=Math.max(2,cw/230);
     if(isIn){x.fillStyle=it.ph?"rgba(255,248,220,.96)":"rgba(255,255,255,.55)";x.fillRect(-dw/2-pd,-dh/2-pd,dw+2*pd,dh+2*pd)}
-    if(it.field=="toggle"&&it.off){if(onE&&it===sel){x.strokeStyle="#7c3aed";x.lineWidth=Math.max(1.2,cw/450);x.setLineDash([4,3]);const m=Math.min(dw,dh)*.7;x.strokeRect(-m/2,-m/2,m,m);x.setLineDash([])}}else if(it.k=="t")vecText(x,it,bm,dw,dh);else x.drawImage(bm,-dw/2,-dh/2,dw,dh);
+    if(it.field=="toggle"&&it.off){if(it.ring&&onE){x.strokeStyle="rgba(124,58,237,.8)";x.lineWidth=Math.max(1.4,cw/400);x.setLineDash([6,4]);x.beginPath();x.ellipse(0,0,dw/2,dh/2,0,0,7);x.stroke();x.setLineDash([])}else if(onE&&it===sel){x.strokeStyle="#7c3aed";x.lineWidth=Math.max(1.2,cw/450);x.setLineDash([4,3]);const m=Math.min(dw,dh)*.7;x.strokeRect(-m/2,-m/2,m,m);x.setLineDash([])}}else if(it.k=="t")vecText(x,it,bm,dw,dh);else x.drawImage(bm,-dw/2,-dh/2,dw,dh);
     if(isIn){x.strokeStyle="rgba(245,158,11,.7)";x.lineWidth=Math.max(1,cw/520);x.setLineDash([5,4]);x.strokeRect(-dw/2-pd,-dh/2-pd,dw+2*pd,dh+2*pd);x.setLineDash([]);
       if(it.no){const rr=Math.max(4,cw/125),bx=-dw/2-pd-rr*.15,by=-dh/2-pd-rr*.15;x.fillStyle="rgba(245,158,11,.5)";x.beginPath();x.arc(bx,by,rr,0,7);x.fill();x.fillStyle="#fff";x.font="bold "+rr*1.25+"px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText(LT(it.no),bx,by)}}
     if(it===sel&&x.canvas.id=="ec"){x.lineWidth=Math.max(2,cw/250);x.strokeStyle=emode=="size"?"#16a34a":emode=="scale"?"#f59e0b":emode=="move"?"#e11d48":"#2563eb";x.setLineDash(emode?[]:[6,4]);x.strokeRect(-w/2,-h/2,w,h);if(emode=="size"||emode=="scale"){x.fillStyle=emode=="size"?"#16a34a":"#f59e0b";x.beginPath();x.arc(w/2,h/2,hr(),0,7);x.fill()}if(it.k=="t"&&!it.field&&!editing&&!it.cell){const rr=hr()*1.7;x.setLineDash([]);x.fillStyle="#16a34a";x.beginPath();x.arc(w/2,h/2,rr,0,7);x.fill()}}
@@ -318,7 +319,7 @@ async function imgToPdf(f){
 var xlTot=[0,0];
 
 // ---- v38.1: 文字をベクターで描く(小さくても読める)・欄(セル)に収まる文字サイズ
-function drawTxt(x,it,K){const L=it.str.split("\n"),f=60;x.font=f+"px sans-serif";x.fillStyle=it.c;x.textBaseline="middle";L.forEach((l,k)=>{const y=6+(k+.5)*f*1.25;if(it.halo){x.lineWidth=12;x.strokeStyle="#fff";x.lineJoin="round";x.strokeText(l,8,y)}x.fillText(l,8,y)})}
+function drawTxt(x,it,K){if(it.ring){x.strokeStyle=it.c;x.lineWidth=7;x.beginPath();x.ellipse(100,60,94,54,0,0,7);x.stroke();return}const L=it.str.split("\n"),f=60;x.font=f+"px sans-serif";x.fillStyle=it.c;x.textBaseline="middle";L.forEach((l,k)=>{const y=6+(k+.5)*f*1.25;if(it.halo){x.lineWidth=12;x.strokeStyle="#fff";x.lineJoin="round";x.strokeText(l,8,y)}x.fillText(l,8,y)})}
 function vecText(x,it,bm,dw,dh){x.save();x.translate(-dw/2,-dh/2);x.scale(dw/bm.width,dh/bm.height);drawTxt(x,it);x.restore()}
 function hiBm(it){const bm=bmOf(it),K=3,c=document.createElement("canvas");c.width=bm.width*K;c.height=bm.height*K;const x=c.getContext("2d");x.scale(K,K);drawTxt(x,it);return c}
 function fitItem(it,pg){const c=it.cell;if(!c)return;const W=pg.W,H=pg.H,pad=2,bw=Math.max(4,(c.x1-c.x0)*W-pad*2),bh=Math.max(3,(c.y1-c.y0)*H-1);
@@ -393,13 +394,21 @@ function exp(selOnly){
 async function saveFile(bytes,name){
   const u=URL.createObjectURL(new Blob([bytes])),a=document.createElement("a");
   a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),60000);
-  say("保存しました。「ファイル」アプリのダウンロードに入ります")}
+  say(isDesk()?"保存しました。ブラウザのダウンロード先(ダウンロードフォルダ)を確認してください":"保存しました。「ファイル」アプリのダウンロードに入ります")}
 async function saveFiles(fs,base){
   if(fs.length==1)return saveFile(new Uint8Array(await fs[0].arrayBuffer()),fs[0].name);
   if(typeof JSZip=="undefined")return say("複数ファイルの保存に対応していません");
   const z=new JSZip();fs.forEach(f=>z.file(f.name,f));
   await saveFile(await z.generateAsync({type:"uint8array"}),base+".zip")}
+const isDesk=()=>!matchMedia("(pointer:coarse)").matches&&!/iPhone|iPad|Android|Mobile/i.test(navigator.userAgent);
+async function saveDesk(fs,base){
+  if(fs.length==1&&window.showSaveFilePicker){
+    const f=fs[0],ext=(f.name.match(/\.[A-Za-z0-9]+$/)||[".pdf"])[0];
+    try{const h=await showSaveFilePicker({suggestedName:f.name,types:[{description:"ファイル",accept:{[f.type||"application/pdf"]:[ext]}}]});const w=await h.createWritable();await w.write(f);await w.close();return say("保存しました: "+h.name)}
+    catch(e){if(e&&e.name=="AbortError")return say("保存をキャンセルしました")}}
+  await saveFiles(fs,base)}
 async function deliverFiles(fs,base){
+  if(isDesk())return saveDesk(fs,base);
   if(navigator.canShare&&navigator.canShare({files:fs})){
     try{await navigator.share({files:fs,title:base});return say("共有しました")}
     catch(e){
@@ -444,7 +453,7 @@ async function redrawBase(){selR=null;if(!cur._base)cur._base=snapOf(cur);
   await renderPage(cur,baseCv,Math.min(baseW*2.5,2400),false);
   ec.width=baseCv.width;ec.height=baseCv.height;ec.style.width=baseW+"px";paint();
 }
-function paint(){if(!cur)return;const x=ec.getContext("2d");x.drawImage(baseCv,0,0);drawMarks(x,cur,ec.width,ec.height,st||dimSt||stArr);drawArm(x);if(ruler.on)drawRuler(x);drawRot(x);drawHandles(x);if(selR&&mode=="move")drawSel(x);$("sb").style.display=(mode=="move")?"flex":"none";if(editing)placeEdit();fgUI();if(!P.size&&!editing){clearTimeout(cT);cT=setTimeout(commit,450)}}
+function paint(){if(!cur)return;const x=ec.getContext("2d");x.drawImage(baseCv,0,0);drawMarks(x,cur,ec.width,ec.height,st||dimSt||stArr);drawArm(x);if(ruler.on)drawRuler(x);drawRot(x);drawHandles(x);drawRg(x);if(selR&&mode=="move")drawSel(x);$("sb").style.display=(mode=="move")?"flex":"none";if(editing)placeEdit();fgUI();if(!P.size&&!editing){clearTimeout(cT);cT=setTimeout(commit,450)}}
 function pt(e){const r=ec.getBoundingClientRect();return toUnrot((e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height,ang(cur))}
 function hit(e){
   const r=ec.getBoundingClientRect(),A=ang(cur),px=e.clientX-r.left,py=e.clientY-r.top,ppp=(A%180==0?r.width:r.height)/cur.W;
@@ -474,6 +483,7 @@ ec.onpointerdown=e=>{
   if(fillInst){let h=hit(e);if(!(h&&(h.field=="toggle"||(h.field=="input"&&h.inst===fillInst)))){const pk=smPick(e,1);if(pk&&pk.field=="input"&&pk.inst===fillInst)h=pk}if(h&&h.field=="input"&&h.inst===fillInst){fsT={it:h,x:e.clientX,y:e.clientY,off:[q[0]-h.a,q[1]-h.b],mv:false};return}if(!(h&&h.field=="toggle")){fsT=null;return}}
   if(tgE&&!smGrab(e)){tgEtap={x:e.clientX,y:e.clientY,ok:true};return}
   if(xlC&&!smGrab(e)){xlTap={x:e.clientX,y:e.clientY,ok:true,q0:q};return}
+  if(rgS){rgS.on=true;rgS.q0=q;rgS.q1=q;paint();return}
   if(smOn){const h=smPick(e);if(h){const o={it:h,x:e.clientX,y:e.clientY,q0:q,mv:false,long:false,multi:smMulti};
     if(smMulti){smT=o;paint();return}
     if(!smSet.has(h))smSet=new Set([h]);o.st=[...smSet].map(i=>[i,i.a,i.b,i.cell&&{...i.cell}]);
@@ -521,6 +531,7 @@ ec.onpointerdown=e=>{
 ec.onpointermove=e=>{
   if(e.pointerType=="mouse"&&e.buttons==2)return;
   if(!P.has(e.pointerId))return;P.set(e.pointerId,e);
+  if(rgS&&rgS.on&&P.size==1){rgS.q1=pt(e);paint();return}
   if(xlTap&&xlTap.ok&&xlC&&P.size==1&&(xlTap.rect||Math.hypot(e.clientX-xlTap.x,e.clientY-xlTap.y)>12)){xlTap.rect=true;xlC.rect={a:xlTap.q0,b:pt(e)};paint();return}
   if(P.size==2&&g){
     const n=G();
@@ -551,7 +562,7 @@ ec.onpointermove=e=>{
   else if(drag&&sel){const na=q[0]-drag[0],nb=q[1]-drag[1];if(sel.cell){const da=na-sel.a,db=nb-sel.b,c=sel.cell;c.x0+=da;c.x1+=da;c.y0+=db;c.y1+=db}sel.a=na;sel.b=nb;moved=true;paint()}
   else if(rdrag){ruler.a=q[0]-rdrag[0];ruler.b=q[1]-rdrag[1];paint()}
 };
-const up=e=>{if(e.pointerType=="mouse"&&e.button==2)return;if(smT){const t=smT;smT=null;clearTimeout(t.lp);P.delete(e.pointerId);if(P.size<2)g=null;if(!t.mv&&!t.long){if(t.multi){smSet.has(t.it)?smSet.delete(t.it):smSet.add(t.it);sel=t.it;smSync();paint()}else if(smTry&&t.it.field=="input"){startEdit(t.it)}else if(smTry&&t.it.field=="toggle"){togFlip(t.it)}else{const now=Date.now(),dbl=smLast&&smLast.it===t.it&&now-smLast.t<450;smLast={it:t.it,t:now};if(dbl){smLast=null;smRename(t.it)}}}return}if(fsT){const t=fsT;fsT=null;P.delete(e.pointerId);if(P.size<2)g=null;if(!t.mv){const now=Date.now(),dbl=fsLast&&fsLast.it===t.it&&now-fsLast.t<450;fsLast={it:t.it,t:now};if(dbl){fsLast=null;fsMenu(t.it)}else{const k=fillL.findIndex(x=>x.list.some(y=>y.it===t.it));if(k>=0&&k!==fpI)fpGo(k,true);else if(k>=0)startEdit(t.it,true,true);sel=t.it;paint()}}return}if(tgE&&tgEtap){const c=tgEtap;tgEtap=null;if(c.ok&&Math.hypot(e.clientX-c.x,e.clientY-c.y)<12)tgETap(e)}if(tgT){const t=tgT;tgT=null;clearTimeout(lpT);lpT=null;if(!t.dead&&Math.hypot(e.clientX-t.x,e.clientY-t.y)<10){togFlip(t.it)}}if(xlC&&xlTap){const c=xlTap;xlTap=null;if(c.ok&&c.rect)xlRange();else if(c.ok&&Math.hypot(e.clientX-c.x,e.clientY-c.y)<12)xlToggle(e)}P.delete(e.pointerId);if(P.size<2)g=null;if(st){addStroke(st);st=null}if(!P.size&&moved&&shI<0&&sel&&sel.shape&&sel.shape.m=="mosaic")bakeShape(sel,cur,sel.shape.rel.map(r=>[sel.a+r[0],sel.b+r[1]]));shI=-1;drag=null;rdrag=null;rz=null;rzm=null;blocked=null;clearTimeout(lpT);lpT=null;if(stArr&&!P.size)stArrEnd();if(dimSt&&!P.size)dimEnd();if(sdrag&&!P.size)selEnd();if(!P.size&&pendDesel&&sel&&(!moved||mode=="move")){sel=null;emode=null;setHint();syncPanel()}if(!P.size&&mvExit&&!moved&&sel&&emode=='move'&&!sel.shape){const L=loc(e,sel);if(Math.abs(L.lx)>L.bw*(sel.sx||1)/2||Math.abs(L.ly)>L.bh*(sel.sy||1)/2){tapEdit=false;sel=null;emode=null;setHint();syncPanel()}}if(!P.size){pendDesel=false;mvExit=false}if(!P.size){let dbl=false;if(!moved&&sel&&sel.k=="t"&&!sel.field){const now=Date.now();dbl=!!(txLast&&txLast.it===sel&&now-txLast.t<450);txLast=dbl?null:{it:sel,t:now}}if(tapEdit&&!moved&&sel&&sel.k=="t"&&(sel.field?true:dbl)){emode=null;setHint();startEdit(sel)}else if(createTap&&!moved)newText(createTap)}tapEdit=false;createTap=null;if(!P.size)lift=null;paint();if(editing&&document.activeElement!==tin)tin.focus()};
+const up=e=>{if(e.pointerType=="mouse"&&e.button==2)return;if(rgS&&rgS.on){P.delete(e.pointerId);rgDone();return}if(smT){const t=smT;smT=null;clearTimeout(t.lp);P.delete(e.pointerId);if(P.size<2)g=null;if(!t.mv&&!t.long){if(t.multi){smSet.has(t.it)?smSet.delete(t.it):smSet.add(t.it);sel=t.it;smSync();paint()}else if(smTry&&t.it.field=="input"){startEdit(t.it)}else if(smTry&&t.it.field=="toggle"){togFlip(t.it)}else{const now=Date.now(),dbl=smLast&&smLast.it===t.it&&now-smLast.t<450;smLast={it:t.it,t:now};if(dbl){smLast=null;smRename(t.it)}}}return}if(fsT){const t=fsT;fsT=null;P.delete(e.pointerId);if(P.size<2)g=null;if(!t.mv){const now=Date.now(),dbl=fsLast&&fsLast.it===t.it&&now-fsLast.t<450;fsLast={it:t.it,t:now};if(dbl){fsLast=null;fsMenu(t.it)}else{const k=fillL.findIndex(x=>x.list.some(y=>y.it===t.it));if(k>=0&&k!==fpI)fpGo(k,true);else if(k>=0)startEdit(t.it,true,true);sel=t.it;paint()}}return}if(tgE&&tgEtap){const c=tgEtap;tgEtap=null;if(c.ok&&Math.hypot(e.clientX-c.x,e.clientY-c.y)<12)tgETap(e)}if(tgT){const t=tgT;tgT=null;clearTimeout(lpT);lpT=null;if(!t.dead&&Math.hypot(e.clientX-t.x,e.clientY-t.y)<10){togFlip(t.it)}}if(xlC&&xlTap){const c=xlTap;xlTap=null;if(c.ok&&c.rect)xlRange();else if(c.ok&&Math.hypot(e.clientX-c.x,e.clientY-c.y)<12)xlToggle(e)}P.delete(e.pointerId);if(P.size<2)g=null;if(st){addStroke(st);st=null}if(!P.size&&moved&&shI<0&&sel&&sel.shape&&sel.shape.m=="mosaic")bakeShape(sel,cur,sel.shape.rel.map(r=>[sel.a+r[0],sel.b+r[1]]));shI=-1;drag=null;rdrag=null;rz=null;rzm=null;blocked=null;clearTimeout(lpT);lpT=null;if(stArr&&!P.size)stArrEnd();if(dimSt&&!P.size)dimEnd();if(sdrag&&!P.size)selEnd();if(!P.size&&pendDesel&&sel&&(!moved||mode=="move")){sel=null;emode=null;setHint();syncPanel()}if(!P.size&&mvExit&&!moved&&sel&&emode=='move'&&!sel.shape){const L=loc(e,sel);if(Math.abs(L.lx)>L.bw*(sel.sx||1)/2||Math.abs(L.ly)>L.bh*(sel.sy||1)/2){tapEdit=false;sel=null;emode=null;setHint();syncPanel()}}if(!P.size){pendDesel=false;mvExit=false}if(!P.size){let dbl=false;if(!moved&&sel&&sel.k=="t"&&!sel.field){const now=Date.now();dbl=!!(txLast&&txLast.it===sel&&now-txLast.t<450);txLast=dbl?null:{it:sel,t:now}}if(tapEdit&&!moved&&sel&&sel.k=="t"&&(sel.field?true:dbl)){emode=null;setHint();startEdit(sel)}else if(createTap&&!moved)newText(createTap)}tapEdit=false;createTap=null;if(!P.size)lift=null;paint();if(editing&&document.activeElement!==tin)tin.focus()};
 ec.onpointerup=ec.onpointercancel=up;
 var hl=false;function mkSync(){document.querySelectorAll(".mkc").forEach(b=>b.classList.toggle("on",hl&&col==b.dataset.c));$("ed").classList.toggle("hl",hl)}
 document.querySelectorAll(".mkc").forEach(b=>b.onclick=()=>{if(hl&&col==b.dataset.c){hl=false;col="#111111";colPick=true;document.querySelectorAll(".col").forEach(x=>x.classList.toggle("on",x.dataset.c=="#111111"));mkSync();return toast("マーカーをやめました",1500)}hl=true;col=b.dataset.c;colPick=true;document.querySelectorAll(".col").forEach(x=>x.classList.remove("on"));mkSync();toast("マーカー:文字の上をなぞってください(太さは右のバー)",2500)});
@@ -576,27 +587,8 @@ function sheet(t,items){const s=$("sh");s.innerHTML="";const h=document.createEl
   [...items,["キャンセル",()=>{}]].forEach(([n,fn])=>{const b=document.createElement("button");b.className="sr";b.textContent=n;b.onclick=()=>{$("ov").style.display="none";fn()};s.appendChild(b)});$("ov").style.display="flex"}
 $("ov").onclick=e=>{if(e.target.id=="ov")e.target.style.display="none"};
 $("empty").onclick=()=>$("bAdd").click();
-$("bAdd").onclick=()=>sheet("追加",[["ファイルから",()=>$("fi").click()],["写真から",()=>$("phi").click()],[wdir?"DocuWorks用の見張りをやめる":"DocuWorks(.xdw)用:PDFの受け取りフォルダを見張る",()=>wdir?xdwStop():xdwWatch()]]);
-// ---- DocuWorks(.xdw)対応: Viewerで「印刷→Microsoft Print to PDF」したPDFを、指定フォルダから自動で取り込む
-var wdir=null,wT=null,wSeen=new Set(),wPend=new Map(),wBusy=false;
-function xdwGuide(name){say("");sheet("「"+name+"」はこのアプリでは直接読めません",[["受け取りフォルダを決めて、PDFを自動で取り込む",()=>xdwWatch(true)],["手順だけ見る",()=>sheet("手順",[["① DocuWorks Viewerでファイルを開く ② ファイル→印刷 ③ プリンターを「Microsoft Print to PDF」にして印刷 ④ 保存先を、先ほど決めた「受け取りフォルダ」にする → 自動でここに追加されます",()=>{}]])]])}
-async function xdwWatch(guide){
-  if(!window.showDirectoryPicker){say("");return toast("この機能はWindowsのEdge・Chromeで使えます(iPhoneは非対応)",4000)}
-  try{wdir=await showDirectoryPicker({id:"xdwin",mode:"read"})}catch(_){wdir=null;return}
-  wSeen=new Set();wPend=new Map();
-  try{for await(const [n,h] of wdir.entries()){if(h.kind=="file"&&/\.pdf$/i.test(n)){const fl=await h.getFile();wSeen.add(n+"|"+fl.lastModified+"|"+fl.size)}}}catch(_){}
-  clearInterval(wT);wT=setInterval(xdwPoll,1500);
-  sheet("見張りを始めました「"+wdir.name+"」",[["DocuWorks Viewerで開いた.xdwを、印刷(Microsoft Print to PDF)で、このフォルダに保存してください。PDFができると自動でこの画面に追加されます",()=>{}]])}
-function xdwStop(){clearInterval(wT);wT=null;wdir=null;toast("見張りをやめました",2000)}
-async function xdwPoll(){
-  if(!wdir||wBusy)return;wBusy=true;
-  try{for await(const [n,h] of wdir.entries()){if(h.kind!="file"||!/\.pdf$/i.test(n))continue;
-    const fl=await h.getFile(),k=n+"|"+fl.lastModified+"|"+fl.size;if(wSeen.has(k)||!fl.size)continue;
-    const pv=wPend.get(n);if(pv!==fl.size){wPend.set(n,fl.size);continue}
-    wPend.delete(n);wSeen.add(k);
-    await $("fi").onchange({target:{files:[fl],value:""}});toast("「"+n+"」を追加しました",3500)}}
-  catch(e){xdwStop();toast("フォルダを読めなくなったので見張りをやめました",3000)}
-  wBusy=false}
+$("bAdd").onclick=()=>sheet("追加",[["ファイルから",()=>$("fi").click()],["写真から",()=>$("phi").click()]]);
+function xdwGuide(name){say("");sheet("「"+name+"」は読めません。PDFにしてから追加してください",[["DocuWorks Viewerで開き、印刷→Microsoft Print to PDFで保存したPDFを追加します",()=>{}]])}
 $("bShare").onclick=()=>sheet("共有・書き出し",[["選択したページ",()=>exp(true)],["すべてのページ",()=>exp(false)],["選択ページをテンプレートに保存",()=>tplSave(true)],["全ページをテンプレートに保存",()=>tplSave(false)]]);
 $("eAdd").onclick=()=>sheet("ページに追加",[["ファイルから(PDF・画像)",()=>$("pf").click()],["写真から",()=>$("pi").click()]]);
 $("eMore").onclick=()=>sheet("その他",[["ページを回転",()=>$("rt").click()],...(cur&&cur._undo?[["トリミングを元に戻す",undoCrop]]:[]),["ペンの書き込みを全消去",()=>$("cl").click()],["テキストを全消去",()=>clearText()],["範囲選択を全消去",()=>clearShapes()],...(isXl()?[["シート編集(Excelの欄・◯◉を整える)",()=>smStart()]]:[["◉フォーム設置",()=>tgMenu()],["◉フォーム自動認識(◯□を見つけて◉に)",()=>xlStart({m:1})],["◉フォームグループ編集",()=>tgEStart()],["空欄+◉フォームをまとめて自動認識",()=>xlStart()]]),["説明書",()=>openManual()],...(cur&&cur.items.some(i=>i.lock)?[["固定した画像を解除",()=>{cur.items.forEach(i=>{delete i.lock});paint();toast("固定を解除しました")}]]:[])]);
@@ -1048,7 +1040,7 @@ async function tplMake(r){
   let n=0,first=null;
   r.fields.forEach(f=>{
     const pg=pgs[f.page];if(!pg)return;
-    const it={k:"t",a:f.a,b:f.b,str:f.str,s:f.s,c:f.c,rot:f.rot,sx:f.sx,sy:f.sy,anc:f.anc};if(f.cell){it.cell={...f.cell};it.s0=f.s0||f.s;it.s=it.s0}
+    const it={k:"t",a:f.a,b:f.b,str:f.str,s:f.s,c:f.c,rot:f.rot,sx:f.sx,sy:f.sy,anc:f.anc};if(f.ring)it.ring=true;if(f.cell){it.cell={...f.cell};it.s0=f.s0||f.s;it.s=it.s0}
     if(f.type=="toggle"){it.field="toggle";it.off=true;it.rd=f.rd;it.grp=f.grp?f.grp+"@"+inst:undefined}
     if(f.type=="input"){it.field="input";it.no=f.no||++n;it.ph=true;it.lbl=f.str;it.inst=inst;if(!first)first=pg}
     if(it.cell)fitItem(it,pg);pg.items.push(it)});
@@ -1182,7 +1174,7 @@ $("smC").onclick=()=>xlStart({c:1});$("smM").onclick=()=>smFormSet(!smForm);$("s
 $("sfU").onclick=()=>$("smU").onclick();
 $("sfL").onclick=()=>{const L=cur.items.filter(i=>i.field=="toggle");if(!L.length)return toast("◉フォームがありません");smSet=new Set(L);smMulti=true;sel=null;smSync();paint();toast(L.length+"か所を選びました。「選択を削除」などをまとめて使えます")};
 $("fge").onclick=()=>smStart();$("fgt").onclick=()=>tgMenu();$("fgo").onclick=()=>{smStart();smOrder()};
-$("sfR").onclick=()=>xlStart({m:1});$("sfN").onclick=()=>tgPlace("c",true);$("sfG").onclick=()=>tgPlace("c",false);$("sfS").onclick=()=>tgPlace("s");
+$("sfR").onclick=()=>xlStart({m:1});$("sfN").onclick=()=>tgPlace("c",true);$("sfG").onclick=()=>tgPlace("c",false);$("sfS").onclick=()=>tgPlace("s");$("sfK").onclick=()=>sheet("丸で囲む欄",[["単独(囲む/外すを切替)",()=>rgStart(false)],["同じグループ(どれか1つだけ囲む)",()=>rgStart(true)]]);
 $("sfD").onclick=()=>{const L=smTg().filter(i=>i.field=="toggle");if(!L.length)return toast("消したい◯・☑を、先にタップで選んでください");cur.items=cur.items.filter(x=>!L.includes(x));smSet.clear();sel=null;smSync();paint();toast(L.length+"か所を削除しました")};
 $("sfE").onclick=()=>{smSet.clear();sel=null;smSync();tgEStart()};$("sfX").onclick=()=>smFormSet(false);
 function smDraw(x,pg,cw,ch,A){x.save();const k=(A%180==0?cw:ch)/pg.W,pd=Math.max(3,cw/200);x.strokeStyle="#2563eb";x.fillStyle="rgba(37,99,235,.16)";x.lineWidth=Math.max(2,cw/300);
@@ -1222,7 +1214,7 @@ function fieldsFrom(list){
   list.forEach((p,pi)=>p.items.forEach(it=>{if(it.k=="t"){if(it.field=="input"&&it.no)mx=Math.max(mx,it.no);raw.push({pi,it,no:it.field=="input"?it.no:0})}}));
   raw.forEach(x=>{if(x.it.field=="input"&&!x.no)x.no=++mx});
   const nos=[...new Set(raw.filter(x=>x.it.field=="input").map(x=>x.no))].sort((a,b)=>a-b),rank=Object.fromEntries(nos.map((n,i)=>[n,i+1]));
-  return raw.map(({pi,it,no})=>({page:pi,a:it.a,b:it.b,s:it.s,c:it.c,sx:it.sx||1,sy:it.sy||1,rot:it.rot||0,anc:it.anc,cell:it.cell?{...it.cell}:undefined,s0:it.cell?(it.s0||it.s):undefined,type:it.field=="input"?"input":it.field=="toggle"?"toggle":"fixed",no:it.field=="input"?rank[no]:undefined,str:it.str,grp:it.grp,rd:it.rd}))}
+  return raw.map(({pi,it,no})=>({page:pi,a:it.a,b:it.b,s:it.s,c:it.c,sx:it.sx||1,sy:it.sy||1,rot:it.rot||0,anc:it.anc,cell:it.cell?{...it.cell}:undefined,s0:it.cell?(it.s0||it.s):undefined,ring:it.ring||undefined,type:it.field=="input"?"input":it.field=="toggle"?"toggle":"fixed",no:it.field=="input"?rank[no]:undefined,str:it.str,grp:it.grp,rd:it.rd}))}
 $("tsok").onclick=async()=>{
   const name=$("tsn").value.trim()||"テンプレート",list=tsList;$("ts").style.display="none";
   let ex=null;try{ex=(await tdb("all")).find(r=>r.name==name)}catch(_){}
@@ -1242,7 +1234,7 @@ async function tplEditStart(r){
   for(let i=0;i<doc.numPages;i++){const p=await doc.getPage(i+1),v=p.view;pgs.push({f:fi,i,r:0,base:p.rotate%360,W:v[2]-v[0],H:v[3]-v[1],sel:false,strokes:[],items:[]})}
   let n=0;
   r.fields.forEach(f=>{const pg=pgs[f.page];if(!pg)return;
-    const it={k:"t",a:f.a,b:f.b,str:f.str,s:f.s,c:f.c,rot:f.rot,sx:f.sx,sy:f.sy,anc:f.anc};if(f.cell){it.cell={...f.cell};it.s0=f.s0||f.s;it.s=it.s0}
+    const it={k:"t",a:f.a,b:f.b,str:f.str,s:f.s,c:f.c,rot:f.rot,sx:f.sx,sy:f.sy,anc:f.anc};if(f.ring)it.ring=true;if(f.cell){it.cell={...f.cell};it.s0=f.s0||f.s;it.s=it.s0}
     if(f.type=="toggle"){it.field="toggle";it.off=true;it.rd=f.rd;it.grp=f.grp}
     if(f.type=="input"){it.field="input";it.no=f.no||++n;it.lbl=f.str}
     if(it.cell)fitItem(it,pg);pg.items.push(it)});
@@ -1911,7 +1903,17 @@ async function pasteSys(q){q=q||[.5,.5];
   if(clipCv)return pasteClip();toast("貼り付けるものがありません(ブラウザのクリップボード許可が必要です)",3600)}
 function ctxMenu(e){const q=pt(e);sheet("ここに置く",[["貼り付け(コピーした文字・画像)",()=>pasteSys(q)],["◯→◉ 選択ボタン(新しいグループ)",()=>tgPlace("c",true,q)],["◯→◉ 選択ボタン(直前と同じグループ)",()=>tgPlace("c",false,q)],["□→✓ チェック",()=>tgPlace("s",false,q)],["文字を置く",()=>{newText(q);setMode("text")}]])}
 document.addEventListener("paste",e=>{const t=e.target;if(t&&/INPUT|TEXTAREA/.test(t.tagName)||!cur||getComputedStyle($("ed")).display=="none")return;e.preventDefault();pasteSys()});
-function tgMenu(){sheet("選択ボタンを置く",[["◯→◉ 新しいグループ(例: ◯本人 ◯他人)",()=>tgPlace("c",true)],["◯→◉ 直前と同じグループに追加",()=>tgPlace("c",false)],["□→✓ チェックを置く",()=>tgPlace("s")]])}
+var rgS=null,rgGrp=null;
+function rgStart(grp){if(!cur)return;endEdit();if(mode!="text")setMode("text");sel=null;emode=null;if(grp)rgGrp=rgGrp||("r"+Date.now());rgS={grp:!!grp,on:false};setHint();syncPanel();paint();toast("囲みたい文字の範囲を、ドラッグで囲んでください",3500)}
+function rgDone(){
+  const R=rgS;rgS=null;if(!R||!R.q0)return paint();const W=cur.W,H=cur.H,A=ang(cur),dx=Math.abs(R.q1[0]-R.q0[0])*W,dy=Math.abs(R.q1[1]-R.q0[1])*H;
+  if(dx<5&&dy<5){paint();return toast("範囲が小さすぎます。もう一度やり直してください",2500)}
+  const wD=Math.max(14,(A%180==0?dx:dy)*1.4+6),hD=Math.max(10,(A%180==0?dy:dx)*1.7+4),s=wD*60/(W*200),sy=(hD/wD)*(200/120);
+  const it={k:"t",a:(R.q0[0]+R.q1[0])/2,b:(R.q0[1]+R.q1[1])/2,str:"○",ring:true,s,c:"#e11d48",rot:-A,sx:1,sy,anc:"c",field:"toggle",off:true,rd:R.grp,grp:R.grp?rgGrp:undefined};
+  addItem(it);sel=it;if(smOn){smSet=new Set([it]);smMulti=false;smSync()}else emode="move";setHint();syncPanel();paint();
+  toast("囲みを置きました。ドラッグで動かせます。連投が終わったあとにタップすると囲みが付き、もう一度で消えます",5000)}
+function drawRg(x){if(!rgS||!rgS.on||!rgS.q1)return;const A=ang(cur),cw=ec.width,ch=ec.height,p=toDisp(rgS.q0[0],rgS.q0[1],A),q=toDisp(rgS.q1[0],rgS.q1[1],A),X=Math.min(p[0],q[0])*cw,Y=Math.min(p[1],q[1])*ch,w=Math.abs(p[0]-q[0])*cw,h=Math.abs(p[1]-q[1])*ch;x.save();x.setLineDash([6,4]);x.lineWidth=Math.max(1.5,cw/350);x.strokeStyle="#7c3aed";x.fillStyle="rgba(124,58,237,.12)";x.fillRect(X,Y,w,h);x.strokeRect(X,Y,w,h);x.beginPath();x.ellipse(X+w/2,Y+h/2,Math.max(1,w*.7),Math.max(1,h*.85),0,0,7);x.stroke();x.restore()}
+function tgMenu(){sheet("選択ボタンを置く",[["◯ 文字を丸で囲む(範囲をドラッグ)・単独",()=>rgStart(false)],["◯ 文字を丸で囲む・同じグループ(1つだけ囲む)",()=>rgStart(true)],["◯→◉ 新しいグループ(例: ◯本人 ◯他人)",()=>tgPlace("c",true)],["◯→◉ 直前と同じグループに追加",()=>tgPlace("c",false)],["□→✓ チェックを置く",()=>tgPlace("s")]])}
 
 // 編集画面を開いている間は、裏のホーム画面が動かないように固定(iPhoneで画面がずれるのを防ぐ)
 (function(){const el=$("ed");let sy=0;function lock(){const on=!!el.style.display&&el.style.display!=="none";if(on===document.body.classList.contains("edopen"))return;if(on){sy=window.scrollY;document.body.style.top=-sy+"px";document.body.classList.add("edopen")}else{document.body.classList.remove("edopen");document.body.style.top="";window.scrollTo(0,sy)}}
