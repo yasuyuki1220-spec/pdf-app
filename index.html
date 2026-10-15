@@ -141,7 +141,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v94</small></div>
+<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v95</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -1202,13 +1202,13 @@ function smDate(){if(!cur)return;const v=prompt("固定の文字を「年,月,�
   let EC=null;if(confirm("頭に元号などの選択欄(昭和・平成・令和…のプルダウン)を付けますか?")){const c=prompt("選択肢をカンマで区切って入れてください(押して選べます)","昭和,平成,令和");if(c)EC=c.split(/[,、,]/).map(x=>x.trim()).filter(Boolean);if(EC&&!EC.length)EC=null}
   const pg=cur,W=pg.W,H=pg.H,A=ang(pg),ref=pg.items.find(i=>i.field=="input"&&i.cell),inst=(ref&&ref.inst)||curInst()||("xa"+Date.now()),n0=Math.max(0,...pages.flatMap(p=>p.items.filter(i=>i.field=="input").map(i=>i.no||0)))+1,
   dn=1+pg.items.filter(i=>i.field=="input"&&/^日付\d* 年$/.test(i.lbl||"")).length,ch=ref?Math.abs(ref.cell.y1-ref.cell.y0)*H:18,fs=ref?(ref.s0||ref.s)*W:10,s0=fs/W,
-  cws=[Math.max(40,fs*4.2),Math.max(28,fs*2.8),Math.max(28,fs*2.8)],tw=t=>t?(t.length*fs*1.05+4):0,gap=3,
-  ecw=EC?Math.max(...EC.map(t=>t.length))*fs*1.15+14:0,total=(EC?ecw+gap*2:0)+(pre?tw(pre)+gap:0)+cws.reduce((q,c,i)=>q+c+gap+tw(P[i])+gap,0),r=ec.getBoundingClientRect(),w=wrap.getBoundingClientRect(),
+  cws=[Math.max(26,fs*2.5),Math.max(22,fs*2.1),Math.max(22,fs*2.1)],tw=t=>t?(t.length*fs*1.05+4):0,gap=3,
+  ecw=EC?Math.max(...EC.map(t=>t.length))*fs*1.1+6:0,total=(EC?ecw:0)+(pre?tw(pre)+gap:0)+cws.reduce((q,c,i)=>q+c+gap+tw(P[i])+gap,0),r=ec.getBoundingClientRect(),w=wrap.getBoundingClientRect(),
   cx=clamp(((w.left+w.width/2)-r.left)/r.width,.1,.9),cy=clamp(((w.top+w.height/2)-r.top)/r.height,.1,.9),[a0,b]=toUnrot(cx,cy,A);
   let x=a0*W-total/2;const mk=(str,lft)=>{const it={k:"t",a:lft/W,b,str,s:s0,c:"#111111",rot:-A,sx:1,sy:1,anc:"l"},bm=bmOf(it),k=sc(it,pg),pd=8*k,w=bm.width*k;it.a=(lft-pd+w/2)/W;it._vw=Math.max(2,w-2*pd);return it},ins=[],fx=[];
-  if(EC){const lbl="日付"+dn+" 元号",it={k:"t",a:(x+ecw/2)/W,b,str:lbl,s:s0,s0,c:"#111111",rot:-A,sx:1,sy:1,anc:"c",field:"input",no:n0,ph:true,lbl,inst,xlc:true,choices:EC,cell:{x0:x/W,x1:(x+ecw)/W,y0:b-ch/2/H,y1:b+ch/2/H}};fitItem(it,pg);ins.push(it);x+=ecw+gap*2}
+  if(EC){const lbl="日付"+dn+" 元号",it={k:"t",a:(x+ecw/2)/W,b,str:lbl,s:s0,s0,c:"#111111",rot:-A,sx:1,sy:1,anc:"r",field:"input",no:n0,ph:true,lbl,inst,xlc:true,choices:EC,cell:{x0:x/W,x1:(x+ecw)/W,y0:b-ch/2/H,y1:b+ch/2/H}};fitItem(it,pg);ins.push(it);x+=ecw}
   if(pre){fx.push(mk(pre,x));x+=fx[fx.length-1]._vw+gap}
-  ["年","月","日"].forEach((nm,i)=>{const cwp=cws[i],a=(x+cwp/2)/W,lbl="日付"+dn+" "+nm,it={k:"t",a,b,str:lbl,s:s0,s0,c:"#111111",rot:-A,sx:1,sy:1,anc:"c",field:"input",no:n0+i+(EC?1:0),ph:true,lbl,inst,xlc:true,cell:{x0:x/W,x1:(x+cwp)/W,y0:b-ch/2/H,y1:b+ch/2/H}};fitItem(it,pg);ins.push(it);x+=cwp+gap;
+  ["年","月","日"].forEach((nm,i)=>{const cwp=cws[i],a=(x+cwp/2)/W,lbl="日付"+dn+" "+nm,it={k:"t",a,b,str:lbl,s:s0,s0,c:"#111111",rot:-A,sx:1,sy:1,anc:i==0?"r":i==1?"l":"c",field:"input",no:n0+i+(EC?1:0),ph:true,lbl,inst,xlc:true,cell:{x0:x/W,x1:(x+cwp)/W,y0:b-ch/2/H,y1:b+ch/2/H}};fitItem(it,pg);ins.push(it);x+=cwp+gap;
     if(P[i]){fx.push(mk(P[i],x));x+=fx[fx.length-1]._vw}x+=gap});
   const dg="d"+Date.now().toString(36);[...fx,...ins].forEach(i=>{i.dg=dg;pg.items.push(i)});smSet=new Set([...ins,...fx]);smMulti=false;sel=ins[0];smSync();paint();
   toast("日付欄を置きました。まとめてドラッグで移動できます。連投では 年→月→日 だけ入力します(固定の文字は動きません)",5000)}
@@ -1217,7 +1217,8 @@ function dgSel(){const m=smTg().find(i=>i.dg)||(sel&&sel.dg?sel:null);return m?d
 function dgSpace(L,d){const pg=pgOf(L[0])||cur,W=pg.W,O=L.slice().sort((p,q)=>(p.cell?(p.cell.x0+p.cell.x1)/2:p.a)-(q.cell?(q.cell.x0+q.cell.x1)/2:q.a));
   O.forEach((it,i)=>{const dx=i*d/W;it.a+=dx;if(it.cell)it.cell={...it.cell,x0:it.cell.x0+dx,x1:it.cell.x1+dx}});paint()}
 function dgMenu(){const L=dgSel();if(!L)return toast("日付欄をタップして選んでから押してください");const fs=(L.find(i=>i.field)||L[0]).s*(pgOf(L[0])||cur).W,d=Math.max(2,fs*.4);
-  sheet("日付欄の調整",[["間隔を広げる",()=>{dgSpace(L,d);dgMenu()}],["間隔を狭める",()=>{dgSpace(L,-d);dgMenu()}],["固定の文字(年・月・日)を変える",()=>dgText(L)],["まとまりを解除(1つずつ動かせるように)",()=>{L.forEach(i=>delete i.dg);paint();toast("1つずつ動かせます",2500)}]])}
+  sheet("日付欄の調整",[["間隔を広げる",()=>{dgSpace(L,d);dgMenu()}],["間隔を狭める",()=>{dgSpace(L,-d);dgMenu()}],["固定の文字(年・月・日)を変える",()=>dgText(L)],["入力文字をすべて右寄せ(年・月・日に近づける)",()=>dgAnc(L,"r")],["入力文字をすべて左寄せ",()=>dgAnc(L,"l")],["入力文字をすべて中央",()=>dgAnc(L,"c")],["年は右寄せ・月は左寄せ・日は中央",()=>dgAnc(L,"ymd")],["まとまりを解除(1つずつ動かせるように)",()=>{L.forEach(i=>delete i.dg);paint();toast("1つずつ動かせます",2500)}]])}
+function dgAnc(L,m){const pg=pgOf(L[0])||cur,I=L.filter(i=>i.field=="input"&&!i.choices).sort((p,q)=>p.a-q.a);I.forEach((i,k)=>{i.anc=m=="ymd"?["r","l","c"][k]||"c":m;if(i.cell)fitItem(i,pg)});paint();toast("入力文字の位置を変えました",2000)}
 function dgText(L){const F=L.filter(i=>!i.field).sort((p,q)=>p.a-q.a),v=prompt("固定の文字をカンマで区切って入れてください(左から順)",F.map(i=>i.str).join(","));if(v===null)return;v.split(/[,、,]/).map(x=>x.trim()).forEach((t,i)=>{if(F[i]&&t){F[i].str=t;F[i].key=null}});paint()}
 $("smDg").onclick=dgMenu;
 {let last=0;const g=$("szG");g.oninput=()=>{const L=dgSel();if(!L)return;const v=+g.value;dgSpace(L,(v-last)*.5);last=v};const rs=()=>{g.value=0;last=0};g.onchange=rs;g.onpointerup=rs;g.ontouchend=rs}
