@@ -106,6 +106,7 @@ input[type=range]{accent-color:var(--ac)}
 #xb button.tg{font-weight:700;min-width:84px}#xb button.tg.on{background:#7c3aed;color:#fff}#xb button.tg.off{opacity:1;background:transparent;color:#a78bfa;box-shadow:none;border:1.5px dashed #c4b5fd}
 #sm button.dis,#sf button.dis,#xb button.dis{opacity:.3!important;pointer-events:none}
 #sf button.on{background:#7c3aed;color:#fff}
+#sm #smN,#sm #smQ{background:#dbeafe;color:#1e40af}#sm #smU,#sm #smL,#sf #sfU,#sf #sfL{background:#ccfbf1;color:#115e59}#sm #smE,#sm #smDt,#sm #smDg,#sf #sfN,#sf #sfG,#sf #sfS,#sf #sfK,#sf #sfO,#sf #sfW{background:#dcfce7;color:#166534}#sm #smD,#sm #smZ,#sf #sfD{background:#fee2e2;color:#991b1b}#sm #smS,#sm #smA{background:#fef3c7;color:#92400e}#sm #smC,#sm #smO,#sm #smK,#sf #sfR{background:#ede9fe;color:#5b21b6}#sm #smM,#sf #sfH,#sf #sfE,#sf #sfC{background:#fce7f3;color:#9d174d}#sm #smX,#sf #sfX{background:#312e81;color:#fff;font-weight:700}#sm button.on,#sf button.on{background:#7c3aed!important;color:#fff!important}
 #sf{margin:6px 0 0}#ed.smf #sm{margin-top:4px;padding:5px 6px;gap:3px;border-radius:14px}#ed.smf #sm .smb{gap:3px}#ed.smf #sm button{padding:5px 8px;font-size:11.5px;border-radius:8px}#ed.smf #sm span{font-size:11px}#ed.smf #sf button{padding:7px 9px}
 #fg #fge{border:0;border-radius:10px;padding:9px 12px;font-size:13px;background:var(--ac2);color:var(--ac)}
 #toast{bottom:auto!important;top:calc(78px + env(safe-area-inset-top,0px))}#toast.mid{top:50%!important;transform:translate(-50%,-50%)!important}#sm button.dis,#sf button.dis,#xb button.dis{display:none!important}
@@ -141,7 +142,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v115</small></div>
+<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v116</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -164,7 +165,7 @@ input[type=range]{accent-color:var(--ac)}
 <div id="dab"><button id="dmA">←</button><button id="dmS" style="font-size:13px;padding:8px 12px">スタンプ</button><span>「←」「スタンプ」を置けます。動かす・回す・大きさ変更ができます</span></div>
 <div id="fg"><span class="fl" id="fgl"></span><button id="fgc">📷 書類から</button><button id="fgs" class="p">連投モード</button><button id="fgp" class="p">単品連投</button><button id="fge">編集モード</button><button id="fgo">連投順</button></div>
 
-<div id="sm"><span id="smt"></span><div class="smb"><button id="smN">名称</button><button id="smU">選択</button><button id="smE">追加</button><button id="smDt">日付欄</button><button id="smDg">日付の調整</button><button id="smD">削除</button><button id="smS">サイズ</button><button id="smA">基準位置</button><button id="smC">空欄認識</button><button id="smO">連投順</button><button id="smQ">連番名称</button><button id="smK">全体⇄単品</button><button id="smZ">入力を消す</button><button id="smL">全選択</button><button id="smM">◉フォーム</button><button class="p" id="smX">完了</button></div></div><div id="sf"><span>◉フォーム</span><button id="sfR">◉自動認識</button><button id="sfN">◯を追加(新グループ)</button><button id="sfG">同じグループに◯追加</button><button id="sfS">☑を追加</button><button id="sfO">⬭ 楕円囲み追加(新グループ)</button><button id="sfH">⬭ 楕円グループ編集</button><button id="sfC">⬭ 楕円の色</button><button id="sfW">スイッチ入力欄</button><button id="sfU">選択</button><button id="sfL">全選択</button><button id="sfD">選択を削除</button><button id="sfE">グループ編集</button><button class="p" id="sfX">閉じる</button></div><div id="smo"></div><div id="fp"><div id="fps"></div><div id="fbar"><i></i></div><div id="fpb"><button id="fpu">←</button><button id="fpk">空欄</button><button id="fpcam">📷</button><button id="fpd">→</button><span id="fpc"></span><button id="fpe" style="display:none">終了</button><button class="p" id="fpx">完了</button></div></div>
+<div id="sm"><span id="smt"></span><div class="smb"><button id="smN">名称</button><button id="smU">選択</button><button id="smE">追加</button><button id="smDt">日付欄</button><button id="smDg">日付の調整</button><button id="smD">削除</button><button id="smS">サイズ</button><button id="smA">基準位置</button><button id="smC">空欄認識</button><button id="smO">連投順</button><button id="smQ">連番名称</button><button id="smK">全体⇄単品</button><button id="smZ">入力を消す</button><button id="smL">全選択</button><button id="smM">◉フォーム</button><button class="p" id="smX">完了</button></div></div><div id="sf"><span>◉フォーム</span><button id="sfR">自動認識フォーム</button><button id="sfN">◯を追加(新グループ)</button><button id="sfG">同じグループに◯追加</button><button id="sfS">☑を追加</button><button id="sfK">✔︎⇄〇 切替</button><button id="sfO">⬭ 囲み追加(新グループ)</button><button id="sfH">⬭ グループ編集</button><button id="sfC">⬭ 色</button><button id="sfW">スイッチ入力欄</button><button id="sfU">選択</button><button id="sfL">全選択</button><button id="sfD">選択を削除</button><button id="sfE">グループ編集</button><button class="p" id="sfX">閉じる</button></div><div id="smo"></div><div id="fp"><div id="fps"></div><div id="fbar"><i></i></div><div id="fpb"><button id="fpu">←</button><button id="fpk">空欄</button><button id="fpcam">📷</button><button id="fpd">→</button><span id="fpc"></span><button id="fpe" style="display:none">終了</button><button class="p" id="fpx">完了</button></div></div>
 <div class="ctx" id="pr">
 <button class="col on" style="background:#111" data-c="#111111"></button><button class="col" style="background:#e11d48" data-c="#e11d48"></button><button class="col" style="background:#2563eb" data-c="#2563eb"></button><button class="col" style="background:#16a34a" data-c="#16a34a"></button><button class="col" style="background:#f59e0b" data-c="#f59e0b"></button><button class="col" style="background:#fff" data-c="#ffffff"></button>
 <button class="mkc" id="mkp" data-c="#ff9ec7" title="薄いピンクのマーカー" style="background:#ff9ec7"></button><button class="mkc" id="mky" data-c="#fff04d" title="黄色のマーカー" style="background:#fff04d"></button><button class="mkc" id="mkg" data-c="#9ff0b4" title="薄い緑のマーカー" style="background:#9ff0b4"></button><button class="mkc" id="mkb" data-c="#8fd3ff" title="水色のマーカー" style="background:#8fd3ff"></button><span id="mkt" style="font-size:12px;color:var(--mut)">←マーカー</span><input type="color" id="cc" value="#111111" style="width:28px;height:28px;padding:0;border:0;background:none"><span style="font-size:12px;color:var(--mut)">太さ</span><input id="wd" type="range" min="1" max="14" value="3" style="width:90px">
@@ -628,7 +629,7 @@ $("bAdd").onclick=()=>sheet("追加",[["ファイルから",()=>openPick()],["�
 function xdwGuide(name){say("");sheet("「"+name+"」は読めません。PDFにしてから追加してください",[["DocuWorks Viewerで開き、印刷→Microsoft Print to PDFで保存したPDFを追加します",()=>{}]])}
 $("bShare").onclick=()=>sheet("共有・書き出し",[["選択したページ",()=>exp(true)],["すべてのページ",()=>exp(false)],["選択ページをテンプレートに保存",()=>tplSave(true)],["全ページをテンプレートに保存",()=>tplSave(false)]]);
 $("eAdd").onclick=()=>sheet("ページに追加",[["ファイルから(PDF・画像)",()=>$("pf").click()],["写真から",()=>$("pi").click()]]);
-$("eMore").onclick=()=>sheet("その他",[["ページを回転",()=>$("rt").click()],...(cur&&cur._undo?[["トリミングを元に戻す",undoCrop]]:[]),["ペンの書き込みを全消去",()=>$("cl").click()],["テキストを全消去",()=>clearText()],["範囲選択を全消去",()=>clearShapes()],...(isXl()?[["シート編集(Excelの欄・◯◉を整える)",()=>smStart()]]:[["◉フォーム設置",()=>tgMenu()],["◉フォーム自動認識(◯□を見つけて◉に)",()=>xlStart({m:1})],["◉フォームグループ編集",()=>tgEStart()],["空欄+◉フォームをまとめて自動認識",()=>xlStart()]]),["説明書",()=>openManual()],...(cur&&cur.items.some(i=>i.lock)?[["固定した画像を解除",()=>{cur.items.forEach(i=>{delete i.lock});paint();toast("固定を解除しました")}]]:[])]);
+$("eMore").onclick=()=>sheet("その他",[["ページを回転",()=>$("rt").click()],...(cur&&cur._undo?[["トリミングを元に戻す",undoCrop]]:[]),["ペンの書き込みを全消去",()=>$("cl").click()],["テキストを全消去",()=>clearText()],["範囲選択を全消去",()=>clearShapes()],["全空欄認識",()=>xlStart()],["◉フォーム",()=>sheet("◉フォーム",[["◉フォーム設置",()=>tgMenu()],["自動認識フォーム",()=>xlStart({m:1})],["◉グループ編集",()=>tgEStart()]])],["説明書",()=>openManual()],...(cur&&cur.items.some(i=>i.lock)?[["固定した画像を解除",()=>{cur.items.forEach(i=>{delete i.lock});paint();toast("固定を解除しました")}]]:[])]);
 async function addItemFile(f){
   try{
     let c,w=.5;
@@ -1335,7 +1336,7 @@ $("smC").onclick=()=>xlStart({c:1});$("smM").onclick=()=>smFormSet(!smForm);$("s
 $("sfU").onclick=()=>$("smU").onclick();
 $("sfL").onclick=()=>{const L=cur.items.filter(i=>i.field=="toggle");if(!L.length)return toast("◉フォームがありません");smSet=new Set(L);smMulti=true;sel=null;smSync();paint();toast(L.length+"か所を選びました。「選択を削除」などをまとめて使えます")};
 $("fge").onclick=()=>smStart();$("fgo").onclick=()=>{smStart();smOrder()};
-$("sfR").onclick=()=>xlStart({m:1});$("sfN").onclick=()=>tgPlace("c",true);$("sfG").onclick=()=>tgPlace("c",false);$("sfS").onclick=()=>tgPlace("s");$("sfO").onclick=()=>rgStart(true,true);$("sfH").onclick=()=>{smSet.clear();sel=null;smSync();tgEStart()};$("sfC").onclick=rgColorMenu;$("sfW").onclick=()=>{swArm=true;rgS=null;toast("入力欄を付けたい◉・☑・楕円をタップしてください(続けて何か所でも)。終わるときは他のボタンか「閉じる」",5000)};
+$("sfR").onclick=()=>xlStart({m:1});$("sfN").onclick=()=>tgPlace("c",true);$("sfG").onclick=()=>tgPlace("c",false);$("sfS").onclick=()=>tgPlace("s");$("sfK").onclick=tgSqFlip;$("sfO").onclick=()=>rgStart(true,true);$("sfH").onclick=()=>{smSet.clear();sel=null;smSync();tgEStart()};$("sfC").onclick=rgColorMenu;$("sfW").onclick=()=>{swArm=true;rgS=null;toast("入力欄を付けたい◉・☑・楕円をタップしてください(続けて何か所でも)。終わるときは他のボタンか「閉じる」",5000)};
 $("sfD").onclick=()=>{const L=smTg().filter(i=>i.field=="toggle");if(!L.length)return toast("消したい◯・☑を、先にタップで選んでください");cur.items=cur.items.filter(x=>!L.includes(x));smSet.clear();sel=null;smSync();paint();toast(L.length+"か所を削除しました")};
 $("sf").addEventListener("click",e=>{const b=e.target.closest("button");if(b&&!/^sf[OW]$/.test(b.id)){rgS=null;swArm=false}},true);$("sm").addEventListener("click",e=>{if(e.target.closest("button")){rgS=null;swArm=false}},true);
 $("sfE").onclick=()=>{smSet.clear();sel=null;smSync();tgEStart()};$("sfX").onclick=()=>smFormSet(false);
@@ -1870,6 +1871,31 @@ function dateScan(T){
     L.push(mk("月",Y?Y.x1+1.5:left(M,56)+1.5,M.x0-1,M));L.push(mk("日",M.x1+1.5,d.x0-1,d));
     if(L.every(c=>c.x1-c.x0>=11))out.push(L)});
   return out}
+function txChars(T){const ch=[];T.forEach(t=>{const a=[...t.s],wt=a.map(c=>c.charCodeAt(0)<128?.55:1),tot=wt.reduce((p,q)=>p+q,0)||1;let cum=0;a.forEach((c,k)=>{const x0=t.x+t.w*cum/tot;cum+=wt[k];ch.push({c,x0,x1:t.x+t.w*cum/tot,y:t.y,h:t.h})})});return ch}
+// 下線だけの記入欄(「氏名＿＿＿＿」)を見つける
+function lineBlanks(img,S,v,T){
+  const w=img.width,h=img.height,d=img.data,ink=new Uint8Array(w*h);for(let i=0,p=0;i<w*h;i++,p+=4)if(d[p]*.3+d[p+1]*.59+d[p+2]*.11<170)ink[i]=1;
+  const MIN=Math.round(45*S),segs=[];let act=[];
+  for(let y=0;y<h;y++){const runs=[];let s=-1,last=-9;for(let x=0;x<=w;x++){const on=x<w&&ink[y*w+x];if(on){if(s<0)s=x;last=x}else if(s>=0&&x-last>2){if(last-s>=MIN)runs.push([s,last]);s=-1}}
+    const nx=[];runs.forEach(([a,b])=>{const g=act.find(q=>Math.min(b,q.x1)-Math.max(a,q.x0)>.8*Math.min(b-a,q.x1-q.x0));if(g){g.x0=Math.min(g.x0,a);g.x1=Math.max(g.x1,b);g.y1=y;nx.push(g)}else{const q={x0:a,x1:b,y0:y,y1:y};segs.push(q);nx.push(q)}});act=nx}
+  const out=[],chs=txChars(T).filter(q=>q.c.trim()&&q.c!="　"),VL=Math.round(9*S);
+  const vrun=(x,y,dy)=>{let k=0;while(k<VL){const yy=y+dy*k;if(yy<0||yy>=h)break;const i=yy*w+x;if(!(ink[i]||(x>0&&ink[i-1])||(x<w-1&&ink[i+1])))break;k++}return k};
+  segs.forEach(g=>{if(g.y1-g.y0+1>2.6*S+1)return;
+    for(let x=Math.max(0,g.x0-2);x<=Math.min(w-1,g.x1+2);x++)if(vrun(x,g.y0-1,-1)>=VL||vrun(x,g.y1+1,1)>=VL)return;
+    const lx0=g.x0/S+v[0],lx1=g.x1/S+v[0],ly=v[3]-g.y0/S;
+    const on=chs.filter(q=>q.y>=ly-3&&q.y<=ly+14&&q.x1>lx0&&q.x0<lx1).sort((a,b)=>a.x0-b.x0),hh=on.length?Math.max(...on.map(q=>q.h)):11;
+    let p=lx0;const fr=[];on.concat([{x0:lx1+3,x1:lx1+3}]).forEach(q=>{if(q.x0-3-p>=40)fr.push([p,q.x0-3]);p=Math.max(p,q.x1+3)});
+    fr.forEach(([a,b])=>{const c={x0:a,x1:b,y0:ly+.3,y1:ly+Math.max(12,hh*1.4)};
+      const X0=Math.round((a-v[0])*S)+2,X1=Math.round((b-v[0])*S)-2,Y1=g.y0-2,Y0=Math.round(g.y0-(c.y1-ly)*S);let n=0,t=0;for(let y=Math.max(0,Y0);y<Y1;y++)for(let x=X0;x<X1;x++){t++;n+=ink[y*w+x]}if(t&&n/t>.01)return;
+      out.push(c)})});
+  return out}
+// 「　　」(　　) の長いすきまを記入欄に
+function bracketBlanks(T){
+  const ch=txChars(T),out=[],same=(a,b)=>Math.abs((a.y+a.h/2)-(b.y+b.h/2))<Math.max(a.h,b.h)*.6;
+  ch.forEach(o=>{if(!/[「『(（［〔【]/.test(o.c))return;const R=ch.filter(q=>q!==o&&same(q,o)&&q.x0>=o.x1-.5).sort((a,b)=>a.x0-b.x0);const k=R.findIndex(q=>/[」』)）］〕】]/.test(q.c));if(k<0)return;
+    if(R.slice(0,k).some(q=>q.c.trim()&&q.c!="　"))return;const cl=R[k];if(cl.x0-o.x1<30)return;
+    out.push({x0:o.x1+1,x1:cl.x0-1,y0:Math.min(o.y,cl.y)-1.5,y1:Math.max(o.y+o.h,cl.y+cl.h)+1.5})});
+  return out}
 function rcLabel(c,T0){
   const T=T0.filter(t=>!(t.w<14&&T0.some(o=>o!==t&&o.w<14&&Math.abs(o.x-t.x)<1.5&&Math.abs(o.y-t.y)>t.h*.5&&Math.abs(o.y-t.y)<t.h*1.7)));
   const w=c.x1-c.x0,cx=(c.x0+c.x1)/2;let up=null,ud=1e9,lf=null,ld=1e9;
@@ -1884,19 +1910,22 @@ function rcLabel(c,T0){
     T.forEach(t=>{if(!L.includes(t)&&inR(t)&&Math.abs(t.x+t.w-r)<lf.h*1.6)L.push(t)});
     const R=[];L.forEach(t=>{const k=Math.round((t.y+t.h/2)/4);let g=R.find(q=>q.k==k);if(!g)R.push(g={k,l:[]});g.l.push(t)});
     s=R.sort((a,b)=>b.k-a.k).map(g=>g.l.sort((a,b)=>a.x-b.x).map(t=>t.s).join("")).join("")}
-  s=s.replace(/[\s　]/g,"").replace(/^\d+[.．、]/,"").replace(/^[()（）〔〕\[\]:：]+|[()（）〔〕\[\]:：]+$/g,"");return s.slice(0,12)}
+  s=s.replace(/[\s　]/g,"").replace(/^\d+[.．、]/,"").replace(/^[()（）〔〕\[\]:：「」『』]+|[()（）〔〕\[\]:：「」『』]+$/g,"");return s.slice(0,12)}
 async function rasterDetect(f,pi,r){
   const pj=await f.doc.getPage(pi+1),v=pj.view,pw=v[2]-v[0],S=Math.min(2,1800/pw),vp=pj.getViewport({scale:S,rotation:0}),c=document.createElement("canvas");c.width=Math.round(vp.width);c.height=Math.round(vp.height);
   const x=c.getContext("2d",{willReadFrequently:true});x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);await pj.render({canvasContext:x,viewport:vp}).promise;
-  const rc=rasterCells(x.getImageData(0,0,c.width,c.height),S,v,r.texts),hasT=r.texts.length>3,cells=[],marks=[],ph=v[3]-v[1];
-  const dates=hasT?dateScan(r.texts):[];const inDate=(cx,cy)=>dates.some(L=>L.some(q=>cx>q.x0&&cx<q.x1&&cy>q.y0&&cy<q.y1));
+  const img=x.getImageData(0,0,c.width,c.height),rc=rasterCells(img,S,v,r.texts),hasT=r.texts.length>3,cells=[],marks=[],ph=v[3]-v[1];
+  const dates=hasT?dateScan(r.texts):[],TC=hasT?txChars(r.texts).filter(q=>q.c.trim()&&!/[　印㊞]/.test(q.c)):[];const inDate=(cx,cy)=>dates.some(L=>L.some(q=>cx>q.x0&&cx<q.x1&&cy>q.y0&&cy<q.y1));
   for(const k of rc){const w=k.x1-k.x0,h=k.y1-k.y0,cx=(k.x0+k.x1)/2,cy=(k.y0+k.y1)/2;
     if(inDate(cx,cy))continue;
+    if(hasT&&TC.some(q=>{const qx=(q.x0+q.x1)/2,qy=q.y+q.h/2;return qx>k.x0+1&&qx<k.x1-1&&qy>k.y0+1&&qy<k.y1-1}))continue;
     if(w<=36&&h<=36&&w>=9&&h>=9){marks.push({kind:"s",cx,cy,size:Math.max(w,h)*.8,on:false});continue}
     const edge=Math.min(cx-v[0],v[2]-cx)<pw*.06||Math.min(cy-v[1],v[3]-cy)<ph*.06;if(edge&&(w<34||h<11))continue;
     const lb=hasT?rcLabel(k,r.texts):"";
     if(!(lb||k.nl>.3||k.nt>.3))continue;
     cells.push({x0:k.x0,y0:k.y0,x1:k.x1,y1:k.y1,on:true,lbl:lb})}
+  {const inC=(cx,cy)=>cells.some(q=>cx>q.x0-1&&cx<q.x1+1&&cy>q.y0-1&&cy<q.y1+1);let U=[];try{U=lineBlanks(img,S,v,r.texts)}catch(e){}if(hasT)U=U.concat(bracketBlanks(r.texts));
+    U.forEach(k=>{const cx=(k.x0+k.x1)/2,cy=(k.y0+k.y1)/2;if(inDate(cx,cy)||inC(cx,cy))return;cells.push({x0:k.x0,y0:k.y0,x1:k.x1,y1:k.y1,on:true,lbl:hasT?rcLabel(k,r.texts):""})})}
   dates.forEach((L,gi)=>{const id="dd"+Date.now().toString(36)+gi;L.forEach(q=>cells.push({x0:q.x0,x1:q.x1,y0:q.y0,y1:q.y1,on:true,lbl:q.lbl,dg:id}))});
   const rows=[];cells.sort((a,b)=>b.y1-a.y1).forEach(c=>{const rw=rows.find(R=>Math.abs(R.y-c.y1)<5);if(rw)rw.l.push(c);else rows.push({y:c.y1,l:[c]})});
   return{cells:rows.flatMap(R=>R.l.sort((a,b)=>a.x0-b.x0)),marks}}
@@ -2256,11 +2285,13 @@ function togFlip(it){it.off=!it.off;if(!it.off&&it.rd&&it.grp)pages.forEach(p=>p
     let j=old?ng.findIndex(g=>g.no===old.no):-1;if(!it.off&&it.tid){const d=ng.findIndex(g=>g.list.some(x=>x.it.dep===it.tid));if(d>=0)j=d}
     if(!ng.length){paint();return fillEnd()}fpI=Math.max(0,j);$("fpc").textContent=(fpI+1)+"/"+fillL.length;if(!it.off&&j>=0){let k=j;if(!(it.tid&&ng[j].list.some(x=>x.it.dep===it.tid))){while(k<ng.length&&!ng[k].list.some(x=>x.it.ph))k++;if(k>=ng.length)k=-1}if(k>=0){fpGo(k,true);return}}}
   paint()}
-var tgLast=null;
+var tgLast=null,tgSq="✓";
+function tgSqFlip(){const L=smTg().filter(i=>i.field=="toggle"&&!i.rd);if(L.length){const to=L[0].str=="〇"?"✓":"〇";L.forEach(i=>{i.str=to;i.key=null});tgSq=to;paint();toast(L.length+"か所を「"+(to=="〇"?"〇":"✔︎")+"」にしました",2500)}
+  else{tgSq=tgSq=="✓"?"〇":"✓";toast("これから置く☑の印を「"+(tgSq=="〇"?"〇(大きい枠に丸をつける書類向け)":"✔︎")+"」にしました",3000)}$("sfK").textContent=tgSq=="〇"?"〇⇄✔︎ 切替(今:〇)":"✔︎⇄〇 切替(今:✔︎)"}
 function tgPlace(kind,newGrp,q){
   const r=ec.getBoundingClientRect(),w=wrap.getBoundingClientRect(),A=ang(cur),cx=clamp(((w.left+w.width/2)-r.left)/r.width,.15,.85),cy=clamp(((w.top+w.height/2)-r.top)/r.height,.15,.85);let [a,b]=toUnrot(cx,cy,A);if(q){a=q[0];b=q[1]}
   let grp;if(kind=="c"){grp=(!newGrp&&tgLast)?tgLast:("g"+Date.now());tgLast=grp}
-  const it={k:"t",a,b,str:kind=="c"?"◉":"✓",s:kind=="c"?.017:.02,c:"#111111",rot:-A,sx:1,sy:1,anc:"c",field:"toggle",off:true,rd:kind=="c",grp};
+  const it={k:"t",a,b,str:kind=="c"?"◉":tgSq,s:kind=="c"?.017:.02,c:"#111111",rot:-A,sx:1,sy:1,anc:"c",field:"toggle",off:true,rd:kind=="c",grp};
   addItem(it);selR=null;sel=it;if(smOn){smSet=new Set([it]);smMulti=false;emode=null;smSync()}else emode="move";setHint();syncPanel();paint();
   toast(smOn?"置きました。ドラッグで○や□の上に動かせます":"置きました。ドラッグで動かして、○や□の上に重ねてください。枠の外をタップで確定。タップで切り替わります",5000)}
 
