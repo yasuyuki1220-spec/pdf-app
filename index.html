@@ -141,7 +141,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v100</small></div>
+<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v101</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -157,7 +157,7 @@ input[type=range]{accent-color:var(--ac)}
 <div id="ed">
 <div class="top"><span style="display:flex;gap:4px"><button class="tb" id="un" title="戻す" aria-label="戻す"><svg><use href="#i-undo"/></svg></button><button class="tb" id="re" title="進む" aria-label="進む"><svg style="transform:scaleX(-1)"><use href="#i-undo"/></svg></button></span><span class="pgn"><button class="tb" id="pgP">‹</button><span id="pgl"></span><button class="tb" id="pgN">›</button></span><span style="display:flex;gap:4px"><button class="tb" id="zOut">－</button><button class="tb" id="zIn">＋</button></span><button class="tb pri" id="ok">ホーム</button></div>
 <div id="mhint"></div><div id="cg"><button id="cgx" aria-label="閉じる">✕</button><b>📷 iPhoneのカメラで書類から入力</b><ol><li><i>1</i><span>下の <u>白い枠</u> をタップ(キーボードが出ます)</span></li><li><i>2</i><span>キーボードの <u>📷(テキストを読み取り)</u> をタップ</span></li><li><i>3</i><span>書類にカメラを向けて、文字が黄色く囲まれたら <u>「挿入」</u> をタップ</span></li></ol><textarea id="cgt" rows="2" placeholder="ここに読み取った文字が入ります(欄にも同時に入ります)" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea><div class="cgr"><button id="cgpa">📋 コピーした文字を貼り付け</button><button id="cgok">OK</button></div><small class="cgs">キーボードに📷が出ないとき: 標準の「カメラ」アプリで書類に向け、文字を長押し →「コピー」→ ここに戻って「貼り付け」</small></div>
-<div id="te"><span class="fl">テンプレート編集中</span><button id="teQ">連投欄の連続編集</button><button id="teO">番号・順番</button><button id="teA">別名保存</button><button id="teS" class="p">上書き保存</button></div>
+<div id="te"><span class="fl">テンプレート編集中</span><button id="teQ">連投欄の連続編集</button><button id="teO">番号・順番</button><button id="teP">PDF差し替え</button><button id="teA">別名保存</button><button id="teS" class="p">上書き保存</button></div>
 <div id="tq"><input id="tqn" placeholder="名称を入れて、ページをダブルタップ(例: 住所)"><select id="tqg"></select><label style="font-size:13px;display:flex;align-items:center;gap:4px"><input type="checkbox" id="tqL">このページ専用(単品)</label><button id="tqs">枠・文字サイズ</button><button id="tqc">選択コピー</button><button id="tqx">終了</button></div>
 <div class="w" id="wrap"><canvas id="ec"></canvas></div>
 <div id="szb" style="display:none"><span id="szt">連投欄の幅・高さ</span><button id="szW1">幅−</button><button id="szW2">幅＋</button><button id="szH1">高−</button><button id="szH2">高＋</button><button id="szF1">字−</button><button id="szF2">字＋</button><span class="gl" id="szGl" style="display:none">間隔</span><input type="range" id="szG" min="-60" max="60" step="1" value="0" style="display:none"><button class="dgx" id="dgS1" style="display:none">間隔−</button><button class="dgx" id="dgS2" style="display:none">間隔＋</button><button class="dgx" id="dgAr" style="display:none">入力右寄せ</button><button class="dgx" id="dgAl" style="display:none">入力左寄せ</button><button class="dgx" id="dgAc" style="display:none">入力中央</button><button class="dgx" id="dgAy" style="display:none">年右・月左</button><button class="dgx" id="dgTx" style="display:none">固定文字</button><button class="dgx" id="dgRl" style="display:none">解除</button><button class="p" id="szOk">✕</button></div><div id="gb"><span id="gbt"></span><button id="gbM">同じグループにまとめる</button><button id="gbS">グループから外す</button><button id="gbD">削除</button><button class="p" id="gbOk">完了</button></div><div id="xb"><span id="xbt"></span><button id="xbC">空欄→連投欄</button><button id="xbM">○ ON</button><button id="xbQ">□ ON</button><button id="xbA">全部外す</button><button id="xbX">中止</button><button class="p" id="xbOk">決定</button></div>
@@ -1383,6 +1383,18 @@ async function tplEditSave(exit){
     const r=tplEdit.r;await tdb("put",{...r,fields:fieldsFrom(tplEdit.pgs),pages:tplEdit.pgs.length});
     toast("テンプレートを保存しました");if(exit)tplEditEnd()
   }catch(e){toast("保存できませんでした")}}
+async function tplReplacePdf(f){
+  if(!tplEdit||!f)return;try{say("差し替え中…");let bytes;
+    if(/\.xls[xm]$/i.test(f.name)){const r=await xlsxToPdf(f);bytes=new Uint8Array(r.bytes)}else bytes=new Uint8Array(await f.arrayBuffer());
+    const doc=await pdfjsLib.getDocument({data:bytes.slice()}).promise,fi=files.push({name:tplEdit.r.name,bytes,doc})-1,old=tplEdit.pgs,np=[];
+    for(let k=0;k<doc.numPages;k++){const p=await doc.getPage(k+1),v=p.view;np.push({f:fi,i:k,r:0,base:p.rotate%360,W:v[2]-v[0],H:v[3]-v[1],sel:false,strokes:[],items:old[k]?old[k].items:[]})}
+    const pos=Math.max(0,pages.indexOf(old[0]));pages=pages.filter(p=>!old.includes(p));pages.splice(pos,0,...np);
+    tplEdit.pgs=np;tplEdit.r={...tplEdit.r,pdf:bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),pages:np.length};
+    say("");draw();await openEd(np[0]);
+    const lost=old.slice(np.length).reduce((n,p)=>n+p.items.length,0);
+    toast("PDFを差し替えました(入力欄はそのまま)。"+(lost?lost+"個の欄は、ページが足りないため外れました。":"")+"位置を確認して「上書き保存」を押してください",6000)
+  }catch(e){say("");toast("差し替えできませんでした")}}
+$("teP").onclick=()=>{const i=document.createElement("input");i.type="file";i.accept="application/pdf,.pdf,.xlsx,.xlsm";i.onchange=()=>tplReplacePdf(i.files[0]);i.click()};
 function tplEditEnd(){const t=tplEdit;tplEdit=null;qp.on=false;qSync();pages=pages.filter(p=>!t.pgs.includes(p));say("");$("ok").click()}
 function tplAskExit(){sheet("テンプレートの編集を終わりますか?",[["保存して終了",()=>tplEditSave(true)],["保存せずに終了",tplEditEnd]])}
 $("teS").onclick=()=>tplEditSave(false);
