@@ -141,7 +141,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v109</small></div>
+<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v111</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -268,7 +268,7 @@ function drawMarks(x,pg,cw,ch,extra){
     x.save();x.translate(u*cw,v*ch);x.rotate((it.rot+A)*PI/180);if(it===lift&&!ghost){x.shadowColor="rgba(0,0,0,.4)";x.shadowBlur=cw/30;x.shadowOffsetY=cw/110;x.scale(1.07,1.07)}if(ghost){x.strokeStyle=it.local?"#0d9488":"#f59e0b";x.lineWidth=Math.max(1.5,cw/160);x.setLineDash([6,4]);x.strokeRect(-w/2,-h/2,w,h);x.setLineDash([]);if(it.no){const rr=Math.max(9,cw/18);x.fillStyle="#f59e0b";x.beginPath();x.arc(-w/2,-h/2,rr,0,7);x.fill();x.fillStyle="#fff";x.font="bold "+rr*1.3+"px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText(LT(it.no),-w/2,-h/2)}x.restore();continue}const onE=x.canvas.id=="ec",cl=onE&&it.field=="input"&&((smOn&&!smTry&&!smBadge)||(fillInst&&it.inst===fillInst&&it.ph)),fl0=onE&&fillInst&&it.field=="input"&&it.inst===fillInst,isIn=it.field=="input"&&onE,k0=(it.ph&&onE)?.72:1,dw=w*k0,dh=h*k0,pd=Math.max(2,cw/230);
     if(isIn&&!cl&&!fl0){x.fillStyle=it.ph?"rgba(255,248,220,.96)":"rgba(255,255,255,.55)";x.fillRect(-dw/2-pd,-dh/2-pd,dw+2*pd,dh+2*pd)}
     if(it.field=="toggle"&&it.off){const gd=onE&&(smOn||(fillInst&&!(it.grp&&pg.items.some(o=>o!==it&&o.field=="toggle"&&o.grp===it.grp&&!o.off))));if(it.ring&&gd){x.strokeStyle=smOn?"rgba(124,58,237,.7)":"rgba(124,58,237,.4)";x.lineWidth=Math.max(1,cw/550);x.beginPath();x.ellipse(0,0,dw/2,dh/2,0,0,7);x.stroke()}else if(gd&&it===sel){x.strokeStyle="#7c3aed";x.lineWidth=Math.max(1.2,cw/450);x.setLineDash([4,3]);const m=Math.min(dw,dh)*.7;x.strokeRect(-m/2,-m/2,m,m);x.setLineDash([])}}else if(cl&&it.ph){}else if(it.k=="t")vecText(x,it,bm,dw,dh);else x.drawImage(bm,-dw/2,-dh/2,dw,dh);
-    if(isIn&&!cl&&!fl0&&(it.ph||smOn)){x.strokeStyle="rgba(245,158,11,.7)";x.lineWidth=Math.max(1,cw/520);x.setLineDash([5,4]);x.strokeRect(-dw/2-pd,-dh/2-pd,dw+2*pd,dh+2*pd);x.setLineDash([]);
+    if(isIn&&!cl&&!fl0&&(it.ph||smOn||tplEdit)){x.strokeStyle="rgba(245,158,11,.7)";x.lineWidth=Math.max(1,cw/520);x.setLineDash([5,4]);x.strokeRect(-dw/2-pd,-dh/2-pd,dw+2*pd,dh+2*pd);x.setLineDash([]);
       if(it.no){const rr=Math.max(4,cw/125),bx=-dw/2-pd-rr*.15,by=-dh/2-pd-rr*.15;x.fillStyle="rgba(245,158,11,.5)";x.beginPath();x.arc(bx,by,rr,0,7);x.fill();x.fillStyle="#fff";x.font="bold "+rr*1.25+"px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText(LT(it.no),bx,by)}}
     if(it===sel&&x.canvas.id=="ec"&&!cl&&!fl0){x.lineWidth=Math.max(2,cw/250);x.strokeStyle=emode=="size"?"#16a34a":emode=="scale"?"#f59e0b":emode=="move"?"#e11d48":"#2563eb";x.setLineDash(emode?[]:[6,4]);x.strokeRect(-w/2,-h/2,w,h);if(emode=="size"||emode=="scale"){x.fillStyle=emode=="size"?"#16a34a":"#f59e0b";x.beginPath();x.arc(w/2,h/2,hr(),0,7);x.fill()}if(it.k=="t"&&!it.field&&!editing&&!it.cell){const rr=hr()*1.7;x.setLineDash([]);x.fillStyle="#16a34a";x.beginPath();x.arc(w/2,h/2,rr,0,7);x.fill()}}
     x.restore();
@@ -1066,7 +1066,7 @@ async function tplMake0(r){
   let n=0,first=null;
   let bad=0;r.fields.forEach(f=>{try{
     const pg=pgs[f.page];if(!pg)return;
-    const it={k:"t",a:f.a,b:f.b,str:f.str,s:f.s,c:f.c,rot:f.rot,sx:f.sx,sy:f.sy,anc:f.anc};if(f.ring)it.ring=true;if(f.local)it.local=true;if(f.tid)it.tid=f.tid;if(f.dep)it.dep=f.dep;if(f.dg)it.dg=f.dg;if(f.choices)it.choices=f.choices;if(f.cell){it.cell={...f.cell};it.s0=f.s0||f.s;it.s=it.s0}
+    const it={k:"t",a:f.a,b:f.b,str:f.str,s:f.s,c:f.c,rot:f.rot,sx:f.sx,sy:f.sy,anc:f.anc};if(f.ring)it.ring=true;if(f.auto)it.auto=true;if(f.local)it.local=true;if(f.tid)it.tid=f.tid;if(f.dep)it.dep=f.dep;if(f.dg)it.dg=f.dg;if(f.choices)it.choices=f.choices;if(f.cell){it.cell={...f.cell};it.s0=f.s0||f.s;it.s=it.s0}
     if(f.type=="toggle"){it.field="toggle";it.off=true;it.rd=f.rd;it.grp=f.grp?f.grp+"@"+inst:undefined}
     if(f.type=="input"){it.field="input";it.no=f.no||++n;it.ph=true;it.lbl=f.str;it.inst=inst;if(!first)first=pg}
     if(it.cell)fitItem(it,pg);pg.items.push(it)}catch(e){bad++}});
@@ -1076,7 +1076,7 @@ async function tplMake0(r){
 // ---- 連投欄ガイド(①②…の順に入力)
 const curInst=()=>(sel&&sel.inst)||((cur&&cur.items.find(i=>i.inst))||{}).inst;
 const depOff=(it,pg)=>{if(!it.dep)return false;const t=(pg||pgOf(it)||cur).items.find(o=>o.field=="toggle"&&o.tid===it.dep);return !!(t&&t.off)};
-function fillList(inst){const L=[];if(!inst)return L;pages.forEach(pg=>pg.items.forEach(it=>{if(it.inst===inst&&it.field=="input"&&!depOff(it,pg))L.push({pg,it})}));return L.sort((a,b)=>a.it.no-b.it.no)}
+function fillList(inst){const L=[];if(!inst)return L;pages.forEach(pg=>pg.items.forEach(it=>{if(it.inst===inst&&it.field=="input"&&!it.auto&&!depOff(it,pg))L.push({pg,it})}));return L.sort((a,b)=>a.it.no-b.it.no)}
 function fgUI(){
   const g=$("fg");$("te").style.display=(cur&&tplEdit)?"flex":"none";qSync();
   if(!cur||fillInst||tplEdit){g.style.display="none";return}
@@ -1216,7 +1216,7 @@ const dgOf=h=>h.dg?(pgOf(h)||cur).items.filter(i=>i.dg===h.dg):[h];
 function smDate(){if(!cur)return;const v=prompt("固定の文字を「年,月,日」の順にカンマで区切って入れてください\n(例: 年,月,日 / 令和,年,月,日 のように4つ目で頭に文字も付けられます)","年,月,日");if(v===null)return;
   let P=v.split(/[,、,]/).map(x=>x.trim());let pre="";if(P.length>=4){pre=P.shift()}while(P.length<3)P.push("");P=P.slice(0,3);
   let EC=null;if(confirm("頭に元号などの選択欄(昭和・平成・令和…のプルダウン)を付けますか?")){const c=prompt("選択肢をカンマで区切って入れてください(押して選べます)","昭和,平成,令和");if(c)EC=c.split(/[,、,]/).map(x=>x.trim()).filter(Boolean);if(EC&&!EC.length)EC=null}
-  const WD=confirm("末尾に曜日(月)〜(日)の選択欄も付けますか?\n年・月・日を入れると曜日は自動で入ります(令和8年10月15日→木)");
+  const WD=confirm("末尾に曜日(月)〜(日)も付けますか?\n年・月・日を入れると自動で入ります(令和8年10月15日→木)。入力順には出ません");
   const pg=cur,W=pg.W,H=pg.H,A=ang(pg),ref=pg.items.find(i=>i.field=="input"&&i.cell),inst=(ref&&ref.inst)||curInst()||("xa"+Date.now()),n0=Math.max(0,...pages.flatMap(p=>p.items.filter(i=>i.field=="input").map(i=>i.no||0)))+1,
   dn=1+pg.items.filter(i=>i.field=="input"&&/^日付\d* 年$/.test(i.lbl||"")).length,ch=ref?Math.abs(ref.cell.y1-ref.cell.y0)*H:18,fs=ref?(ref.s0||ref.s)*W:10,s0=fs/W,
   cws=[Math.max(26,fs*2.5),Math.max(22,fs*2.1),Math.max(22,fs*2.1)],tw=t=>t?(t.length*fs*1.05+4):0,gap=3,
@@ -1228,7 +1228,7 @@ function smDate(){if(!cur)return;const v=prompt("固定の文字を「年,月,�
   ["年","月","日"].forEach((nm,i)=>{const cwp=cws[i],a=(x+cwp/2)/W,lbl=nm,it={k:"t",a,b,str:lbl,s:s0,s0,c:"#111111",rot:-A,sx:1,sy:1,anc:i==0?"r":i==1?"l":"c",field:"input",no:n0+i+(EC?1:0),ph:true,lbl,inst,xlc:true,cell:{x0:x/W,x1:(x+cwp)/W,y0:b-ch/2/H,y1:b+ch/2/H}};fitItem(it,pg);ins.push(it);x+=cwp+gap;
     if(P[i]){fx.push(mk(P[i],x));x+=fx[fx.length-1]._vw}x+=gap});
   if(WD){const WC=["月","火","水","木","金","土","日"],cw2=Math.max(22,fs*1.8);fx.push(mk("(",x));x+=fx[fx.length-1]._vw+gap;
-    const it={k:"t",a:(x+cw2/2)/W,b,str:"曜日",s:s0,s0,c:"#111111",rot:-A,sx:1,sy:1,anc:"c",field:"input",no:n0+3+(EC?1:0),ph:true,lbl:"曜日",inst,xlc:true,choices:WC,cell:{x0:x/W,x1:(x+cw2)/W,y0:b-ch/2/H,y1:b+ch/2/H}};fitItem(it,pg);ins.push(it);x+=cw2+gap;fx.push(mk(")",x))}
+    const it={k:"t",a:(x+cw2/2)/W,b,str:"曜日",s:s0,s0,c:"#111111",rot:-A,sx:1,sy:1,anc:"c",field:"input",no:n0+3+(EC?1:0),ph:true,lbl:"曜日",inst,xlc:true,auto:true,choices:WC,cell:{x0:x/W,x1:(x+cw2)/W,y0:b-ch/2/H,y1:b+ch/2/H}};fitItem(it,pg);ins.push(it);x+=cw2+gap;fx.push(mk(")",x))}
   const dg="d"+Date.now().toString(36);[...fx,...ins].forEach(i=>{i.dg=dg;pg.items.push(i)});smSet=new Set([...ins,...fx]);smMulti=false;sel=ins[0];smSync();paint();
   toast("日付欄を置きました。まとめてドラッグで移動できます。連投では 年→月→日 だけ入力します(固定の文字は動きません)",5000)}
 $("smDt").onclick=smDate;
@@ -1250,7 +1250,7 @@ $("smZ").onclick=()=>sheet("試し入力を消す",[["入力した文字を全�
 const DGO=["元号","年","月","日","曜日"];
 function dgMem(it){if(!it.dg)return [it];return cur.items.filter(i=>i.dg===it.dg&&i.field=="input").sort((p,q)=>DGO.indexOf(p.lbl)-DGO.indexOf(q.lbl))}
 function smNum(U){let k=0;U.forEach(u=>dgMem(u).forEach(x=>x.no=++k))}
-function smItemsOrd(){const seen=new Set(),r=[];cur.items.filter(i=>i.field=="input").sort((p,q)=>(p.no||0)-(q.no||0)).forEach(i=>{if(i.dg){if(seen.has(i.dg))return;seen.add(i.dg);r.push(dgMem(i)[0])}else r.push(i)});return r}
+function smItemsOrd(){const seen=new Set(),r=[];cur.items.filter(i=>i.field=="input"&&!i.auto).sort((p,q)=>(p.no||0)-(q.no||0)).forEach(i=>{if(i.dg){if(seen.has(i.dg))return;seen.add(i.dg);r.push(dgMem(i)[0])}else r.push(i)});return r}
 function smOrder(){let L=smItemsOrd();if(!L.length)return toast("連投欄がありません");const box=$("smo");box.innerHTML="";box.classList.remove("tap");smTapOrd=null;smBadge=true;
   const num=()=>smNum(L);num();
   const h=document.createElement("div");h.className="smoh";h.innerHTML="<b>入力順</b><span>行を長押し(または右の「≡」をつかんで)上下に動かすと並べ替え。Enter・Tabはこの順に進みます</span>";
@@ -1335,7 +1335,7 @@ function fieldsFrom(list){
   list.forEach((p,pi)=>p.items.forEach(it=>{if(it.k=="t"){if(it.field=="input"&&it.no)mx=Math.max(mx,it.no);raw.push({pi,it,no:it.field=="input"?it.no:0})}}));
   raw.forEach(x=>{if(x.it.field=="input"&&!x.no)x.no=++mx});
   const nos=[...new Set(raw.filter(x=>x.it.field=="input").map(x=>x.no))].sort((a,b)=>a-b),rank=Object.fromEntries(nos.map((n,i)=>[n,i+1]));
-  return raw.map(({pi,it,no})=>({page:pi,a:it.a,b:it.b,s:it.s,c:it.c,sx:it.sx||1,sy:it.sy||1,rot:it.rot||0,anc:it.anc,cell:it.cell?{...it.cell}:undefined,s0:it.cell?(it.s0||it.s):undefined,ring:it.ring||undefined,local:it.local||undefined,tid:it.tid,dep:it.dep,dg:it.dg,choices:it.choices,type:it.field=="input"?"input":it.field=="toggle"?"toggle":"fixed",no:it.field=="input"?rank[no]:undefined,str:it.str,grp:it.grp,rd:it.rd}))}
+  return raw.map(({pi,it,no})=>({page:pi,a:it.a,b:it.b,s:it.s,c:it.c,sx:it.sx||1,sy:it.sy||1,rot:it.rot||0,anc:it.anc,cell:it.cell?{...it.cell}:undefined,s0:it.cell?(it.s0||it.s):undefined,ring:it.ring||undefined,local:it.local||undefined,auto:it.auto||undefined,tid:it.tid,dep:it.dep,dg:it.dg,choices:it.choices,type:it.field=="input"?"input":it.field=="toggle"?"toggle":"fixed",no:it.field=="input"?rank[no]:undefined,str:it.str,grp:it.grp,rd:it.rd}))}
 $("tsok").onclick=async()=>{
   const name=$("tsn").value.trim()||"テンプレート",list=tsList;$("ts").style.display="none";
   let ex=null;try{ex=(await tdb("all")).find(r=>r.name==name)}catch(_){}
@@ -1356,7 +1356,7 @@ async function tplEditStart0(r){
   for(let i=0;i<doc.numPages;i++){const p=await doc.getPage(i+1),v=p.view;pgs.push({f:fi,i,r:0,base:p.rotate%360,W:v[2]-v[0],H:v[3]-v[1],sel:false,strokes:[],items:[]})}
   let n=0;
   let bad=0;r.fields.forEach(f=>{try{const pg=pgs[f.page];if(!pg)return;
-    const it={k:"t",a:f.a,b:f.b,str:f.str,s:f.s,c:f.c,rot:f.rot,sx:f.sx,sy:f.sy,anc:f.anc};if(f.ring)it.ring=true;if(f.local)it.local=true;if(f.tid)it.tid=f.tid;if(f.dep)it.dep=f.dep;if(f.dg)it.dg=f.dg;if(f.choices)it.choices=f.choices;if(f.cell){it.cell={...f.cell};it.s0=f.s0||f.s;it.s=it.s0}
+    const it={k:"t",a:f.a,b:f.b,str:f.str,s:f.s,c:f.c,rot:f.rot,sx:f.sx,sy:f.sy,anc:f.anc};if(f.ring)it.ring=true;if(f.auto)it.auto=true;if(f.local)it.local=true;if(f.tid)it.tid=f.tid;if(f.dep)it.dep=f.dep;if(f.dg)it.dg=f.dg;if(f.choices)it.choices=f.choices;if(f.cell){it.cell={...f.cell};it.s0=f.s0||f.s;it.s=it.s0}
     if(f.type=="toggle"){it.field="toggle";it.off=true;it.rd=f.rd;it.grp=f.grp}
     if(f.type=="input"){it.field="input";it.no=f.no||++n;it.lbl=f.str}
     if(it.cell)fitItem(it,pg);pg.items.push(it)}catch(e){bad++}});
