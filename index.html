@@ -141,7 +141,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v97</small></div>
+<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v98</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -1151,9 +1151,15 @@ $("fpe").onclick=fillEnd;
 var smTapOrd=null,smBadge=false,smForm=false,xlLast=null,smOn=false,smT=null,smLast=null,smSet=new Set(),smMulti=false,smTry=false;
 const isXl=()=>!!(cur&&files[cur.f]&&files[cur.f].xl);
 function smStart(){if(!isXl()&&!(cur&&cur.items.some(i=>i.field)))return toast("シート編集は、Excelから読み込んだシートだけで使えます");if(fillInst)fillStop();endEdit();sel=null;emode=null;setMode("text");smOn=true;smSet.clear();smMulti=false;$("ed").classList.add("sm");$("sm").style.display="flex";smSync();paint();toast("欄をタップで選択・ドラッグで移動・ダブルタップで名前・長押しでサイズ調整",4500)}
-function smEnd(){$("ed").classList.remove("smf");smOn=false;smT=null;smTapOrd=null;smBadge=false;smForm=false;$("sf").style.display="none";$("smM").classList.remove("on");smSet.clear();smMulti=false;$("smo").style.display="none";$("ed").classList.remove("sm");$("sm").style.display="none";$("szb").style.display="none";szbIt=null;xlC=null;xlUI();tgE=null;tgEUI();paint()}
+function smEnd(){ec.style.marginBottom="";$("ed").classList.remove("smf");smOn=false;smT=null;smTapOrd=null;smBadge=false;smForm=false;$("sf").style.display="none";$("smM").classList.remove("on");smSet.clear();smMulti=false;$("smo").style.display="none";$("ed").classList.remove("sm");$("sm").style.display="none";$("szb").style.display="none";szbIt=null;xlC=null;xlUI();tgE=null;tgEUI();paint()}
 const smTg=()=>smSet.size?[...smSet]:(sel&&(sel.field=="input"||sel.field=="toggle")?[sel]:[]);
-function smSync(){const L=smTg(),t=$("smt"),dgL=smOn?dgSel():null;if(smOn&&!smTry){const rep=dgL?(dgL.find(i=>i.field)||dgL[0]):L.length==1?L[0]:null;if(rep&&szbIt!==rep&&!(szbIt&&szbIt.cand))szbOpen(rep);else if(!rep&&szbIt&&!szbIt.cand){$("szb").style.display="none";szbIt=null}}
+var smRvK=null,smRvT=0;
+function smReveal(){if(!smOn||!cur)return;const L=smTg();if(!L.length)return;const wr=wrap.getBoundingClientRect(),r=ec.getBoundingClientRect(),k=r.width/ec.width,A=ang(cur);let R;const g=dgSel();
+  R=dgRect(g||L,ec.width,ec.height,A);const top=r.top+R.Y*k,bot=r.top+(R.Y+R.H)*k,pad=14;
+  ec.style.marginBottom=Math.round(wr.height*.7)+"px";
+  if(bot>wr.bottom-pad||top<wr.top+pad){const mid=(top+bot)/2,want=wr.top+wr.height*.4;wrap.scrollTop+=mid-want}}
+function smSync(){const L=smTg(),t=$("smt"),dgL=smOn?dgSel():null;
+  if(smOn){const key=L.length?L[0]:null,same=key===smRvK;smRvK=key;if(key&&!same){clearTimeout(smRvT);smRvT=setTimeout(smReveal,90);setTimeout(smReveal,350)}}if(smOn&&!smTry){const rep=dgL?(dgL.find(i=>i.field)||dgL[0]):L.length==1?L[0]:null;if(rep&&szbIt!==rep&&!(szbIt&&szbIt.cand))szbOpen(rep);else if(!rep&&szbIt&&!szbIt.cand){$("szb").style.display="none";szbIt=null}}
   $("szG").style.display=$("szGl").style.display=dgL?"":"none";document.querySelectorAll(".dgx").forEach(e=>e.style.display=dgL?"":"none");t.textContent=L.length>1?L.length+"個の欄を選択中(まとめて操作できます)":L.length==1?"選択中:"+(L[0].field=="input"?"連投欄「"+(L[0].lbl||"")+"」":L[0].field=="toggle"?"選択ボタン":"文字"):(smMulti?"タップで追加・解除":"欄をタップで選択");$("smU").classList.toggle("on",smMulti);$("sfU").classList.toggle("on",smMulti);0}
 var smMq=null;
 function smCen(i){return i.cell?[(i.cell.x0+i.cell.x1)/2,(i.cell.y0+i.cell.y1)/2]:[i.a,i.b]}
