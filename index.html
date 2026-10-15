@@ -141,7 +141,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v103</small></div>
+<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v105</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -1088,7 +1088,12 @@ $("fgs").onclick=()=>{const i=curInst();if(i)fillStart(i)};
 $("fgp").onclick=()=>{const i=curInst();if(i)fillStart(i,"page")};
 
 // ---- 文字の増え方の基準(左・中央・右)を固定したまま文字を変える
-function setItemStr(it,pg,str){
+function setItemStr(it,pg,str){setItemStr0(it,pg,str);if(it.dg&&it.field=="input")dgAutoWd(it,pg)}
+function dgAutoWd(it,pg){if(dgAutoWd._l)return;const G=pg.items.filter(i=>i.dg===it.dg&&i.field=="input"),Wd=G.find(i=>i.lbl=="曜日");if(!Wd||it===Wd)return;
+  const get=l=>G.find(i=>i.lbl==l),val=i=>i&&!i.ph?String(i.str).trim().replace(/[０-９]/g,c=>String.fromCharCode(c.charCodeAt(0)-65248)):"",y=parseInt(val(get("年"))),m=parseInt(val(get("月"))),d=parseInt(val(get("日"))),e=get("元号"),ev=val(e);
+  if(!(y>0&&m>=1&&m<=12&&d>=1&&d<=31))return;let Y;if(e){const B={明治:1867,大正:1911,昭和:1925,平成:1988,令和:2018};if(!(ev in B))return;Y=B[ev]+y}else Y=y>=1900?y:2018+y;
+  const dt=new Date(Y,m-1,d);if(dt.getMonth()!=m-1)return;dgAutoWd._l=1;try{Wd.ph=false;setItemStr(Wd,pg,"日月火水木金土"[dt.getDay()])}finally{dgAutoWd._l=0}}
+function setItemStr0(it,pg,str){
   if(it.cell){it.str=str;fitItem(it,pg);return}
   const W=pg.W,H=pg.H,s0=sc(it,pg),b0=bmOf(it),w0=b0.width*s0*(it.sx||1),h0=b0.height*s0*(it.sy||1),th=(it.rot||0)*PI/180,c=Math.cos(th),n=Math.sin(th),fx={l:-.5,c:0,r:.5}[it.anc||"l"];
   const P=[it.a*W+fx*w0*c+h0/2*n,it.b*H+fx*w0*n-h0/2*c];
@@ -1208,16 +1213,19 @@ const dgOf=h=>h.dg?(pgOf(h)||cur).items.filter(i=>i.dg===h.dg):[h];
 function smDate(){if(!cur)return;const v=prompt("固定の文字を「年,月,日」の順にカンマで区切って入れてください\n(例: 年,月,日 / 令和,年,月,日 のように4つ目で頭に文字も付けられます)","年,月,日");if(v===null)return;
   let P=v.split(/[,、,]/).map(x=>x.trim());let pre="";if(P.length>=4){pre=P.shift()}while(P.length<3)P.push("");P=P.slice(0,3);
   let EC=null;if(confirm("頭に元号などの選択欄(昭和・平成・令和…のプルダウン)を付けますか?")){const c=prompt("選択肢をカンマで区切って入れてください(押して選べます)","昭和,平成,令和");if(c)EC=c.split(/[,、,]/).map(x=>x.trim()).filter(Boolean);if(EC&&!EC.length)EC=null}
+  const WD=confirm("末尾に曜日(月)〜(日)の選択欄も付けますか?\n年・月・日を入れると曜日は自動で入ります(令和8年10月15日→木)");
   const pg=cur,W=pg.W,H=pg.H,A=ang(pg),ref=pg.items.find(i=>i.field=="input"&&i.cell),inst=(ref&&ref.inst)||curInst()||("xa"+Date.now()),n0=Math.max(0,...pages.flatMap(p=>p.items.filter(i=>i.field=="input").map(i=>i.no||0)))+1,
   dn=1+pg.items.filter(i=>i.field=="input"&&/^日付\d* 年$/.test(i.lbl||"")).length,ch=ref?Math.abs(ref.cell.y1-ref.cell.y0)*H:18,fs=ref?(ref.s0||ref.s)*W:10,s0=fs/W,
   cws=[Math.max(26,fs*2.5),Math.max(22,fs*2.1),Math.max(22,fs*2.1)],tw=t=>t?(t.length*fs*1.05+4):0,gap=3,
-  ecw=EC?Math.max(...EC.map(t=>t.length))*fs*1.1+6:0,total=(EC?ecw:0)+(pre?tw(pre)+gap:0)+cws.reduce((q,c,i)=>q+c+gap+tw(P[i])+gap,0),r=ec.getBoundingClientRect(),w=wrap.getBoundingClientRect(),
+  ecw=EC?Math.max(...EC.map(t=>t.length))*fs*1.1+6:0,total=(EC?ecw:0)+(WD?fs*3.6+tw("(")*2+gap*3:0)+(pre?tw(pre)+gap:0)+cws.reduce((q,c,i)=>q+c+gap+tw(P[i])+gap,0),r=ec.getBoundingClientRect(),w=wrap.getBoundingClientRect(),
   cx=clamp(((w.left+w.width/2)-r.left)/r.width,.1,.9),cy=clamp(((w.top+w.height/2)-r.top)/r.height,.1,.9),[a0,b]=toUnrot(cx,cy,A);
   let x=a0*W-total/2;const mk=(str,lft)=>{const it={k:"t",a:lft/W,b,str,s:s0,c:"#111111",rot:-A,sx:1,sy:1,anc:"l"},bm=bmOf(it),k=sc(it,pg),pd=8*k,w=bm.width*k;it.a=(lft-pd+w/2)/W;it._vw=Math.max(2,w-2*pd);return it},ins=[],fx=[];
-  if(EC){const lbl="日付"+dn+" 元号",it={k:"t",a:(x+ecw/2)/W,b,str:lbl,s:s0,s0,c:"#111111",rot:-A,sx:1,sy:1,anc:"r",field:"input",no:n0,ph:true,lbl,inst,xlc:true,choices:EC,cell:{x0:x/W,x1:(x+ecw)/W,y0:b-ch/2/H,y1:b+ch/2/H}};fitItem(it,pg);ins.push(it);x+=ecw}
+  if(EC){const lbl="元号",it={k:"t",a:(x+ecw/2)/W,b,str:lbl,s:s0,s0,c:"#111111",rot:-A,sx:1,sy:1,anc:"r",field:"input",no:n0,ph:true,lbl,inst,xlc:true,choices:EC,cell:{x0:x/W,x1:(x+ecw)/W,y0:b-ch/2/H,y1:b+ch/2/H}};fitItem(it,pg);ins.push(it);x+=ecw}
   if(pre){fx.push(mk(pre,x));x+=fx[fx.length-1]._vw+gap}
-  ["年","月","日"].forEach((nm,i)=>{const cwp=cws[i],a=(x+cwp/2)/W,lbl="日付"+dn+" "+nm,it={k:"t",a,b,str:lbl,s:s0,s0,c:"#111111",rot:-A,sx:1,sy:1,anc:i==0?"r":i==1?"l":"c",field:"input",no:n0+i+(EC?1:0),ph:true,lbl,inst,xlc:true,cell:{x0:x/W,x1:(x+cwp)/W,y0:b-ch/2/H,y1:b+ch/2/H}};fitItem(it,pg);ins.push(it);x+=cwp+gap;
+  ["年","月","日"].forEach((nm,i)=>{const cwp=cws[i],a=(x+cwp/2)/W,lbl=nm,it={k:"t",a,b,str:lbl,s:s0,s0,c:"#111111",rot:-A,sx:1,sy:1,anc:i==0?"r":i==1?"l":"c",field:"input",no:n0+i+(EC?1:0),ph:true,lbl,inst,xlc:true,cell:{x0:x/W,x1:(x+cwp)/W,y0:b-ch/2/H,y1:b+ch/2/H}};fitItem(it,pg);ins.push(it);x+=cwp+gap;
     if(P[i]){fx.push(mk(P[i],x));x+=fx[fx.length-1]._vw}x+=gap});
+  if(WD){const WC=["月","火","水","木","金","土","日"],cw2=Math.max(22,fs*1.8);fx.push(mk("(",x));x+=fx[fx.length-1]._vw+gap;
+    const it={k:"t",a:(x+cw2/2)/W,b,str:"曜日",s:s0,s0,c:"#111111",rot:-A,sx:1,sy:1,anc:"c",field:"input",no:n0+3+(EC?1:0),ph:true,lbl:"曜日",inst,xlc:true,choices:WC,cell:{x0:x/W,x1:(x+cw2)/W,y0:b-ch/2/H,y1:b+ch/2/H}};fitItem(it,pg);ins.push(it);x+=cw2+gap;fx.push(mk(")",x))}
   const dg="d"+Date.now().toString(36);[...fx,...ins].forEach(i=>{i.dg=dg;pg.items.push(i)});smSet=new Set([...ins,...fx]);smMulti=false;sel=ins[0];smSync();paint();
   toast("日付欄を置きました。まとめてドラッグで移動できます。連投では 年→月→日 だけ入力します(固定の文字は動きません)",5000)}
 $("smDt").onclick=smDate;
@@ -1236,9 +1244,12 @@ $("dgRl").onclick=D(L=>{L.forEach(i=>delete i.dg);smSync();paint();toast("1つ�
 {let last=0;const g=$("szG");g.oninput=()=>{const L=dgSel();if(!L)return;const v=+g.value;dgSpace(L,(v-last)*.5);last=v};const rs=()=>{g.value=0;last=0};g.onchange=rs;g.onpointerup=rs;g.ontouchend=rs}
 if($("smY"))$("smY").onclick=()=>{smTry=!smTry;smSync();toast(smTry?"試し入力:欄をタップして文字を入れて確認できます(Enterで次の欄)。もう一度押すと編集に戻ります":"試し入力を終えました",3500)};
 $("smZ").onclick=()=>sheet("試し入力を消す",[["入力した文字を全部消す(欄は残す)",()=>{cur.items.forEach(i=>{if(i.field=="input"&&i.lbl&&!i.ph){i.ph=true;setItemStr(i,cur,i.lbl)}});paint()}]]);
-function smItemsOrd(){return cur.items.filter(i=>i.field=="input").sort((p,q)=>(p.no||0)-(q.no||0))}
+const DGO=["元号","年","月","日","曜日"];
+function dgMem(it){if(!it.dg)return [it];return cur.items.filter(i=>i.dg===it.dg&&i.field=="input").sort((p,q)=>DGO.indexOf(p.lbl)-DGO.indexOf(q.lbl))}
+function smNum(U){let k=0;U.forEach(u=>dgMem(u).forEach(x=>x.no=++k))}
+function smItemsOrd(){const seen=new Set(),r=[];cur.items.filter(i=>i.field=="input").sort((p,q)=>(p.no||0)-(q.no||0)).forEach(i=>{if(i.dg){if(seen.has(i.dg))return;seen.add(i.dg);r.push(dgMem(i)[0])}else r.push(i)});return r}
 function smOrder(){let L=smItemsOrd();if(!L.length)return toast("連投欄がありません");const box=$("smo");box.innerHTML="";box.classList.remove("tap");smTapOrd=null;smBadge=true;
-  const num=()=>L.forEach((x,k)=>x.no=k+1);num();
+  const num=()=>smNum(L);num();
   const h=document.createElement("div");h.className="smoh";h.innerHTML="<b>入力順</b><span>行を長押し(または右の「≡」をつかんで)上下に動かすと並べ替え。Enter・Tabはこの順に進みます</span>";
   const ul=document.createElement("div");ul.className="smol";
   const render=()=>{ul.innerHTML="";L.forEach((it,i)=>{const r=document.createElement("div");r.className="smor"+(sel===it?" on":"");r._it=it;
@@ -1251,9 +1262,9 @@ function smOrder(){let L=smItemsOrd();if(!L.length)return toast("連投欄があ
 function smTapStart(){const old=smItemsOrd();if(!old.length)return;smTapOrd={old,got:[]};$("smo").classList.add("tap");smTapUI();paint()}
 function smTapUI(){const T=smTapOrd,box=$("smo");box.innerHTML="";const h=document.createElement("div");h.className="smoh";h.innerHTML="<b>タップ順で決める</b><span>"+T.got.length+" / "+T.old.length+" 番まで決定。次に入力したい欄をタップしてください</span>";
   const ft=document.createElement("div");ft.className="smof";const bk=document.createElement("button"),cn=document.createElement("button"),ok=document.createElement("button");bk.textContent="ひとつ戻す";cn.textContent="やめる";ok.textContent="確定";ok.className="p";
-  bk.onclick=()=>{T.got.pop();smTapApply();smTapUI();paint()};cn.onclick=()=>{T.old.forEach((x,k)=>x.no=k+1);smTapOrd=null;smOrder()};ok.onclick=smTapFin;ft.append(bk,cn,ok);box.append(h,ft)}
-function smTapApply(){const T=smTapOrd;T.got.concat(T.old.filter(i=>!T.got.includes(i))).forEach((x,k)=>x.no=k+1)}
-function smTapAdd(it){const T=smTapOrd;if(!T||T.got.includes(it))return;T.got.push(it);smTapApply();if(T.got.length>=T.old.length)smTapFin();else{smTapUI();paint()}}
+  bk.onclick=()=>{T.got.pop();smTapApply();smTapUI();paint()};cn.onclick=()=>{smNum(T.old);smTapOrd=null;smOrder()};ok.onclick=smTapFin;ft.append(bk,cn,ok);box.append(h,ft)}
+function smTapApply(){const T=smTapOrd;smNum(T.got.concat(T.old.filter(i=>!T.got.includes(i))))}
+function smTapAdd(it){it=dgMem(it)[0];const T=smTapOrd;if(!T||T.got.includes(it))return;T.got.push(it);smTapApply();if(T.got.length>=T.old.length)smTapFin();else{smTapUI();paint()}}
 function smTapFin(){smTapApply();smTapOrd=null;toast("入力順を決めました",2500);smOrder()}
 function smPick(e,np){if(!cur)return null;const r=ec.getBoundingClientRect(),A=ang(cur),X=e.clientX,Y=e.clientY;
   const dp=(a,b)=>{const [u,v]=toDisp(a,b,A);return[r.left+u*r.width,r.top+v*r.height]};
