@@ -141,7 +141,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v93</small></div>
+<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v94</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -264,11 +264,11 @@ function drawMarks(x,pg,cw,ch,extra){
   for(const pass of [0,1,2]){if(pass==1){dS();continue}
   for(const it of pg.items){if((it.k=='i')!=(pass==0))continue;if(it.arr&&it.k=='t'&&!(it.ph&&x.canvas.id!='ec'))drawArr(x,it,pg,cw,ch,A);if(it===editing){if(x.canvas.id=="ec"&&it.field=="input"&&it.lbl&&(fillInst||smOn)){LB.push(it);const B=itBox(it,cw,ch,A);x.save();x.strokeStyle="#2563eb";x.lineWidth=Math.max(2,cw/260);x.setLineDash([]);x.strokeRect(B.X,B.Y,B.W,B.H);x.restore()}continue}try{if(it.dep&&depOff(it,pg)&&!(smOn&&x.canvas.id=="ec"))continue;if(it.field=="toggle"&&it.off&&x.canvas.id!="ec")continue;const ghost=it.ph&&x.canvas.id!="ec";if(ghost)continue;
     const bm=bmOf(it),s=sc(it,pg)*ppp,[u,v]=toDisp(it.a,it.b,A),w=bm.width*s*(it.sx||1),h=bm.height*s*(it.sy||1);
-    const fq=x.canvas.id=="ec"&&fillInst&&it.field=="input"&&it.inst===fillInst;if((it.cell||(it.field=="input"&&(fq||(smOn&&!smTry&&!smBadge))))&&x.canvas.id=="ec"&&!(fq&&!it.ph)&&!(smOn&&it.dg&&!smBadge)){const BB=itBox(it,cw,ch,A);x.save();x.strokeStyle=fq?(it===sel?"#2563eb":"rgba(245,158,11,.55)"):(it.local?"#0d9488":(it.ph?"#f59e0b":"#3b82f6"));x.lineWidth=(fq&&it===sel)?Math.max(2,cw/260):Math.max(1,cw/450);x.setLineDash(fq?[]:[5,3]);x.strokeRect(BB.X,BB.Y,BB.W,BB.H);x.restore()}
+    const fq=x.canvas.id=="ec"&&fillInst&&it.field=="input"&&it.inst===fillInst;if((it.cell||(it.field=="input"&&(fq||(smOn&&!smTry&&!smBadge))))&&x.canvas.id=="ec"&&!(fq&&!it.ph)&&!(smOn&&it.dg&&!smBadge)&&(it.ph||smOn||fq)){const BB=itBox(it,cw,ch,A);x.save();x.strokeStyle=fq?(it===sel?"#2563eb":"rgba(245,158,11,.55)"):(it.local?"#0d9488":(it.ph?"#f59e0b":"#3b82f6"));x.lineWidth=(fq&&it===sel)?Math.max(2,cw/260):Math.max(1,cw/450);x.setLineDash(fq?[]:[5,3]);x.strokeRect(BB.X,BB.Y,BB.W,BB.H);x.restore()}
     x.save();x.translate(u*cw,v*ch);x.rotate((it.rot+A)*PI/180);if(it===lift&&!ghost){x.shadowColor="rgba(0,0,0,.4)";x.shadowBlur=cw/30;x.shadowOffsetY=cw/110;x.scale(1.07,1.07)}if(ghost){x.strokeStyle=it.local?"#0d9488":"#f59e0b";x.lineWidth=Math.max(1.5,cw/160);x.setLineDash([6,4]);x.strokeRect(-w/2,-h/2,w,h);x.setLineDash([]);if(it.no){const rr=Math.max(9,cw/18);x.fillStyle="#f59e0b";x.beginPath();x.arc(-w/2,-h/2,rr,0,7);x.fill();x.fillStyle="#fff";x.font="bold "+rr*1.3+"px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText(LT(it.no),-w/2,-h/2)}x.restore();continue}const onE=x.canvas.id=="ec",cl=onE&&it.field=="input"&&((smOn&&!smTry&&!smBadge)||(fillInst&&it.inst===fillInst&&it.ph)),fl0=onE&&fillInst&&it.field=="input"&&it.inst===fillInst,isIn=it.field=="input"&&onE,k0=(it.ph&&onE)?.72:1,dw=w*k0,dh=h*k0,pd=Math.max(2,cw/230);
     if(isIn&&!cl&&!fl0){x.fillStyle=it.ph?"rgba(255,248,220,.96)":"rgba(255,255,255,.55)";x.fillRect(-dw/2-pd,-dh/2-pd,dw+2*pd,dh+2*pd)}
     if(it.field=="toggle"&&it.off){if(it.ring&&onE){x.strokeStyle=smOn?"rgba(124,58,237,.7)":"rgba(124,58,237,.4)";x.lineWidth=Math.max(1,cw/550);x.beginPath();x.ellipse(0,0,dw/2,dh/2,0,0,7);x.stroke()}else if(onE&&it===sel){x.strokeStyle="#7c3aed";x.lineWidth=Math.max(1.2,cw/450);x.setLineDash([4,3]);const m=Math.min(dw,dh)*.7;x.strokeRect(-m/2,-m/2,m,m);x.setLineDash([])}}else if(cl&&it.ph){}else if(it.k=="t")vecText(x,it,bm,dw,dh);else x.drawImage(bm,-dw/2,-dh/2,dw,dh);
-    if(isIn&&!cl&&!fl0){x.strokeStyle="rgba(245,158,11,.7)";x.lineWidth=Math.max(1,cw/520);x.setLineDash([5,4]);x.strokeRect(-dw/2-pd,-dh/2-pd,dw+2*pd,dh+2*pd);x.setLineDash([]);
+    if(isIn&&!cl&&!fl0&&(it.ph||smOn)){x.strokeStyle="rgba(245,158,11,.7)";x.lineWidth=Math.max(1,cw/520);x.setLineDash([5,4]);x.strokeRect(-dw/2-pd,-dh/2-pd,dw+2*pd,dh+2*pd);x.setLineDash([]);
       if(it.no){const rr=Math.max(4,cw/125),bx=-dw/2-pd-rr*.15,by=-dh/2-pd-rr*.15;x.fillStyle="rgba(245,158,11,.5)";x.beginPath();x.arc(bx,by,rr,0,7);x.fill();x.fillStyle="#fff";x.font="bold "+rr*1.25+"px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText(LT(it.no),bx,by)}}
     if(it===sel&&x.canvas.id=="ec"&&!cl&&!fl0){x.lineWidth=Math.max(2,cw/250);x.strokeStyle=emode=="size"?"#16a34a":emode=="scale"?"#f59e0b":emode=="move"?"#e11d48":"#2563eb";x.setLineDash(emode?[]:[6,4]);x.strokeRect(-w/2,-h/2,w,h);if(emode=="size"||emode=="scale"){x.fillStyle=emode=="size"?"#16a34a":"#f59e0b";x.beginPath();x.arc(w/2,h/2,hr(),0,7);x.fill()}if(it.k=="t"&&!it.field&&!editing&&!it.cell){const rr=hr()*1.7;x.setLineDash([]);x.fillStyle="#16a34a";x.beginPath();x.arc(w/2,h/2,rr,0,7);x.fill()}}
     x.restore();
@@ -1205,11 +1205,11 @@ function smDate(){if(!cur)return;const v=prompt("固定の文字を「年,月,�
   cws=[Math.max(40,fs*4.2),Math.max(28,fs*2.8),Math.max(28,fs*2.8)],tw=t=>t?(t.length*fs*1.05+4):0,gap=3,
   ecw=EC?Math.max(...EC.map(t=>t.length))*fs*1.15+14:0,total=(EC?ecw+gap*2:0)+(pre?tw(pre)+gap:0)+cws.reduce((q,c,i)=>q+c+gap+tw(P[i])+gap,0),r=ec.getBoundingClientRect(),w=wrap.getBoundingClientRect(),
   cx=clamp(((w.left+w.width/2)-r.left)/r.width,.1,.9),cy=clamp(((w.top+w.height/2)-r.top)/r.height,.1,.9),[a0,b]=toUnrot(cx,cy,A);
-  let x=a0*W-total/2;const mk=(str,lft)=>({k:"t",a:lft/W,b,str,s:s0,c:"#111111",rot:-A,sx:1,sy:1,anc:"l"}),ins=[],fx=[];
+  let x=a0*W-total/2;const mk=(str,lft)=>{const it={k:"t",a:lft/W,b,str,s:s0,c:"#111111",rot:-A,sx:1,sy:1,anc:"l"},bm=bmOf(it),k=sc(it,pg),pd=8*k,w=bm.width*k;it.a=(lft-pd+w/2)/W;it._vw=Math.max(2,w-2*pd);return it},ins=[],fx=[];
   if(EC){const lbl="日付"+dn+" 元号",it={k:"t",a:(x+ecw/2)/W,b,str:lbl,s:s0,s0,c:"#111111",rot:-A,sx:1,sy:1,anc:"c",field:"input",no:n0,ph:true,lbl,inst,xlc:true,choices:EC,cell:{x0:x/W,x1:(x+ecw)/W,y0:b-ch/2/H,y1:b+ch/2/H}};fitItem(it,pg);ins.push(it);x+=ecw+gap*2}
-  if(pre){fx.push(mk(pre,x));x+=tw(pre)+gap}
+  if(pre){fx.push(mk(pre,x));x+=fx[fx.length-1]._vw+gap}
   ["年","月","日"].forEach((nm,i)=>{const cwp=cws[i],a=(x+cwp/2)/W,lbl="日付"+dn+" "+nm,it={k:"t",a,b,str:lbl,s:s0,s0,c:"#111111",rot:-A,sx:1,sy:1,anc:"c",field:"input",no:n0+i+(EC?1:0),ph:true,lbl,inst,xlc:true,cell:{x0:x/W,x1:(x+cwp)/W,y0:b-ch/2/H,y1:b+ch/2/H}};fitItem(it,pg);ins.push(it);x+=cwp+gap;
-    if(P[i]){fx.push(mk(P[i],x));x+=tw(P[i])}x+=gap});
+    if(P[i]){fx.push(mk(P[i],x));x+=fx[fx.length-1]._vw}x+=gap});
   const dg="d"+Date.now().toString(36);[...fx,...ins].forEach(i=>{i.dg=dg;pg.items.push(i)});smSet=new Set([...ins,...fx]);smMulti=false;sel=ins[0];smSync();paint();
   toast("日付欄を置きました。まとめてドラッグで移動できます。連投では 年→月→日 だけ入力します(固定の文字は動きません)",5000)}
 $("smDt").onclick=smDate;
