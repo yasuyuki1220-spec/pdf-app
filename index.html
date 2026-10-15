@@ -141,7 +141,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v99</small></div>
+<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v100</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -1910,7 +1910,7 @@ async function xlsxToPdf(file){
   const fonts=sect("fonts").map(f=>({sz:parseFloat(xAttr(f.getElementsByTagName("sz")[0],"val"))||11,b:!!f.getElementsByTagName("b")[0],c:rgb(f.getElementsByTagName("color")[0])||"#000000"}));
   const fills=sect("fills").map(f=>{const p=f.getElementsByTagName("patternFill")[0];return p&&xAttr(p,"patternType")=="solid"?rgb(p.getElementsByTagName("fgColor")[0]):null});
   const borders=sect("borders").map(b=>{const o={};["left","right","top","bottom"].forEach(k=>{const e=b.getElementsByTagName(k)[0];o[k]=e?xAttr(e,"style"):null});return o});
-  const xfs=sect("cellXfs").map(x=>{const a=x.getElementsByTagName("alignment")[0];return{numFmtId:x.getAttribute("numFmtId"),font:fonts[+x.getAttribute("fontId")]||fonts[0]||{sz:11,b:false,c:"#000000"},fill:fills[+x.getAttribute("fillId")]||null,border:borders[+x.getAttribute("borderId")]||{},h:xAttr(a,"horizontal"),v:xAttr(a,"vertical"),wrap:xAttr(a,"wrapText")=="1"||xAttr(a,"wrapText")=="true"}});
+  const xfs=sect("cellXfs").map(x=>{const a=x.getElementsByTagName("alignment")[0];return{numFmtId:x.getAttribute("numFmtId"),font:fonts[+x.getAttribute("fontId")]||fonts[0]||{sz:11,b:false,c:"#000000"},fill:fills[+x.getAttribute("fillId")]||null,border:borders[+x.getAttribute("borderId")]||{},h:xAttr(a,"horizontal"),v:xAttr(a,"vertical"),wrap:xAttr(a,"wrapText")=="1"||xAttr(a,"wrapText")=="true",shrink:xAttr(a,"shrinkToFit")=="1"||xAttr(a,"shrinkToFit")=="true"}});
   const dflt={numFmtId:0,font:{sz:11,b:false,c:"#000000"},fill:null,border:{},h:null,v:null,wrap:false};
   const outPdf=await PDFLib.PDFDocument.create(),model={pages:[]};
   for(const sh of wb.getElementsByTagName("sheet")){
@@ -1952,15 +1952,16 @@ async function xlsxToPdf(file){
       for(let r=ra;r<=rb;r++)for(let c=minC;c<=maxC;c++){const key=r+","+c;if(skip.has(key))continue;const cell=cells.get(key),m=mAt.get(key);if(!cell&&!m)continue;boxes.push({r0:r,c0:c,r1:m?Math.min(m.r1,rb):r,c1:m?m.c1:c,cell:cell||{v:"",s:0},xf:xfs[(cell||{}).s]||dflt})}
       boxes.forEach(b=>{if(b.xf.fill){x.fillStyle=b.xf.fill;x.fillRect(X(b.c0),Y(b.r0),X(b.c1+1)-X(b.c0),Y(b.r1+1)-Y(b.r0))}});
       boxes.forEach(b=>{const v=b.cell.v;if(v==="")return;
-        const f=b.xf.font,fs=f.sz*k,x0=X(b.c0),y0=Y(b.r0),w=X(b.c1+1)-x0,h=Y(b.r1+1)-y0,pad=2*k*S;
-        x.save();let nextX=x0+w;if(!b.xf.wrap&&(b.xf.h==null||b.xf.h=="left"||b.xf.h=="general")){for(let c=b.c1+1;c<=maxC;c++){const o=cells.get(b.r0+","+c);if(o&&o.v!==""){nextX=X(c);break}nextX=X(c+1)}}
+        const f=b.xf.font;let fs=f.sz*k;const x0=X(b.c0),y0=Y(b.r0),h=Y(b.r1+1)-y0,pad=2*k*S;let w=X(b.c1+1)-x0;const ccA=b.xf.h=="centerContinuous";if(ccA){for(let c=b.c1+1;c<=maxC;c++){const o=cells.get(b.r0+","+c);if(!o||o.v!=="")break;const xo=xfs[o.s]||dflt;if(xo.h!=="centerContinuous")break;w=X(c+1)-x0}}
+        x.save();let nextX=x0+w;if(!b.xf.wrap&&!ccA&&(b.xf.h==null||b.xf.h=="left"||b.xf.h=="general")){for(let c=b.c1+1;c<=maxC;c++){const o=cells.get(b.r0+","+c);if(o&&o.v!==""){nextX=X(c);break}nextX=X(c+1)}}
         x.beginPath();x.rect(x0,y0,Math.max(1,nextX-x0),h);x.clip();
         x.font=(f.b?"bold ":"")+(fs*S)+"px 'Hiragino Sans','Yu Gothic','Noto Sans CJK JP','Noto Sans JP',sans-serif";x.fillStyle=f.c;x.textBaseline="alphabetic";
         let lines=String(v).split(/\r?\n/);
+        if(b.xf.shrink&&!b.xf.wrap){const tw0=Math.max(...lines.map(l=>x.measureText(l).width)),av=w-2*pad;if(tw0>av&&av>0){fs*=Math.max(.2,av/tw0);x.font=(f.b?"bold ":"")+(fs*S)+"px 'Hiragino Sans','Yu Gothic','Noto Sans CJK JP','Noto Sans JP',sans-serif"}}
         if(b.xf.wrap){const o=[];lines.forEach(l=>{let cur="";for(const ch of l){if(x.measureText(cur+ch).width>w-2*pad&&cur){o.push(cur);cur=ch}else cur+=ch}o.push(cur)});lines=o}
         const lh=fs*S*1.2,tot=lines.length*lh,al=b.xf.h||(b.cell.num?"right":"left"),va=b.xf.v||"bottom";
         let top=va=="top"?y0+pad:va=="center"?y0+(h-tot)/2:y0+h-pad-tot;
-        lines.forEach((l,i)=>{const tw=x.measureText(l).width,tx=al=="center"?x0+(w-tw)/2:al=="right"?x0+w-pad-tw:x0+pad,base=top+i*lh+fs*S*.95;x.fillText(l,tx,base);
+        lines.forEach((l,i)=>{const tw=x.measureText(l).width,tx=(al=="center"||al=="centerContinuous")?x0+(w-tw)/2:al=="right"?x0+w-pad-tw:x0+pad,base=top+i*lh+fs*S*.95;x.fillText(l,tx,base);
           if(lines.length==1&&/[○◯〇□☐◻▢]/.test(l)){[...l].forEach((ch,ci)=>{if(/[○◯〇□☐◻▢]/.test(ch)){const pre=x.measureText(l.slice(0,ci)).width,cwd=x.measureText(ch).width;pgM.marks.push({kind:/[○◯〇]/.test(ch)?"c":"s",cx:(tx+pre+cwd/2)/S,cy:pdfY((base-fs*S*.33)/S),size:fs,on:false})}})}});
         x.restore();
         pgM.texts.push({x:x0/S,y:pdfY((y0+h)/S),w:w/S,h:h/S,s:String(v).replace(/\s+/g," ").trim()})});
@@ -1970,7 +1971,7 @@ async function xlsxToPdf(file){
       boxes.forEach(b=>{const x0=X(b.c0),x1=X(b.c1+1),y0=Y(b.r0),y1=Y(b.r1+1),B=b.xf.border||{},Br=(cells.get(b.r0+","+b.c1)&&(xfs[cells.get(b.r0+","+b.c1).s]||dflt).border)||B,Bb=(cells.get(b.r1+","+b.c0)&&(xfs[cells.get(b.r1+","+b.c0).s]||dflt).border)||B;
         edge(B.left,x0,y0,x0,y1);edge(B.top,x0,y0,x1,y0);edge(Br.right||B.right,x1,y0,x1,y1);edge(Bb.bottom||B.bottom,x0,y1,x1,y1);
         const bordered=[B.left,B.top,B.right,B.bottom,Br.right,Bb.bottom].some(Boolean);
-        if(bordered&&b.cell.v===""&&(x1-x0)/S>=10&&(y1-y0)/S>=7)pgM.cells.push({x0:x0/S,y0:pdfY(y1/S),x1:x1/S,y1:pdfY(y0/S),empty:true})});
+        if(bordered&&b.cell.v===""&&b.xf.h!=="centerContinuous"&&(x1-x0)/S>=10&&(y1-y0)/S>=7)pgM.cells.push({x0:x0/S,y0:pdfY(y1/S),x1:x1/S,y1:pdfY(y0/S),empty:true})});
       shapes.forEach(s=>{const X0=(M+s.x0*k)*S,Y0=(M+(s.y0-ry[ra])*k)*S,W=(s.x1-s.x0)*k*S,Hh=(s.y1-s.y0)*k*S;if(Y0+Hh<0||Y0>ph*S)return;
         x.save();if(s.img){x.drawImage(s.img,X0,Y0,W,Hh);x.restore();return}
         const lines=/line|Connector/i.test(s.prst);
