@@ -141,7 +141,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v102</small></div>
+<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v103</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -1044,7 +1044,7 @@ async function tplList(){
     b2.onclick=()=>sheet("「"+r.name+"」を削除しますか?",[["削除する",async()=>{await tdb("del",r.id);tplList()}]]);
     const cv=document.createElement("canvas");cv.style.cssText="width:44px;height:auto;min-height:56px;border:1px solid var(--bd);border-radius:4px;background:#fff";
     const bE=document.createElement("button");bE.textContent="編集";bE.onclick=()=>tplEditStart(r);const tb=document.createElement("div");tb.className="tb";tb.append(b1,bE,b3,b2);row.append(cv,tn,tb);c.appendChild(row);
-    (async()=>{try{const d=await pdfjsLib.getDocument({data:new Uint8Array(r.pdf)}).promise,p=await d.getPage(1),vp=p.getViewport({scale:100/p.getViewport({scale:1}).width});cv.width=vp.width;cv.height=vp.height;await p.render({canvasContext:cv.getContext("2d"),viewport:vp}).promise}catch(_){}})()});
+    (async()=>{try{const d=await pdfjsLib.getDocument({data:new Uint8Array(new Uint8Array(r.pdf))}).promise,p=await d.getPage(1),vp=p.getViewport({scale:100/p.getViewport({scale:1}).width});cv.width=vp.width;cv.height=vp.height;await p.render({canvasContext:cv.getContext("2d"),viewport:vp}).promise}catch(_){}})()});
   $("tl").style.display="flex"}
 $("tlx").onclick=()=>{$("tl").style.display="none"};
 function tplForm(r){
@@ -1059,7 +1059,7 @@ function kbPre(){try{let k=$("kbp");if(!k){k=document.createElement("input");k.i
 async function tplMake(r){try{return await tplMake0(r)}catch(e){say("");toast("テンプレートを開けませんでした("+((e&&e.message)||e)+")。もう一度試すか、テンプレートを作り直してください",9000)}}
 async function tplMake0(r){
   snap();say("開いています…");
-  const bytes=new Uint8Array(r.pdf),doc=await Promise.race([pdfjsLib.getDocument({data:bytes.slice()}).promise,new Promise((_,j)=>setTimeout(()=>j(new Error("PDFの読み込みが止まりました")),30000))]),fi=files.push({name:r.name,bytes,doc})-1,pgs=[],inst="t"+Date.now();
+  const bytes=new Uint8Array(new Uint8Array(r.pdf)),doc=await Promise.race([pdfjsLib.getDocument({data:bytes.slice()}).promise,new Promise((_,j)=>setTimeout(()=>j(new Error("PDFの読み込みが止まりました")),30000))]),fi=files.push({name:r.name,bytes,doc})-1,pgs=[],inst="t"+Date.now();
   for(let i=0;i<doc.numPages;i++){const p=await doc.getPage(i+1),v=p.view;pgs.push({f:fi,i,r:0,base:p.rotate%360,W:v[2]-v[0],H:v[3]-v[1],sel:false,strokes:[],items:[]})}
   let n=0,first=null;
   let bad=0;r.fields.forEach(f=>{try{
@@ -1295,7 +1295,7 @@ function b64(u){let s="";for(let i=0;i<u.length;i+=32768)s+=String.fromCharCode.
 async function tplShare(r){
   try{
     say("共有ファイルを作成中…");$("tl").style.display="none";
-    const o={app:"pdfmatome",v:1,name:r.name,pages:r.pages||1,fields:r.fields,pdf:b64(new Uint8Array(r.pdf))};
+    const o={app:"pdfmatome",v:1,name:r.name,pages:r.pages||1,fields:r.fields,pdf:b64(new Uint8Array(new Uint8Array(r.pdf)))};
     await deliverFiles([new File([JSON.stringify(o)],r.name+".テンプレート.json",{type:"application/json"})],r.name)
   }catch(e){say("共有ファイルを作れませんでした")}}
 $("tli").onclick=()=>$("tlf").click();
@@ -1338,7 +1338,7 @@ async function tplDoSave(name,list,id){
 async function tplEditStart(r){try{return await tplEditStart0(r)}catch(e){say("");toast("テンプレートを開けませんでした("+((e&&e.message)||e)+")",9000)}}
 async function tplEditStart0(r){
   $("tl").style.display="none";snap();say("開いています…");
-  const bytes=new Uint8Array(r.pdf),doc=await Promise.race([pdfjsLib.getDocument({data:bytes.slice()}).promise,new Promise((_,j)=>setTimeout(()=>j(new Error("PDFの読み込みが止まりました")),30000))]),fi=files.push({name:r.name,bytes,doc})-1,pgs=[];
+  const bytes=new Uint8Array(new Uint8Array(r.pdf)),doc=await Promise.race([pdfjsLib.getDocument({data:bytes.slice()}).promise,new Promise((_,j)=>setTimeout(()=>j(new Error("PDFの読み込みが止まりました")),30000))]),fi=files.push({name:r.name,bytes,doc})-1,pgs=[];
   for(let i=0;i<doc.numPages;i++){const p=await doc.getPage(i+1),v=p.view;pgs.push({f:fi,i,r:0,base:p.rotate%360,W:v[2]-v[0],H:v[3]-v[1],sel:false,strokes:[],items:[]})}
   let n=0;
   let bad=0;r.fields.forEach(f=>{try{const pg=pgs[f.page];if(!pg)return;
