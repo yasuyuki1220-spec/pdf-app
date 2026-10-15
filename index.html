@@ -141,7 +141,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v95</small></div>
+<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v96</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -160,7 +160,7 @@ input[type=range]{accent-color:var(--ac)}
 <div id="te"><span class="fl">テンプレート編集中</span><button id="teQ">連投欄の連続編集</button><button id="teO">番号・順番</button><button id="teA">別名保存</button><button id="teS" class="p">上書き保存</button></div>
 <div id="tq"><input id="tqn" placeholder="名称を入れて、ページをダブルタップ(例: 住所)"><select id="tqg"></select><label style="font-size:13px;display:flex;align-items:center;gap:4px"><input type="checkbox" id="tqL">このページ専用(単品)</label><button id="tqs">枠・文字サイズ</button><button id="tqc">選択コピー</button><button id="tqx">終了</button></div>
 <div class="w" id="wrap"><canvas id="ec"></canvas></div>
-<div id="szb" style="display:none"><span id="szt">連投欄の幅・高さ</span><button id="szW1">幅−</button><button id="szW2">幅＋</button><button id="szH1">高−</button><button id="szH2">高＋</button><button id="szF1">字−</button><button id="szF2">字＋</button><span class="gl" id="szGl" style="display:none">間隔</span><input type="range" id="szG" min="-60" max="60" step="1" value="0" style="display:none"><button class="p" id="szOk">✕</button></div><div id="gb"><span id="gbt"></span><button id="gbM">同じグループにまとめる</button><button id="gbS">グループから外す</button><button id="gbD">削除</button><button class="p" id="gbOk">完了</button></div><div id="xb"><span id="xbt"></span><button id="xbC">空欄→連投欄</button><button id="xbM">○ ON</button><button id="xbQ">□ ON</button><button id="xbA">全部外す</button><button id="xbX">中止</button><button class="p" id="xbOk">決定</button></div>
+<div id="szb" style="display:none"><span id="szt">連投欄の幅・高さ</span><button id="szW1">幅−</button><button id="szW2">幅＋</button><button id="szH1">高−</button><button id="szH2">高＋</button><button id="szF1">字−</button><button id="szF2">字＋</button><span class="gl" id="szGl" style="display:none">間隔</span><input type="range" id="szG" min="-60" max="60" step="1" value="0" style="display:none"><button class="dgx" id="dgS1" style="display:none">間隔−</button><button class="dgx" id="dgS2" style="display:none">間隔＋</button><button class="dgx" id="dgAr" style="display:none">入力右寄せ</button><button class="dgx" id="dgAl" style="display:none">入力左寄せ</button><button class="dgx" id="dgAc" style="display:none">入力中央</button><button class="dgx" id="dgAy" style="display:none">年右・月左</button><button class="dgx" id="dgTx" style="display:none">固定文字</button><button class="dgx" id="dgRl" style="display:none">解除</button><button class="p" id="szOk">✕</button></div><div id="gb"><span id="gbt"></span><button id="gbM">同じグループにまとめる</button><button id="gbS">グループから外す</button><button id="gbD">削除</button><button class="p" id="gbOk">完了</button></div><div id="xb"><span id="xbt"></span><button id="xbC">空欄→連投欄</button><button id="xbM">○ ON</button><button id="xbQ">□ ON</button><button id="xbA">全部外す</button><button id="xbX">中止</button><button class="p" id="xbOk">決定</button></div>
 <div id="dab"><button id="dmA">←</button><button id="dmS" style="font-size:13px;padding:8px 12px">スタンプ</button><span>「←」「スタンプ」を置けます。動かす・回す・大きさ変更ができます</span></div>
 <div id="fg"><span class="fl" id="fgl"></span><button id="fgc">📷 書類から</button><button id="fgs" class="p">連投モード</button><button id="fgp" class="p">単品連投</button><button id="fge">編集モード</button><button id="fgo">連投順</button></div>
 
@@ -1154,7 +1154,7 @@ function smStart(){if(!isXl()&&!(cur&&cur.items.some(i=>i.field)))return toast("
 function smEnd(){$("ed").classList.remove("smf");smOn=false;smT=null;smTapOrd=null;smBadge=false;smForm=false;$("sf").style.display="none";$("smM").classList.remove("on");smSet.clear();smMulti=false;$("smo").style.display="none";$("ed").classList.remove("sm");$("sm").style.display="none";$("szb").style.display="none";szbIt=null;xlC=null;xlUI();tgE=null;tgEUI();paint()}
 const smTg=()=>smSet.size?[...smSet]:(sel&&(sel.field=="input"||sel.field=="toggle")?[sel]:[]);
 function smSync(){const L=smTg(),t=$("smt"),dgL=smOn?dgSel():null;if(smOn&&!smTry){const rep=dgL?(dgL.find(i=>i.field)||dgL[0]):L.length==1?L[0]:null;if(rep&&szbIt!==rep&&!(szbIt&&szbIt.cand))szbOpen(rep);else if(!rep&&szbIt&&!szbIt.cand){$("szb").style.display="none";szbIt=null}}
-  $("szG").style.display=$("szGl").style.display=dgL?"":"none";t.textContent=L.length>1?L.length+"個の欄を選択中(まとめて操作できます)":L.length==1?"選択中:"+(L[0].field=="input"?"連投欄「"+(L[0].lbl||"")+"」":L[0].field=="toggle"?"選択ボタン":"文字"):(smMulti?"タップで追加・解除":"欄をタップで選択");$("smU").classList.toggle("on",smMulti);$("sfU").classList.toggle("on",smMulti);0}
+  $("szG").style.display=$("szGl").style.display=dgL?"":"none";document.querySelectorAll(".dgx").forEach(e=>e.style.display=dgL?"":"none");t.textContent=L.length>1?L.length+"個の欄を選択中(まとめて操作できます)":L.length==1?"選択中:"+(L[0].field=="input"?"連投欄「"+(L[0].lbl||"")+"」":L[0].field=="toggle"?"選択ボタン":"文字"):(smMulti?"タップで追加・解除":"欄をタップで選択");$("smU").classList.toggle("on",smMulti);$("sfU").classList.toggle("on",smMulti);0}
 var smMq=null;
 function smCen(i){return i.cell?[(i.cell.x0+i.cell.x1)/2,(i.cell.y0+i.cell.y1)/2]:[i.a,i.b]}
 function smMqDone(M){const x0=Math.min(M.q0[0],M.q1[0]),x1=Math.max(M.q0[0],M.q1[0]),y0=Math.min(M.q0[1],M.q1[1]),y1=Math.max(M.q0[1],M.q1[1]);
@@ -1221,6 +1221,10 @@ function dgMenu(){const L=dgSel();if(!L)return toast("日付欄をタップし�
 function dgAnc(L,m){const pg=pgOf(L[0])||cur,I=L.filter(i=>i.field=="input"&&!i.choices).sort((p,q)=>p.a-q.a);I.forEach((i,k)=>{i.anc=m=="ymd"?["r","l","c"][k]||"c":m;if(i.cell)fitItem(i,pg)});paint();toast("入力文字の位置を変えました",2000)}
 function dgText(L){const F=L.filter(i=>!i.field).sort((p,q)=>p.a-q.a),v=prompt("固定の文字をカンマで区切って入れてください(左から順)",F.map(i=>i.str).join(","));if(v===null)return;v.split(/[,、,]/).map(x=>x.trim()).forEach((t,i)=>{if(F[i]&&t){F[i].str=t;F[i].key=null}});paint()}
 $("smDg").onclick=dgMenu;
+{const D=fn=>()=>{const L=dgSel();if(!L)return toast("日付欄をタップして選んでください");fn(L)};
+$("dgS1").onclick=D(L=>dgSpace(L,-Math.max(2,(L.find(i=>i.field)||L[0]).s*(pgOf(L[0])||cur).W*.3)));$("dgS2").onclick=D(L=>dgSpace(L,Math.max(2,(L.find(i=>i.field)||L[0]).s*(pgOf(L[0])||cur).W*.3)));
+$("dgAr").onclick=D(L=>dgAnc(L,"r"));$("dgAl").onclick=D(L=>dgAnc(L,"l"));$("dgAc").onclick=D(L=>dgAnc(L,"c"));$("dgAy").onclick=D(L=>dgAnc(L,"ymd"));$("dgTx").onclick=D(L=>dgText(L));
+$("dgRl").onclick=D(L=>{L.forEach(i=>delete i.dg);smSync();paint();toast("1つずつ動かせます",2500)})}
 {let last=0;const g=$("szG");g.oninput=()=>{const L=dgSel();if(!L)return;const v=+g.value;dgSpace(L,(v-last)*.5);last=v};const rs=()=>{g.value=0;last=0};g.onchange=rs;g.onpointerup=rs;g.ontouchend=rs}
 if($("smY"))$("smY").onclick=()=>{smTry=!smTry;smSync();toast(smTry?"試し入力:欄をタップして文字を入れて確認できます(Enterで次の欄)。もう一度押すと編集に戻ります":"試し入力を終えました",3500)};
 $("smZ").onclick=()=>sheet("試し入力を消す",[["入力した文字を全部消す(欄は残す)",()=>{cur.items.forEach(i=>{if(i.field=="input"&&i.lbl&&!i.ph){i.ph=true;setItemStr(i,cur,i.lbl)}});paint()}]]);
