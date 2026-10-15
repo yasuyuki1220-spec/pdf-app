@@ -141,7 +141,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v101</small></div>
+<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v102</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -1056,18 +1056,19 @@ function tplForm(r){
   $("tf").style.display="flex"}
 $("tfx").onclick=()=>{$("tf").style.display="none"};
 function kbPre(){try{let k=$("kbp");if(!k){k=document.createElement("input");k.id="kbp";k.type="text";k.setAttribute("aria-hidden","true");k.style.cssText="position:fixed;left:0;bottom:0;width:1px;height:1px;opacity:0;border:0;padding:0;font-size:16px;z-index:-1";document.body.appendChild(k)}k.focus()}catch(_){}}
-async function tplMake(r){
+async function tplMake(r){try{return await tplMake0(r)}catch(e){say("");toast("テンプレートを開けませんでした("+((e&&e.message)||e)+")。もう一度試すか、テンプレートを作り直してください",9000)}}
+async function tplMake0(r){
   snap();say("開いています…");
-  const bytes=new Uint8Array(r.pdf),doc=await pdfjsLib.getDocument({data:bytes.slice()}).promise,fi=files.push({name:r.name,bytes,doc})-1,pgs=[],inst="t"+Date.now();
+  const bytes=new Uint8Array(r.pdf),doc=await Promise.race([pdfjsLib.getDocument({data:bytes.slice()}).promise,new Promise((_,j)=>setTimeout(()=>j(new Error("PDFの読み込みが止まりました")),30000))]),fi=files.push({name:r.name,bytes,doc})-1,pgs=[],inst="t"+Date.now();
   for(let i=0;i<doc.numPages;i++){const p=await doc.getPage(i+1),v=p.view;pgs.push({f:fi,i,r:0,base:p.rotate%360,W:v[2]-v[0],H:v[3]-v[1],sel:false,strokes:[],items:[]})}
   let n=0,first=null;
-  r.fields.forEach(f=>{
+  let bad=0;r.fields.forEach(f=>{try{
     const pg=pgs[f.page];if(!pg)return;
     const it={k:"t",a:f.a,b:f.b,str:f.str,s:f.s,c:f.c,rot:f.rot,sx:f.sx,sy:f.sy,anc:f.anc};if(f.ring)it.ring=true;if(f.local)it.local=true;if(f.tid)it.tid=f.tid;if(f.dep)it.dep=f.dep;if(f.dg)it.dg=f.dg;if(f.choices)it.choices=f.choices;if(f.cell){it.cell={...f.cell};it.s0=f.s0||f.s;it.s=it.s0}
     if(f.type=="toggle"){it.field="toggle";it.off=true;it.rd=f.rd;it.grp=f.grp?f.grp+"@"+inst:undefined}
     if(f.type=="input"){it.field="input";it.no=f.no||++n;it.ph=true;it.lbl=f.str;it.inst=inst;if(!first)first=pg}
-    if(it.cell)fitItem(it,pg);pg.items.push(it)});
-  pages.push(...pgs);say("");draw();
+    if(it.cell)fitItem(it,pg);pg.items.push(it)}catch(e){bad++}});
+  pages.push(...pgs);say("");draw();if(bad)toast(bad+"個の欄を読み込めませんでした",6000);
   if(first){await openEd(first);fillStart(inst);if("ontouchstart" in window)setTimeout(()=>{if(fillInst===inst&&!kbUp()&&$("ov").style.display!="flex")sheet("入力を始めます(キーボードを出します)",[["入力を始める",()=>fpGo(Math.max(0,fpI),true)]])},1000)}
   else{await openEd(pgs[0]||pages[pages.length-1]);say("");toast("「"+r.name+"」を開きました(連投欄なし)。編集モードで欄を追加できます",4000)}}
 // ---- 連投欄ガイド(①②…の順に入力)
@@ -1334,17 +1335,18 @@ async function tplDoSave(name,list,id){
     say("テンプレート「"+name+"」を保存しました。「追加」→「テンプレートから」で使えます")
   }catch(e){say("テンプレートを保存できませんでした")}}
 // ---- テンプレート自体の編集モード
-async function tplEditStart(r){
+async function tplEditStart(r){try{return await tplEditStart0(r)}catch(e){say("");toast("テンプレートを開けませんでした("+((e&&e.message)||e)+")",9000)}}
+async function tplEditStart0(r){
   $("tl").style.display="none";snap();say("開いています…");
-  const bytes=new Uint8Array(r.pdf),doc=await pdfjsLib.getDocument({data:bytes.slice()}).promise,fi=files.push({name:r.name,bytes,doc})-1,pgs=[];
+  const bytes=new Uint8Array(r.pdf),doc=await Promise.race([pdfjsLib.getDocument({data:bytes.slice()}).promise,new Promise((_,j)=>setTimeout(()=>j(new Error("PDFの読み込みが止まりました")),30000))]),fi=files.push({name:r.name,bytes,doc})-1,pgs=[];
   for(let i=0;i<doc.numPages;i++){const p=await doc.getPage(i+1),v=p.view;pgs.push({f:fi,i,r:0,base:p.rotate%360,W:v[2]-v[0],H:v[3]-v[1],sel:false,strokes:[],items:[]})}
   let n=0;
-  r.fields.forEach(f=>{const pg=pgs[f.page];if(!pg)return;
+  let bad=0;r.fields.forEach(f=>{try{const pg=pgs[f.page];if(!pg)return;
     const it={k:"t",a:f.a,b:f.b,str:f.str,s:f.s,c:f.c,rot:f.rot,sx:f.sx,sy:f.sy,anc:f.anc};if(f.ring)it.ring=true;if(f.local)it.local=true;if(f.tid)it.tid=f.tid;if(f.dep)it.dep=f.dep;if(f.dg)it.dg=f.dg;if(f.choices)it.choices=f.choices;if(f.cell){it.cell={...f.cell};it.s0=f.s0||f.s;it.s=it.s0}
     if(f.type=="toggle"){it.field="toggle";it.off=true;it.rd=f.rd;it.grp=f.grp}
     if(f.type=="input"){it.field="input";it.no=f.no||++n;it.lbl=f.str}
-    if(it.cell)fitItem(it,pg);pg.items.push(it)});
-  pages.push(...pgs);tplEdit={r,pgs};say("");draw();await openEd(pgs[0]);
+    if(it.cell)fitItem(it,pg);pg.items.push(it)}catch(e){bad++}});
+  pages.push(...pgs);tplEdit={r,pgs};say("");draw();await openEd(pgs[0]);if(bad)toast(bad+"個の欄を読み込めませんでした",6000);
   toast("テンプレート編集中:文字を動かしたり、番号で入力順を変えられます",4500)}
 function tplGroups(){
   const m=new Map();(tplEdit?tplEdit.pgs:[]).forEach((pg,pi)=>pg.items.forEach(it=>{if(it.field=="input"){const n=it.no||9999;if(!m.has(n))m.set(n,[]);m.get(n).push({pg,pi,it})}}));
