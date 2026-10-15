@@ -141,7 +141,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v98</small></div>
+<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v99</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -260,7 +260,7 @@ function drawMarks(x,pg,cw,ch,extra){
     x.stroke();x.restore();x.lineCap=x.lineJoin="round";
   }};
   const ppp=(A%180==0?cw:ch)/pg.W;
-  const LB=[];
+  const LB=[],SM=[];
   for(const pass of [0,1,2]){if(pass==1){dS();continue}
   for(const it of pg.items){if((it.k=='i')!=(pass==0))continue;if(it.arr&&it.k=='t'&&!(it.ph&&x.canvas.id!='ec'))drawArr(x,it,pg,cw,ch,A);if(it===editing){if(x.canvas.id=="ec"&&it.field=="input"&&it.lbl&&(fillInst||smOn)){LB.push(it);const B=itBox(it,cw,ch,A);x.save();x.strokeStyle="#2563eb";x.lineWidth=Math.max(2,cw/260);x.setLineDash([]);x.strokeRect(B.X,B.Y,B.W,B.H);x.restore()}continue}try{if(it.dep&&depOff(it,pg)&&!(smOn&&x.canvas.id=="ec"))continue;if(it.field=="toggle"&&it.off&&x.canvas.id!="ec")continue;const ghost=it.ph&&x.canvas.id!="ec";if(ghost)continue;
     const bm=bmOf(it),s=sc(it,pg)*ppp,[u,v]=toDisp(it.a,it.b,A),w=bm.width*s*(it.sx||1),h=bm.height*s*(it.sy||1);
@@ -272,10 +272,11 @@ function drawMarks(x,pg,cw,ch,extra){
       if(it.no){const rr=Math.max(4,cw/125),bx=-dw/2-pd-rr*.15,by=-dh/2-pd-rr*.15;x.fillStyle="rgba(245,158,11,.5)";x.beginPath();x.arc(bx,by,rr,0,7);x.fill();x.fillStyle="#fff";x.font="bold "+rr*1.25+"px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText(LT(it.no),bx,by)}}
     if(it===sel&&x.canvas.id=="ec"&&!cl&&!fl0){x.lineWidth=Math.max(2,cw/250);x.strokeStyle=emode=="size"?"#16a34a":emode=="scale"?"#f59e0b":emode=="move"?"#e11d48":"#2563eb";x.setLineDash(emode?[]:[6,4]);x.strokeRect(-w/2,-h/2,w,h);if(emode=="size"||emode=="scale"){x.fillStyle=emode=="size"?"#16a34a":"#f59e0b";x.beginPath();x.arc(w/2,h/2,hr(),0,7);x.fill()}if(it.k=="t"&&!it.field&&!editing&&!it.cell){const rr=hr()*1.7;x.setLineDash([]);x.fillStyle="#16a34a";x.beginPath();x.arc(w/2,h/2,rr,0,7);x.fill()}}
     x.restore();
-    if(cl&&!(smOn&&it.dg)&&(smOn?true:(it.ph&&it===sel)))LB.push(it);
+    if(cl&&!(smOn&&it.dg)&&(smOn?true:(it.ph&&it===sel)))LB.push(it);if(cl&&smOn&&!smTry&&it.dg&&it.ph&&it.cell)SM.push(it);
     if(it===sel&&x.canvas.id=="ec"&&it.k=="t"&&(!it.field||tplEdit)&&it.cell&&!editing){const b=cellBR(it,pg),rr=hr()*1.7;x.save();x.setLineDash([]);x.fillStyle="#16a34a";x.beginPath();x.arc(b.u*cw,b.v*ch,rr,0,7);x.fill();x.restore()}
   }catch(err){try{x.restore()}catch(_){}}}}
   LB.sort((p,q)=>((p===sel||p===editing)?1:0)-((q===sel||q===editing)?1:0));LB.forEach(it=>drawLbl(x,it,cw,ch,A));
+  SM.forEach(it=>{try{const sp=it.choices?it.choices[0]:/月$/.test(it.lbl||"")?"10":/日$/.test(it.lbl||"")?"25":"60",T={...it,str:sp,key:null,bmc:null,ph:false,c:"#2563eb"};fitItem(T,pg);const bm=bmOf(T),s=sc(T,pg)*ppp,[u,v]=toDisp(T.a,T.b,A),w=bm.width*s*(T.sx||1),h=bm.height*s*(T.sy||1);x.save();x.globalAlpha=.85;x.translate(u*cw,v*ch);x.rotate((T.rot+A)*PI/180);vecText(x,T,bm,w,h);x.restore()}catch(e){}});
   if(x.canvas.id=="ec"&&xlC&&xlC.pg===pg)xlDraw(x,pg,cw,ch,A);
   if(x.canvas.id=="ec"&&tgE&&cur===pg)tgEDraw(x,pg,cw,ch,A);
   if(x.canvas.id=="ec"&&smOn&&cur===pg)smDraw(x,pg,cw,ch,A);
