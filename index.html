@@ -143,7 +143,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v120</small></div>
+<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v122</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -254,6 +254,7 @@ function arrowPts(P0,P1,W,H){const x0=P0[0]*W,y0=P0[1]*H,x1=P1[0]*W,y1=P1[1]*H,d
 function drawArr(x,it,pg,cw,ch,A){const o=stampCornerP(it,pg);x.save();x.lineCap=x.lineJoin="round";x.setLineDash([]);for(const a of it.arr){x.strokeStyle=a.c;x.lineWidth=a.w*(A%180==0?cw:ch);arrowPts(o,a.t,pg.W,pg.H).forEach(Pp=>{x.beginPath();Pp.forEach(([p,q],k)=>{const [u,v]=toDisp(p,q,A);k?x.lineTo(u*cw,v*ch):x.moveTo(u*cw,v*ch)});x.stroke()})}x.restore()}
 const LT=n=>(n>=1&&n<=26&&Math.floor(n)==n)?String.fromCharCode(64+n):String(n);
 function drawMarks(x,pg,cw,ch,extra){
+  const zf=x.canvas.id=="ec"&&baseW?Math.max(1,(ec.getBoundingClientRect().width||baseW)/baseW):1,cwU=cw/zf;
   const A=ang(pg);x.lineCap=x.lineJoin="round";
   const dS=()=>{for(const s of pg.strokes.concat(extra?[extra]:[])){
     x.save();if(s.hl){x.globalAlpha=.4;x.globalCompositeOperation="multiply";x.lineCap="butt"}x.strokeStyle=s.c;x.lineWidth=s.w*(A%180==0?cw:ch);x.beginPath();
@@ -264,15 +265,15 @@ function drawMarks(x,pg,cw,ch,extra){
   const ppp=(A%180==0?cw:ch)/pg.W;
   const LB=[],SM=[];
   for(const pass of [0,1,2]){if(pass==1){dS();continue}
-  for(const it of pg.items){if((it.k=='i')!=(pass==0))continue;if(it.arr&&it.k=='t'&&!(it.ph&&x.canvas.id!='ec'))drawArr(x,it,pg,cw,ch,A);if(it===editing){if(x.canvas.id=="ec"&&it.field=="input"&&it.lbl&&(fillInst||smOn)){LB.push(it);const B=itBox(it,cw,ch,A);x.save();x.strokeStyle="#2563eb";x.lineWidth=Math.max(2,cw/260);x.setLineDash([]);x.strokeRect(B.X,B.Y,B.W,B.H);x.restore()}continue}try{if(it.dep&&depOff(it,pg)&&!(smOn&&x.canvas.id=="ec"))continue;if(it.field=="toggle"&&it.off&&x.canvas.id!="ec")continue;const ghost=it.ph&&x.canvas.id!="ec";if(ghost)continue;
+  for(const it of pg.items){if((it.k=='i')!=(pass==0))continue;if(it.arr&&it.k=='t'&&!(it.ph&&x.canvas.id!='ec'))drawArr(x,it,pg,cw,ch,A);if(it===editing){if(x.canvas.id=="ec"&&it.field=="input"&&it.lbl&&(fillInst||smOn)){LB.push(it);const B=itBox(it,cw,ch,A);x.save();x.strokeStyle="#2563eb";x.lineWidth=Math.max(2,cwU/260);x.setLineDash([]);x.strokeRect(B.X,B.Y,B.W,B.H);x.restore()}continue}try{if(it.dep&&depOff(it,pg)&&!(smOn&&x.canvas.id=="ec"))continue;if(it.field=="toggle"&&it.off&&x.canvas.id!="ec")continue;const ghost=it.ph&&x.canvas.id!="ec";if(ghost)continue;
     const bm=bmOf(it),s=sc(it,pg)*ppp,[u,v]=toDisp(it.a,it.b,A),w=bm.width*s*(it.sx||1),h=bm.height*s*(it.sy||1);
-    const fq=x.canvas.id=="ec"&&fillInst&&it.field=="input"&&it.inst===fillInst;if((it.cell||(it.field=="input"&&(fq||(smOn&&!smTry&&!smBadge))))&&x.canvas.id=="ec"&&!(fq&&!it.ph)&&!(smOn&&it.dg&&!smBadge)&&(it.ph||smOn||fq)){const BB=itBox(it,cw,ch,A);x.save();x.strokeStyle=fq?(it===sel?"#2563eb":"rgba(245,158,11,.55)"):(it.local?"#0d9488":(it.ph?"#f59e0b":"#3b82f6"));x.lineWidth=(fq&&it===sel)?Math.max(2,cw/260):Math.max(1,cw/450);x.setLineDash(fq?[]:[5,3]);x.strokeRect(BB.X,BB.Y,BB.W,BB.H);x.restore()}
-    x.save();x.translate(u*cw,v*ch);x.rotate((it.rot+A)*PI/180);if(it===lift&&!ghost){x.shadowColor="rgba(0,0,0,.4)";x.shadowBlur=cw/30;x.shadowOffsetY=cw/110;x.scale(1.07,1.07)}if(ghost){x.strokeStyle=it.local?"#0d9488":"#f59e0b";x.lineWidth=Math.max(1.5,cw/160);x.setLineDash([6,4]);x.strokeRect(-w/2,-h/2,w,h);x.setLineDash([]);if(it.no){const rr=Math.max(9,cw/18);x.fillStyle="#f59e0b";x.beginPath();x.arc(-w/2,-h/2,rr,0,7);x.fill();x.fillStyle="#fff";x.font="bold "+rr*1.3+"px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText(LT(it.no),-w/2,-h/2)}x.restore();continue}const onE=x.canvas.id=="ec",cl=onE&&it.field=="input"&&((smOn&&!smTry&&!smBadge)||(fillInst&&it.inst===fillInst&&it.ph)),fl0=onE&&fillInst&&it.field=="input"&&it.inst===fillInst,isIn=it.field=="input"&&onE,k0=(it.ph&&onE)?.72:1,dw=w*k0,dh=h*k0,pd=Math.max(2,cw/230);
+    const fq=x.canvas.id=="ec"&&fillInst&&it.field=="input"&&it.inst===fillInst;if((it.cell||(it.field=="input"&&(fq||(smOn&&!smTry&&!smBadge))))&&x.canvas.id=="ec"&&!(fq&&!it.ph)&&!(smOn&&it.dg&&!smBadge)&&(it.ph||smOn||fq)){const BB=itBox(it,cw,ch,A);x.save();x.strokeStyle=fq?(it===sel?"#2563eb":"rgba(245,158,11,.55)"):(it.local?"#0d9488":(it.ph?"#f59e0b":"#3b82f6"));x.lineWidth=(fq&&it===sel)?Math.max(2,cwU/260):Math.max(1,cwU/450);x.setLineDash(fq?[]:[5,3]);x.strokeRect(BB.X,BB.Y,BB.W,BB.H);x.restore()}
+    x.save();x.translate(u*cw,v*ch);x.rotate((it.rot+A)*PI/180);if(it===lift&&!ghost){x.shadowColor="rgba(0,0,0,.4)";x.shadowBlur=cwU/30;x.shadowOffsetY=cwU/110;x.scale(1.07,1.07)}if(ghost){x.strokeStyle=it.local?"#0d9488":"#f59e0b";x.lineWidth=Math.max(1.5,cwU/160);x.setLineDash([6,4]);x.strokeRect(-w/2,-h/2,w,h);x.setLineDash([]);if(it.no){const rr=Math.max(9,cwU/18);x.fillStyle="#f59e0b";x.beginPath();x.arc(-w/2,-h/2,rr,0,7);x.fill();x.fillStyle="#fff";x.font="bold "+rr*1.3+"px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText(LT(it.no),-w/2,-h/2)}x.restore();continue}const onE=x.canvas.id=="ec",cl=onE&&it.field=="input"&&((smOn&&!smTry&&!smBadge)||(fillInst&&it.inst===fillInst&&it.ph)),fl0=onE&&fillInst&&it.field=="input"&&it.inst===fillInst,isIn=it.field=="input"&&onE,k0=(it.ph&&onE)?.72:1,dw=w*k0,dh=h*k0,pd=Math.max(2,cwU/230);
     if(isIn&&!cl&&!fl0){x.fillStyle=it.ph?"rgba(255,248,220,.96)":"rgba(255,255,255,.55)";x.fillRect(-dw/2-pd,-dh/2-pd,dw+2*pd,dh+2*pd)}
-    if(it.field=="toggle"&&it.off){const gd=onE&&(smOn||(fillInst&&!(it.grp&&pg.items.some(o=>o!==it&&o.field=="toggle"&&o.grp===it.grp&&!o.off))));if(it.ring&&gd){x.strokeStyle=smOn?"rgba(124,58,237,.7)":"rgba(124,58,237,.4)";x.lineWidth=Math.max(1,cw/550);x.beginPath();x.ellipse(0,0,dw/2,dh/2,0,0,7);x.stroke()}else if(gd&&it===sel){x.strokeStyle="#7c3aed";x.lineWidth=Math.max(1.2,cw/450);x.setLineDash([4,3]);const m=Math.min(dw,dh)*.7;x.strokeRect(-m/2,-m/2,m,m);x.setLineDash([])}}else if(cl&&it.ph){}else if(it.k=="t")vecText(x,it,bm,dw,dh);else x.drawImage(bm,-dw/2,-dh/2,dw,dh);
-    if(isIn&&!cl&&!fl0&&(it.ph||smOn||tplEdit)){x.strokeStyle="rgba(245,158,11,.7)";x.lineWidth=Math.max(1,cw/520);x.setLineDash([5,4]);x.strokeRect(-dw/2-pd,-dh/2-pd,dw+2*pd,dh+2*pd);x.setLineDash([]);
-      if(it.no){const rr=Math.max(4,cw/125),bx=-dw/2-pd-rr*.15,by=-dh/2-pd-rr*.15;x.fillStyle="rgba(245,158,11,.5)";x.beginPath();x.arc(bx,by,rr,0,7);x.fill();x.fillStyle="#fff";x.font="bold "+rr*1.25+"px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText(LT(it.no),bx,by)}}
-    if(it===sel&&x.canvas.id=="ec"&&!cl&&!fl0){x.lineWidth=Math.max(2,cw/250);x.strokeStyle=emode=="size"?"#16a34a":emode=="scale"?"#f59e0b":emode=="move"?"#e11d48":"#2563eb";x.setLineDash(emode?[]:[6,4]);x.strokeRect(-w/2,-h/2,w,h);if(emode=="size"||emode=="scale"){x.fillStyle=emode=="size"?"#16a34a":"#f59e0b";x.beginPath();x.arc(w/2,h/2,hr(),0,7);x.fill()}if(it.k=="t"&&!it.field&&!editing&&!it.cell){const rr=hr()*1.7;x.setLineDash([]);x.fillStyle="#16a34a";x.beginPath();x.arc(w/2,h/2,rr,0,7);x.fill()}}
+    if(it.field=="toggle"&&it.off){const gd=onE&&(smOn||(fillInst&&!(it.grp&&pg.items.some(o=>o!==it&&o.field=="toggle"&&o.grp===it.grp&&!o.off))));if(it.ring&&gd){x.strokeStyle=smOn?"rgba(124,58,237,.7)":"rgba(124,58,237,.4)";x.lineWidth=Math.max(1,cwU/550);x.beginPath();x.ellipse(0,0,dw/2,dh/2,0,0,7);x.stroke()}else if(gd&&it===sel){x.strokeStyle="#7c3aed";x.lineWidth=Math.max(1.2,cwU/450);x.setLineDash([4,3]);const m=Math.min(dw,dh)*.7;x.strokeRect(-m/2,-m/2,m,m);x.setLineDash([])}}else if(cl&&it.ph){}else if(it.k=="t")vecText(x,it,bm,dw,dh);else x.drawImage(bm,-dw/2,-dh/2,dw,dh);
+    if(isIn&&!cl&&!fl0&&(it.ph||smOn||tplEdit)){x.strokeStyle="rgba(245,158,11,.7)";x.lineWidth=Math.max(1,cwU/520);x.setLineDash([5,4]);x.strokeRect(-dw/2-pd,-dh/2-pd,dw+2*pd,dh+2*pd);x.setLineDash([]);
+      if(it.no){const rr=Math.max(4,cwU/125),bx=-dw/2-pd-rr*.15,by=-dh/2-pd-rr*.15;x.fillStyle="rgba(245,158,11,.5)";x.beginPath();x.arc(bx,by,rr,0,7);x.fill();x.fillStyle="#fff";x.font="bold "+rr*1.25+"px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText(LT(it.no),bx,by)}}
+    if(it===sel&&x.canvas.id=="ec"&&!cl&&!fl0){x.lineWidth=Math.max(2,cwU/250);x.strokeStyle=emode=="size"?"#16a34a":emode=="scale"?"#f59e0b":emode=="move"?"#e11d48":"#2563eb";x.setLineDash(emode?[]:[6,4]);x.strokeRect(-w/2,-h/2,w,h);if(emode=="size"||emode=="scale"){x.fillStyle=emode=="size"?"#16a34a":"#f59e0b";x.beginPath();x.arc(w/2,h/2,hr(),0,7);x.fill()}if(it.k=="t"&&!it.field&&!editing&&!it.cell){const rr=hr()*1.7;x.setLineDash([]);x.fillStyle="#16a34a";x.beginPath();x.arc(w/2,h/2,rr,0,7);x.fill()}}
     x.restore();
     if(cl&&!(smOn&&it.dg)&&(smOn?true:(it.ph&&it===sel)))LB.push(it);if(cl&&smOn&&!smTry&&it.ph)SM.push(it);
     if(it===sel&&x.canvas.id=="ec"&&it.k=="t"&&(!it.field||tplEdit)&&it.cell&&!editing){const b=cellBR(it,pg),rr=hr()*1.7;x.save();x.setLineDash([]);x.fillStyle="#16a34a";x.beginPath();x.arc(b.u*cw,b.v*ch,rr,0,7);x.fill();x.restore()}
@@ -292,10 +293,10 @@ function smpOf(it){const l=it.lbl||"";if(it.choices&&it.choices.length)return it
    [/会社|法人|事業所|店名|社名|勤務先/,"株式会社サンプル"],[/住所|所在|位置|本拠|場所/,"鹿児島市中央町1-2-3"],[/氏名|名前|お名前|担当|代表者|医師|申請者|所有者|使用者/,"山田 太郎"],[/病名|症状|疾患/,"インフルエンザ"],
    [/車名/,"プリウス"],[/型式/,"6AA-MXAA54"],[/車台|番号|No|ＮＯ/i,"ABC-1234567"],[/金額|円|価格|代金|合計|小計|税|料/,"12,345"],[/数|量|台/,"1"],[/機関|病院|学校|園/,"サンプル医院"],[/^年$/,"8"],[/^月$/,"10"],[/^日$/,"25"]];
   for(const [r,v] of R)if(r.test(l))return v;return "見本テキスト"}
-function drawLbl(x,it,cw,ch,A){const B=itBox(it,cw,ch,A),X=B.X,Y=B.Y,t=it.lbl||"";if(!t)return;
-  const E=smOn&&(it===sel||it===editing),fz=Math.max(9,cw/70)*(E?1.3:1);x.save();x.font="700 "+fz+"px sans-serif";if(smOn&&!E&&(sel||smSet.size)){const tw=x.measureText(t).width,lx=X-fz*.3,ly=Y-1-fz*1.1,P=fz*.6,S=new Set(smSet);if(sel)S.add(sel);let hit=false;S.forEach(o=>{if(hit||o===it||o.dg&&o.dg===it.dg)return;const b=itBox(o,cw,ch,A);if(lx<b.X+b.W+P&&lx+tw>b.X-P&&ly<b.Y+b.H+P&&ly+fz*1.2>b.Y-P)hit=true});if(hit)x.globalAlpha=.15}x.lineJoin="round";x.textAlign="left";x.textBaseline="bottom";
+function drawLbl(x,it,cw,ch,A){const cwU=cw/Math.max(1,(ec.getBoundingClientRect().width||baseW)/baseW);const B=itBox(it,cw,ch,A),X=B.X,Y=B.Y,t=it.lbl||"";if(!t)return;
+  const E=smOn&&(it===sel||it===editing),fz=Math.max(9,cwU/70)*(E?1.3:1);x.save();x.font="700 "+fz+"px sans-serif";if(smOn&&!E&&(sel||smSet.size)){const tw=x.measureText(t).width,lx=X-fz*.3,ly=Y-1-fz*1.1,P=fz*.6,S=new Set(smSet);if(sel)S.add(sel);let hit=false;S.forEach(o=>{if(hit||o===it||o.dg&&o.dg===it.dg)return;const b=itBox(o,cw,ch,A);if(lx<b.X+b.W+P&&lx+tw>b.X-P&&ly<b.Y+b.H+P&&ly+fz*1.2>b.Y-P)hit=true});if(hit)x.globalAlpha=.15}x.lineJoin="round";x.textAlign="left";x.textBaseline="bottom";
   if(E){const w=x.measureText(t).width,px=fz*.4,bx=X-fz*.3-px,by=Y-fz*1.35-3;x.shadowColor="rgba(37,99,235,.5)";x.shadowBlur=fz*.6;x.fillStyle="#2563eb";x.beginPath();(x.roundRect?x.roundRect(bx,by,w+2*px,fz*1.3,fz*.3):x.rect(bx,by,w+2*px,fz*1.3));x.fill();x.shadowBlur=0;x.fillStyle="#fff";x.fillText(t,X-fz*.3,by+fz*1.15);
-    x.strokeStyle="#2563eb";x.lineWidth=Math.max(3,cw/170);x.setLineDash([]);x.strokeRect(B.X,B.Y,B.W,B.H);x.strokeStyle="rgba(255,255,255,.9)";x.lineWidth=Math.max(1,cw/600);x.strokeRect(B.X,B.Y,B.W,B.H)}
+    x.strokeStyle="#2563eb";x.lineWidth=Math.max(3,cwU/170);x.setLineDash([]);x.strokeRect(B.X,B.Y,B.W,B.H);x.strokeStyle="rgba(255,255,255,.9)";x.lineWidth=Math.max(1,cwU/600);x.strokeRect(B.X,B.Y,B.W,B.H)}
   else{x.lineWidth=fz/2.4;x.strokeStyle="rgba(255,255,255,.95)";x.strokeText(t,X-fz*.3,Y-1);x.fillStyle=it.local?"#0f766e":"#b45309";x.fillText(t,X-fz*.3,Y-1)}x.restore()}
 function draw(flash){
   const gr=$("grid");gr.innerHTML="";$("empty").style.display=pages.length?"none":"block";
@@ -470,7 +471,7 @@ const pgList=()=>tplEdit?tplEdit.pgs:pages;
 function pgLabel(){const L=pgList();$("pgl").textContent=(L.indexOf(cur)+1)+" / "+L.length}
 function goPage(d){if(!cur)return;const L=pgList(),n=L[L.indexOf(cur)+d];if(!n)return toast(d>0?"最後のページです":"最初のページです",1200);endEdit();commit();openEd(n)}
 $("pgP").onclick=()=>goPage(-1);$("pgN").onclick=()=>goPage(1);
-async function openEd(pg){let kz=null;if(cur&&cur!==pg&&ec.width&&baseW&&$("ed").style.display=="flex"){kz={z:ec.getBoundingClientRect().width/baseW,fx:(wrap.scrollLeft+wrap.clientWidth/2)/Math.max(1,wrap.scrollWidth),fy:(wrap.scrollTop+wrap.clientHeight/2)/Math.max(1,wrap.scrollHeight)}}sbAll();cur=pg;emode=null;ruler={on:false,a:.5,b:.4,deg:0};rotInfo=null;rulerUI();pgLabel();sel=null;$("ed").style.display="flex";setMode(qp&&qp.on&&tplEdit?"text":"pen");await redrawBase();if(kz&&kz.z>1.02){ec.style.width=baseW*kz.z+"px";wrap.scrollLeft=kz.fx*wrap.scrollWidth-wrap.clientWidth/2;wrap.scrollTop=kz.fy*wrap.scrollHeight-wrap.clientHeight/2;paint()}qSync();if(qp&&qp.on)qOpts();if(smOn){smSync();paint()}}
+async function openEd(pg){let kz=null;if(cur&&cur!==pg&&ec.width&&baseW&&$("ed").style.display=="flex"){kz={z:ec.getBoundingClientRect().width/baseW,fx:(wrap.scrollLeft+wrap.clientWidth/2)/Math.max(1,wrap.scrollWidth),fy:(wrap.scrollTop+wrap.clientHeight/2)/Math.max(1,wrap.scrollHeight)}}sbAll();cur=pg;emode=null;ruler={on:false,a:.5,b:.4,deg:0};rotInfo=null;rulerUI();pgLabel();sel=null;$("ed").style.display="flex";setMode(qp&&qp.on&&tplEdit?"text":"pen");await redrawBase();if(kz&&kz.z>1.02){ec.style.width=baseW*kz.z+"px";wrap.scrollLeft=kz.fx*wrap.scrollWidth-wrap.clientWidth/2;wrap.scrollTop=kz.fy*wrap.scrollHeight-wrap.clientHeight/2;paint()}qSync();if(qp&&qp.on)qOpts();if(smOn){smSync();paint();smAutoCells()}}
 const baseCv=document.createElement("canvas");
 async function redrawBase(){selR=null;if(!cur._base)cur._base=snapOf(cur);
   {const A0=ang(cur),pw=A0%180==0?cur.W:cur.H,ph=A0%180==0?cur.H:cur.W;baseW=Math.max(120,Math.min(wrap.clientWidth-4,(wrap.clientHeight-4)*pw/ph,900))}
@@ -605,6 +606,13 @@ $("ex").onclick=()=>{if(sel&&sel.k=="t")startEdit(sel)};
 $("dl").onclick=()=>{if(sel){cur.items=cur.items.filter(i=>i!==sel);sel=null;syncPanel();paint()}};
 $("un").onclick=undoLast;$("re").onclick=redoLast;
 $("cl").onclick=()=>{if(cur.strokes.length)sheet("ペンの書き込みを全て消しますか?",[["消す",()=>{cur.strokes=[];paint()}]])};
+let hrT=0,hrBusy=false;
+function hiResSoon(){clearTimeout(hrT);hrT=setTimeout(hiRes,300)}
+async function hiRes(){if(!cur||hrBusy||$("ed").style.display!="flex")return;const r=ec.getBoundingClientRect();if(!r.width)return;
+  const dpr=Math.min(3,window.devicePixelRatio||1),A0=ang(cur),asp=A0%180==0?cur.H/cur.W:cur.W/cur.H,want=Math.min(Math.round(r.width*dpr),Math.floor(Math.sqrt(12e6/asp)));
+  if(want<=ec.width*1.15)return;hrBusy=true;const pg=cur;
+  try{const cv=document.createElement("canvas");await renderPage(pg,cv,want,false);if(cur===pg&&cv.width>ec.width){baseCv.width=cv.width;baseCv.height=cv.height;baseCv.getContext("2d").drawImage(cv,0,0);ec.width=cv.width;ec.height=cv.height;paint()}cv.width=cv.height=0}catch(e){}finally{hrBusy=false}}
+if(window.ResizeObserver)new ResizeObserver(()=>hiResSoon()).observe(ec);
 function zoomAt(w,fx,fy,mx,my){ec.style.width=clamp(w,baseW,baseW*5)+"px";const r=ec.getBoundingClientRect();wrap.scrollLeft+=r.left+fx*r.width-mx;wrap.scrollTop+=r.top+fy*r.height-my;zoomNote()}
 const zoom=f=>{const r=ec.getBoundingClientRect(),q=wrap.getBoundingClientRect(),mx=q.left+q.width/2,my=q.top+q.height/2;zoomAt(r.width*f,(mx-r.left)/r.width,(my-r.top)/r.height,mx,my)};
 $("zi").onclick=()=>zoom(1.1);$("zo").onclick=()=>zoom(1/1.1);
@@ -1226,7 +1234,19 @@ $("fpe").onclick=fillEnd;
 // ---- v38: シート編集モード(Excel読み込みシート専用)
 var smTapOrd=null,smBadge=false,smForm=false,xlLast=null,smOn=false,smT=null,smLast=null,smSet=new Set(),smMulti=false,smTry=false;
 const isXl=()=>!!(cur&&files[cur.f]&&files[cur.f].xl);
-function smStart(){if(!isXl()&&!(cur&&cur.items.some(i=>i.field)))return toast("シート編集は、Excelから読み込んだシートだけで使えます");if(fillInst)fillStop();endEdit();sel=null;emode=null;setMode("text");smOn=true;smSet.clear();smMulti=false;$("ed").classList.add("sm");$("sm").style.display="flex";smSync();paint();toast("欄をタップで選択・ドラッグで移動・ダブルタップで名前・長押しでサイズ調整",4500)}
+// ---- マスの情報が無い欄(古いテンプレートなど)を、その欄がのっている表のマスに合わせる
+async function autoCells(pg){if(!pg||pg._ac)return 0;const L=pg.items.filter(i=>i.field=="input"&&!i.cell&&!i.dg);pg._ac=true;if(!L.length)return 0;
+  const fl=files[pg.f];if(!fl||!fl.doc)return 0;let n=0;
+  try{const pj=await fl.doc.getPage(pg.i+1),v=pj.view,W=pg.W,H=pg.H,pw=v[2]-v[0],S=Math.min(2,1800/pw),vp=pj.getViewport({scale:S,rotation:0}),c=document.createElement("canvas");c.width=Math.round(vp.width);c.height=Math.round(vp.height);
+    const x=c.getContext("2d",{willReadFrequently:true});x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);await pj.render({canvasContext:x,viewport:vp}).promise;
+    if(fl.bytes&&typeof PDFLib!="undefined"){try{const {H:HL,V:VL}=await xlLines(fl.bytes,pg.i),lw=Math.max(1.3,S*.7);x.fillStyle="#000";HL.forEach(l=>x.fillRect((l.x0-v[0])*S,(v[3]-l.y)*S-lw/2,(l.x1-l.x0)*S,lw));VL.forEach(l=>x.fillRect((l.x-v[0])*S-lw/2,(v[3]-l.y1)*S,lw,(l.y1-l.y0)*S))}catch(e){}}
+    let B=rasterCells(x.getImageData(0,0,c.width,c.height),S,v,[]);c.width=c.height=0;try{const tc=await pj.getTextContent(),{texts}=xlText(tc);if(texts.length>3){const R=await rasterDetect(fl,pg.i,{texts});B=B.concat(R.cells.filter(k=>!k.dg))}}catch(e){}
+    L.forEach(it=>{const bx=itBox(it,W,H,0),px=v[0]+(bx.X+Math.min(8,bx.W*.25)),py=v[3]-(bx.Y+bx.H/2),cand=B.filter(k=>px>=k.x0-2&&px<=k.x1&&py>=k.y0&&py<=k.y1&&(k.x1-k.x0)<pw*.95);
+      if(!cand.length)return;const k=cand.sort((p,q)=>(p.x1-p.x0)*(p.y1-p.y0)-(q.x1-q.x0)*(q.y1-q.y0))[0];
+      it.cell={x0:(k.x0-v[0])/W,x1:(k.x1-v[0])/W,y0:(v[3]-k.y1)/H,y1:(v[3]-k.y0)/H};const fs=Math.max(6,Math.min(16,(k.y1-k.y0)*.55))/W;it.s0=Math.min(it.s0||it.s,fs);it.s=it.s0;if(!it.anc)it.anc="l";fitItem(it,pg);n++})}catch(e){}
+  say("");return n}
+async function smAutoCells(){const pg=cur;const n=await autoCells(pg);if(n&&cur===pg){paint();toast(n+"か所の欄を、表のマスに合わせました(大きさ・位置)。保存→「テンプレートを上書き」で記録されます",5000)}}
+function smStart(){if(!isXl()&&!(cur&&cur.items.some(i=>i.field)))return toast("シート編集は、Excelから読み込んだシートだけで使えます");if(fillInst)fillStop();endEdit();sel=null;emode=null;setMode("text");smOn=true;smSet.clear();smMulti=false;$("ed").classList.add("sm");$("sm").style.display="flex";smSync();paint();smAutoCells();toast("欄をタップで選択・ドラッグで移動・ダブルタップで名前・長押しでサイズ調整",4500)}
 function smEnd(){ec.style.marginBottom="";$("ed").classList.remove("smf");smOn=false;smT=null;smTapOrd=null;smBadge=false;smForm=false;$("sf").style.display="none";$("smM").classList.remove("on");smSet.clear();smMulti=false;$("smo").style.display="none";$("ed").classList.remove("sm");$("sm").style.display="none";$("szb").style.display="none";szbIt=null;xlC=null;xlUI();tgE=null;tgEUI();paint()}
 const smTg=()=>smSet.size?[...smSet]:(sel&&(sel.field=="input"||sel.field=="toggle")?[sel]:[]);
 var smRvK=null,smRvT=0;
