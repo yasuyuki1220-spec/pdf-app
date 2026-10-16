@@ -142,7 +142,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v117</small></div>
+<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v118</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -1794,7 +1794,7 @@ async function xlLines(bytes,pi){
 const XL_C=/[○◯〇]/,XL_S=/[□☐◻▢]/;
 function xlText(tc){const texts=[],marks=[];
   for(const it of tc.items){const s=it.str;if(!s||!s.trim())continue;const tr=it.transform,fs=Math.abs(tr[3])||it.height||10,x=tr[4],y=tr[5],w=it.width||fs*s.length;
-    texts.push({x,y:y-fs*.2,w,h:fs,s:s.trim()});
+    texts.push({x,y:y-fs*.2,w,h:fs,s:s.trim(),r:s});
     if(XL_C.test(s)||XL_S.test(s)){const wt=[...s].map(ch=>ch.charCodeAt(0)<128?.55:1),tot=wt.reduce((a,b)=>a+b,0);let cum=0;
       [...s].forEach((ch,k)=>{const cx=x+w*(cum+wt[k]/2)/tot;cum+=wt[k];
         if(XL_C.test(ch))marks.push({kind:"c",cx,cy:y+fs*.33,size:fs});else if(XL_S.test(ch))marks.push({kind:"s",cx,cy:y+fs*.33,size:fs})})}}
@@ -1883,51 +1883,78 @@ function dateScan(T){
     L.push(mk("月",Y?Y.x1+1.5:left(M,56)+1.5,M.x0-1,M));L.push(mk("日",M.x1+1.5,d.x0-1,d));
     if(L.every(c=>c.x1-c.x0>=11))out.push(L)});
   return out}
-function txChars(T){const ch=[];T.forEach(t=>{const a=[...t.s],wt=a.map(c=>c.charCodeAt(0)<128?.55:1),tot=wt.reduce((p,q)=>p+q,0)||1;let cum=0;a.forEach((c,k)=>{const x0=t.x+t.w*cum/tot;cum+=wt[k];ch.push({c,x0,x1:t.x+t.w*cum/tot,y:t.y,h:t.h})})});return ch}
+function txChars(T){const ch=[];T.forEach(t=>{const a=[...(t.r||t.s)],wt=a.map(c=>c.charCodeAt(0)<128?.55:1),tot=wt.reduce((p,q)=>p+q,0)||1;let cum=0;a.forEach((c,k)=>{const x0=t.x+t.w*cum/tot;cum+=wt[k];ch.push({c,x0,x1:t.x+t.w*cum/tot,y:t.y,h:t.h})})});return ch}
+// 文字のかたまり(1行の中で近い文字をまとめたもの)
+function txPhrases(T){const C=txChars(T).filter(q=>q.c.trim()&&q.c!="　");C.forEach(q=>q.cy=q.y+q.h/2);C.sort((a,b)=>a.cy-b.cy);const L=[];
+  C.forEach(q=>{const l=L.find(l=>Math.abs(l.cy-q.cy)<Math.max(l.h,q.h)*.45);if(l){l.c.push(q);l.h=Math.max(l.h,q.h)}else L.push({cy:q.cy,h:q.h,c:[q]})});
+  const P=[];L.forEach(l=>{l.c.sort((a,b)=>a.x0-b.x0);let cur=null;l.c.forEach(q=>{if(cur&&q.x0-cur.x1<2.2*l.h&&!/[(（「]/.test(q.c)&&!/[)）」]$/.test(cur.s)){cur.s+=q.c;cur.x1=q.x1}else{cur={s:q.c,x0:q.x0,x1:q.x1,cy:l.cy,h:l.h,line:l};P.push(cur)}})});return P}
+const FLD=/(名|所|地|号|称|先|者|在|ガナ|がな|TEL|FAX|ＴＥＬ|ＦＡＸ|齢|業|期間|理由|備考|No|NO|Ｎｏ|ＮＯ|式|担当|スタッフ|店|職|連絡|メール|mail|〒|日)$/i;
+const lbClean=s=>String(s||"").replace(/^[※・\d０-９.．、□☐◻▢■]+/,"").replace(/[()（）「」]/g,"").replace(/[:：]+$/,"").trim();
+function inkOf(img){const w=img.width,h=img.height,d=img.data,ink=new Uint8Array(w*h);for(let i=0,p=0;i<w*h;i++,p+=4)if(d[p]*.3+d[p+1]*.59+d[p+2]*.11<170)ink[i]=1;return ink}
 // 下線だけの記入欄(「氏名＿＿＿＿」)を見つける
-function lineBlanks(img,S,v,T){
-  const w=img.width,h=img.height,d=img.data,ink=new Uint8Array(w*h);for(let i=0,p=0;i<w*h;i++,p+=4)if(d[p]*.3+d[p+1]*.59+d[p+2]*.11<170)ink[i]=1;
+function lineBlanks(img,S,v,T,ink){
+  const w=img.width,h=img.height;ink=ink||inkOf(img);
   const MIN=Math.round(45*S),segs=[];let act=[];
   for(let y=0;y<h;y++){const runs=[];let s=-1,last=-9;for(let x=0;x<=w;x++){const on=x<w&&ink[y*w+x];if(on){if(s<0)s=x;last=x}else if(s>=0&&x-last>2){if(last-s>=MIN)runs.push([s,last]);s=-1}}
     const nx=[];runs.forEach(([a,b])=>{const g=act.find(q=>Math.min(b,q.x1)-Math.max(a,q.x0)>.8*Math.min(b-a,q.x1-q.x0));if(g){g.x0=Math.min(g.x0,a);g.x1=Math.max(g.x1,b);g.y1=y;nx.push(g)}else{const q={x0:a,x1:b,y0:y,y1:y};segs.push(q);nx.push(q)}});act=nx}
-  const out=[],chs=txChars(T).filter(q=>q.c.trim()&&q.c!="　"),VL=Math.round(9*S);
+  const out=[],chs=txChars(T).filter(q=>q.c.trim()&&q.c!="　"),VL=Math.round(9*S),hasT=chs.length>3;
   const vrun=(x,y,dy)=>{let k=0;while(k<VL){const yy=y+dy*k;if(yy<0||yy>=h)break;const i=yy*w+x;if(!(ink[i]||(x>0&&ink[i-1])||(x<w-1&&ink[i+1])))break;k++}return k};
-  segs.forEach(g=>{if(g.y1-g.y0+1>2.6*S+1)return;
+  const thin=segs.filter(g=>g.y1-g.y0+1<=2.6*S+1);
+  thin.forEach(g=>{
+    if(thin.some(o=>o!==g&&Math.abs(o.y0-g.y0)<=6*S&&Math.min(o.x1,g.x1)-Math.max(o.x0,g.x0)>.8*Math.min(o.x1-o.x0,g.x1-g.x0)))return;// 二重線
     for(let x=Math.max(0,g.x0-2);x<=Math.min(w-1,g.x1+2);x++)if(vrun(x,g.y0-1,-1)>=VL||vrun(x,g.y1+1,1)>=VL)return;
     const lx0=g.x0/S+v[0],lx1=g.x1/S+v[0],ly=v[3]-g.y0/S;
     const on=chs.filter(q=>q.y>=ly-3&&q.y<=ly+14&&q.x1>lx0&&q.x0<lx1).sort((a,b)=>a.x0-b.x0),hh=on.length?Math.max(...on.map(q=>q.h)):11;
     let p=lx0;const fr=[];on.concat([{x0:lx1+3,x1:lx1+3}]).forEach(q=>{if(q.x0-3-p>=40)fr.push([p,q.x0-3]);p=Math.max(p,q.x1+3)});
     fr.forEach(([a,b])=>{const c={x0:a,x1:b,y0:ly+.3,y1:ly+Math.max(12,hh*1.4)};
+      if(hasT&&!chs.some(q=>{const cy=q.y+q.h/2;return cy>ly-2&&cy<ly+22&&q.x1>a-150&&q.x0<b}))return;// 近くに見出しの無い線(区切り線)は除く
       const X0=Math.round((a-v[0])*S)+2,X1=Math.round((b-v[0])*S)-2,Y1=g.y0-2,Y0=Math.round(g.y0-(c.y1-ly)*S);let n=0,t=0;for(let y=Math.max(0,Y0);y<Y1;y++)for(let x=X0;x<X1;x++){t++;n+=ink[y*w+x]}if(t&&n/t>.01)return;
       out.push(c)})});
   return out}
-// 「　　」(　　) の長いすきまを記入欄に
-function bracketBlanks(T){
-  const ch=txChars(T),out=[],same=(a,b)=>Math.abs((a.y+a.h/2)-(b.y+b.h/2))<Math.max(a.h,b.h)*.6;
-  ch.forEach(o=>{if(!/[「『(（［〔【]/.test(o.c))return;const R=ch.filter(q=>q!==o&&same(q,o)&&q.x0>=o.x1-.5).sort((a,b)=>a.x0-b.x0);const k=R.findIndex(q=>/[」』)）］〕】]/.test(q.c));if(k<0)return;
-    if(R.slice(0,k).some(q=>q.c.trim()&&q.c!="　"))return;const cl=R[k];if(cl.x0-o.x1<30)return;
-    out.push({x0:o.x1+1,x1:cl.x0-1,y0:Math.min(o.y,cl.y)-1.5,y1:Math.max(o.y+o.h,cl.y+cl.h)+1.5})});
+// 左にある見出し(同じ行・すぐ左の文字)
+function leftLbl(ch,o,vx){const same=q=>Math.abs((q.y+q.h/2)-(o.y+o.h/2))<Math.max(q.h,o.h)*.5;const L=ch.filter(q=>q!==o&&same(q)&&q.x1<=o.x0+.5&&q.c.trim()&&q.c!="　").sort((a,b)=>b.x1-a.x1);
+  let s="",e=o.x0;for(const q of L){if(e-q.x1>o.h*(s?1.3:6))break;if(/[)）」□☐◻▢・]/.test(q.c)&&s)break;if(vx&&vx(q.x1,e,o.y+o.h/2,o.h))break;s=q.c+s;e=q.x0}return lbClean(s)}
+// (　　)「　　」の中の空き。中に文字があれば、すきまごとに欄にする
+function bracketBlanks(T,vx){
+  const ch=txChars(T),out=[],same=(a,b)=>Math.abs((a.y+a.h/2)-(b.y+b.h/2))<Math.max(a.h,b.h)*.6,sp=q=>!q.c.trim()||q.c=="　";
+  ch.forEach(o=>{if(!/[「『(（［〔【]/.test(o.c))return;const R=ch.filter(q=>q!==o&&same(q,o)&&q.x0>=o.x1-.5&&q.x0-o.x1<520).sort((a,b)=>a.x0-b.x0);const k=R.findIndex(q=>/[」』)）］〕】]/.test(q.c));if(k<0)return;
+    const inner=R.slice(0,k).filter(q=>!sp(q));if(inner.some(q=>/[「『(（。]/.test(q.c)))return;const cl=R[k],y0=Math.min(o.y,cl.y)-1.5,y1=Math.max(o.y+o.h,cl.y+cl.h)+1.5,lb=leftLbl(ch,o,vx);
+    let p=o.x1;inner.concat([{x0:cl.x0,x1:cl.x0}]).forEach(q=>{if(q.x0-p>=(inner.length?34:24))out.push({x0:p+1,x1:q.x0-1,y0,y1,lbl:lb});p=Math.max(p,q.x1)})});
+  return out}
+// 見出しのうしろ、枠の線までの空き(「住所又は所在　　　　　|」)と、「　　頃から」「　　円」のような前の空き
+function textBlanks(img,S,v,T,ink){
+  const w=img.width,h=img.height,P=txPhrases(T),out=[];
+  const vl=(X,ya,yb)=>{let n=0,t=0;for(let y=Math.max(0,ya);y<=Math.min(h-1,yb);y++){t++;if(ink[y*w+X]||ink[y*w+X-1]||ink[y*w+X+1])n++}return t&&n/t>.85};
+  const scan=(xp,cy,hh,dir,lim)=>{const X0=Math.round((xp-v[0])*S),ya=Math.round((v[3]-(cy+hh*.75))*S),yb=Math.round((v[3]-(cy-hh*.75))*S),L=Math.round(lim*S);for(let k=1;k<L;k++){const X=X0+dir*k;if(X<2||X>=w-2)return null;if(vl(X,ya,yb))return v[0]+X/S}return null};
+  const blank=(x0,x1,cy,hh)=>{const X0=Math.round((x0-v[0])*S),X1=Math.round((x1-v[0])*S),Y0=Math.round((v[3]-(cy+hh*.5))*S),Y1=Math.round((v[3]-(cy-hh*.5))*S);let n=0,t=0;for(let y=Math.max(0,Y0);y<Math.min(h,Y1);y++)for(let x=Math.max(0,X0);x<Math.min(w,X1);x++){t++;n+=ink[y*w+x]}return !t||n/t<.02};
+  P.forEach(p=>{const lb=lbClean(p.s);if(!lb||lb.length<2||lb.length>12||/[0-9０-９]/.test(lb)||/[。、]/.test(p.s)||!FLD.test(lb))return;
+    const nx=P.filter(q=>q.line===p.line&&q.x0>p.x1).sort((a,b)=>a.x0-b.x0)[0];let b=scan(p.x1+p.h*.5,p.cy,p.h,1,nx?nx.x0-p.x1:2000);if(b===null){if(!nx)return;b=nx.x0}
+    const x0=p.x1+p.h*.6,x1=b-3;if(x1-x0<50||!blank(x0,x1,p.cy,p.h))return;out.push({x0,x1,y0:p.cy-p.h*.62,y1:p.cy+p.h*.62,lbl:lb})});
+  const SF=/^(頃から|から|まで|頃|円|人|台|様|歳|才|ヶ月|か月|ケ月|件|枚|個)/;
+  P.forEach(p=>{if(!SF.test(p.s))return;const pv=P.filter(q=>q.line===p.line&&q.x1<p.x0).sort((a,b)=>b.x1-a.x1)[0];let a=scan(p.x0-p.h*.5,p.cy,p.h,-1,pv?p.x0-pv.x1:300);if(a===null){if(!pv)return;a=pv.x1}
+    const x0=a+3,x1=p.x0-p.h*.3;if(x1-x0<40||!blank(x0,x1,p.cy,p.h))return;const lb=pv&&FLD.test(lbClean(pv.s))&&lbClean(pv.s).length<=12?lbClean(pv.s):"";out.push({x0,x1,y0:p.cy-p.h*.62,y1:p.cy+p.h*.62,lbl:lb})});
   return out}
 function rcLabel(c,T0){
-  const T=T0.filter(t=>!(t.w<14&&T0.some(o=>o!==t&&o.w<14&&Math.abs(o.x-t.x)<1.5&&Math.abs(o.y-t.y)>t.h*.5&&Math.abs(o.y-t.y)<t.h*1.7)));
+  const T=T0.filter(t=>!/^[㊞印①-⑳\s]+$/.test(t.s)&&!(t.w<14&&T0.some(o=>o!==t&&o.w<14&&Math.abs(o.x-t.x)<1.5&&Math.abs(o.y-t.y)>t.h*.5&&Math.abs(o.y-t.y)<t.h*1.7)));
   const w=c.x1-c.x0,cx=(c.x0+c.x1)/2;let up=null,ud=1e9,lf=null,ld=1e9;
   T.forEach(t=>{const tcx=t.x+t.w/2,tcy=t.y+t.h/2;
     if(tcy>c.y0&&tcy<c.y1&&t.x+t.w<=c.x0+2){const d=c.x0-(t.x+t.w);if(d<160&&d<ld){ld=d;lf=t}}
     if(tcy>=c.y1-1&&Math.abs(tcx-cx)<Math.max(14,w*.45)){const d=tcy-c.y1;if(d<34&&d<ud){ud=d;up=t}}});
   let s="",U=up?T.filter(t=>Math.abs(t.y-up.y)<2.5&&t.x+t.w>c.x0-4&&t.x<c.x1+4).sort((a,b)=>a.x-b.x):[];
   const ucx=U.length?(U[0].x+U[U.length-1].x+U[U.length-1].w)/2:cx;
-  if(up&&(!lf||Math.abs(ucx-cx)<Math.min(w*.2,24))){s=U.map(t=>t.s).join("")}
+  if(up&&(!lf||(Math.abs(ucx-cx)<Math.min(w*.2,24)&&!(ld<30&&FLD.test(lbClean(lf.s))&&lbClean(lf.s).length<=12)))){s=U.map(t=>t.s).join("")}
   else if(lf){const r=lf.x+lf.w,L=[lf],inR=t=>t.y+t.h/2>c.y0-2&&t.y+t.h/2<c.y1+2;let ch=true;
-    while(ch){ch=false;T.forEach(t=>{if(L.includes(t)||!inR(t))return;if(t.w>=t.h*.55&&L.some(q=>Math.abs((q.y+q.h/2)-(t.y+t.h/2))<q.h*.45&&q.x-(t.x+t.w)>=-1&&q.x-(t.x+t.w)<22)){L.push(t);ch=true}})}
+    while(ch){ch=false;T.forEach(t=>{if(L.includes(t)||!inR(t))return;if(t.w>=t.h*.55&&L.some(q=>Math.abs((q.y+q.h/2)-(t.y+t.h/2))<q.h*.45&&q.x-(t.x+t.w)>=-1&&q.x-(t.x+t.w)<Math.max(22,q.h*2.6))){L.push(t);ch=true}})}
     T.forEach(t=>{if(!L.includes(t)&&inR(t)&&Math.abs(t.x+t.w-r)<lf.h*1.6)L.push(t)});
     const R=[];L.forEach(t=>{const k=Math.round((t.y+t.h/2)/4);let g=R.find(q=>q.k==k);if(!g)R.push(g={k,l:[]});g.l.push(t)});
-    s=R.sort((a,b)=>b.k-a.k).map(g=>g.l.sort((a,b)=>a.x-b.x).map(t=>t.s).join("")).join("")}
+    R.sort((a,b)=>b.k-a.k);{const tp=R[0].l,mx=Math.max(...tp.map(t=>t.x+t.w)),mn=Math.min(...tp.map(t=>t.x)),ty=tp[0].y,th=tp[0].h,A=T.filter(t=>!L.includes(t)&&t.y>ty+th*.6&&t.y<ty+th*1.9&&t.x+t.w<=c.x0+2&&t.x+t.w>mn&&t.x<mx+2&&Math.abs(t.x+t.w-mx)<th*1.2);if(A.length&&A.length<4&&Math.abs(Math.min(...A.map(t=>t.x))-mn)<th*1.2&&!FLD.test(lbClean(A.map(t=>t.s).join(""))))R.unshift({k:1e9,l:A})}
+    s=R.map(g=>g.l.sort((a,b)=>a.x-b.x).map(t=>t.s).join("")).join("")}
   s=s.replace(/[\s　]/g,"").replace(/^\d+[.．、]/,"").replace(/^[()（）〔〕\[\]:：「」『』]+|[()（）〔〕\[\]:：「」『』]+$/g,"");return s.slice(0,12)}
 async function rasterDetect(f,pi,r){
   const pj=await f.doc.getPage(pi+1),v=pj.view,pw=v[2]-v[0],S=Math.min(2,1800/pw),vp=pj.getViewport({scale:S,rotation:0}),c=document.createElement("canvas");c.width=Math.round(vp.width);c.height=Math.round(vp.height);
   const x=c.getContext("2d",{willReadFrequently:true});x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);await pj.render({canvasContext:x,viewport:vp}).promise;
   const img=x.getImageData(0,0,c.width,c.height),rc=rasterCells(img,S,v,r.texts),hasT=r.texts.length>3,cells=[],marks=[],ph=v[3]-v[1];
-  const dates=hasT?dateScan(r.texts):[],TC=hasT?txChars(r.texts).filter(q=>q.c.trim()&&!/[　印㊞]/.test(q.c)):[];const inDate=(cx,cy)=>dates.some(L=>L.some(q=>cx>q.x0&&cx<q.x1&&cy>q.y0&&cy<q.y1));
+  const dates=hasT?dateScan(r.texts):[],TC=hasT?txChars(r.texts).filter(q=>q.c.trim()&&!/[　印㊞①-⑳]/.test(q.c)):[];const inDate=(cx,cy)=>dates.some(L=>L.some(q=>cx>q.x0&&cx<q.x1&&cy>q.y0&&cy<q.y1));
   for(const k of rc){const w=k.x1-k.x0,h=k.y1-k.y0,cx=(k.x0+k.x1)/2,cy=(k.y0+k.y1)/2;
     if(inDate(cx,cy))continue;
     if(hasT&&TC.some(q=>{const qx=(q.x0+q.x1)/2,qy=q.y+q.h/2;return qx>k.x0+1&&qx<k.x1-1&&qy>k.y0+1&&qy<k.y1-1}))continue;
@@ -1936,8 +1963,8 @@ async function rasterDetect(f,pi,r){
     const lb=hasT?rcLabel(k,r.texts):"";
     if(!(lb||k.nl>.3||k.nt>.3))continue;
     cells.push({x0:k.x0,y0:k.y0,x1:k.x1,y1:k.y1,on:true,lbl:lb})}
-  {const inC=(cx,cy)=>cells.some(q=>cx>q.x0-1&&cx<q.x1+1&&cy>q.y0-1&&cy<q.y1+1);let U=[];try{U=lineBlanks(img,S,v,r.texts)}catch(e){}if(hasT)U=U.concat(bracketBlanks(r.texts));
-    U.forEach(k=>{const cx=(k.x0+k.x1)/2,cy=(k.y0+k.y1)/2;if(inDate(cx,cy)||inC(cx,cy))return;cells.push({x0:k.x0,y0:k.y0,x1:k.x1,y1:k.y1,on:true,lbl:hasT?rcLabel(k,r.texts):""})})}
+  {const inC=(cx,cy)=>cells.some(q=>cx>q.x0-1&&cx<q.x1+1&&cy>q.y0-1&&cy<q.y1+1);let U=[];const INK=inkOf(img);if(hasT)try{U=lineBlanks(img,S,v,r.texts,INK)}catch(e){}if(hasT){try{const W=img.width,Hh=img.height,vx=(xa,xb,cy,hh)=>{const A=Math.round((xa-v[0])*S)+1,B=Math.round((xb-v[0])*S)-1,ya=Math.max(0,Math.round((v[3]-(cy+hh*.7))*S)),yb=Math.min(Hh-1,Math.round((v[3]-(cy-hh*.7))*S));for(let X=Math.max(1,A);X<=Math.min(W-2,B);X++){let n=0;for(let y=ya;y<=yb;y++)if(INK[y*W+X])n++;if(n>(yb-ya+1)*.85)return true}return false};U=U.concat(bracketBlanks(r.texts,vx))}catch(e){}try{U=U.concat(textBlanks(img,S,v,r.texts,INK).filter(k=>!cells.some(c=>c.x0>=k.x1-6&&c.x0-k.x1<28&&Math.min(c.y1,k.y1)-Math.max(c.y0,k.y0)>(k.y1-k.y0)*.5)))}catch(e){}}
+    U.forEach(k=>{const cx=(k.x0+k.x1)/2,cy=(k.y0+k.y1)/2;if(inDate(cx,cy)||inC(cx,cy))return;if(TC.some(q=>{const qx=(q.x0+q.x1)/2,qy=q.y+q.h/2;return qx>k.x0+1&&qx<k.x1-1&&qy>k.y0+1&&qy<k.y1-1}))return;cells.push({x0:k.x0,y0:k.y0,x1:k.x1,y1:k.y1,on:true,lbl:k.lbl||(hasT?rcLabel(k,r.texts):"")})})}
   dates.forEach((L,gi)=>{const id="dd"+Date.now().toString(36)+gi;L.forEach(q=>cells.push({x0:q.x0,x1:q.x1,y0:q.y0,y1:q.y1,on:true,lbl:q.lbl,dg:id}))});
   const rows=[];cells.sort((a,b)=>b.y1-a.y1).forEach(c=>{const rw=rows.find(R=>Math.abs(R.y-c.y1)<5);if(rw)rw.l.push(c);else rows.push({y:c.y1,l:[c]})});
   return{cells:rows.flatMap(R=>R.l.sort((a,b)=>a.x0-b.x0)),marks}}
