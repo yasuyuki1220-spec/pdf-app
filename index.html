@@ -106,6 +106,7 @@ input[type=range]{accent-color:var(--ac)}
 #xb button.tg{font-weight:700;min-width:84px}#xb button.tg.on{background:#7c3aed;color:#fff}#xb button.tg.off{opacity:1;background:transparent;color:#a78bfa;box-shadow:none;border:1.5px dashed #c4b5fd}
 #sm button.dis,#sf button.dis,#xb button.dis{opacity:.3!important;pointer-events:none}
 #sf button.on{background:#7c3aed;color:#fff}
+#xb #xbP,#xb #xbY,#xb #xbT{background:#dcfce7;color:#166534}#xb #xbP.on,#xb #xbY.on,#xb #xbT.on{background:#16a34a;color:#fff}#sm #smG{background:#fce7f3;color:#9d174d}
 #sm #smN,#sm #smQ{background:#dbeafe;color:#1e40af}#sm #smU,#sm #smL,#sf #sfU,#sf #sfL{background:#ccfbf1;color:#115e59}#sm #smE,#sm #smDt,#sm #smDg,#sf #sfN,#sf #sfG,#sf #sfS,#sf #sfK,#sf #sfO,#sf #sfW{background:#dcfce7;color:#166534}#sm #smD,#sm #smZ,#sf #sfD{background:#fee2e2;color:#991b1b}#sm #smS,#sm #smA{background:#fef3c7;color:#92400e}#sm #smC,#sm #smO,#sm #smK,#sf #sfR{background:#ede9fe;color:#5b21b6}#sm #smM,#sf #sfH,#sf #sfE,#sf #sfC{background:#fce7f3;color:#9d174d}#sm #smX,#sf #sfX{background:#312e81;color:#fff;font-weight:700}#sm button.on,#sf button.on{background:#7c3aed!important;color:#fff!important}
 #sf{margin:6px 0 0}#ed.smf #sm{margin-top:4px;padding:5px 6px;gap:3px;border-radius:14px}#ed.smf #sm .smb{gap:3px}#ed.smf #sm button{padding:5px 8px;font-size:11.5px;border-radius:8px}#ed.smf #sm span{font-size:11px}#ed.smf #sf button{padding:7px 9px}
 #fg #fge{border:0;border-radius:10px;padding:9px 12px;font-size:13px;background:var(--ac2);color:var(--ac)}
@@ -142,7 +143,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v119</small></div>
+<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v120</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -161,11 +162,11 @@ input[type=range]{accent-color:var(--ac)}
 <div id="te"><span class="fl">テンプレート編集中</span><button id="teQ">連投欄の連続編集</button><button id="teO">番号・順番</button><button id="teP">PDF差し替え</button><button id="teA">別名保存</button><button id="teS" class="p">上書き保存</button></div>
 <div id="tq"><input id="tqn" placeholder="名称を入れて、ページをダブルタップ(例: 住所)"><select id="tqg"></select><label style="font-size:13px;display:flex;align-items:center;gap:4px"><input type="checkbox" id="tqL">このページ専用(単品)</label><button id="tqs">枠・文字サイズ</button><button id="tqc">選択コピー</button><button id="tqx">終了</button></div>
 <div class="w" id="wrap"><canvas id="ec"></canvas></div>
-<div id="szb" style="display:none"><span id="szt">連投欄の幅・高さ</span><button id="szW1">幅−</button><button id="szW2">幅＋</button><button id="szH1">高−</button><button id="szH2">高＋</button><button id="szF1">字−</button><button id="szF2">字＋</button><span class="gl" id="szGl" style="display:none">間隔</span><input type="range" id="szG" min="-60" max="60" step="1" value="0" style="display:none"><button class="dgx" id="dgS1" style="display:none">間隔−</button><button class="dgx" id="dgS2" style="display:none">間隔＋</button><button class="dgx" id="dgAr" style="display:none">入力右寄せ</button><button class="dgx" id="dgAl" style="display:none">入力左寄せ</button><button class="dgx" id="dgAc" style="display:none">入力中央</button><button class="dgx" id="dgAy" style="display:none">年右・月左</button><button class="dgx" id="dgTx" style="display:none">固定文字</button><button class="dgx" id="dgRl" style="display:none">解除</button><button class="p" id="szOk">✕</button></div><div id="gb"><span id="gbt"></span><button id="gbM">同じグループにまとめる</button><button id="gbS">グループから外す</button><button id="gbD">削除</button><button class="p" id="gbOk">完了</button></div><div id="xb"><span id="xbt"></span><button id="xbC">空欄→連投欄</button><button id="xbM">○ ON</button><button id="xbQ">□ ON</button><button id="xbA">全部外す</button><button id="xbX">中止</button><button class="p" id="xbOk">決定</button></div>
+<div id="szb" style="display:none"><span id="szt">連投欄の幅・高さ</span><button id="szW1">幅−</button><button id="szW2">幅＋</button><button id="szH1">高−</button><button id="szH2">高＋</button><button id="szF1">字−</button><button id="szF2">字＋</button><span class="gl" id="szGl" style="display:none">間隔</span><input type="range" id="szG" min="-60" max="60" step="1" value="0" style="display:none"><button class="dgx" id="dgS1" style="display:none">間隔−</button><button class="dgx" id="dgS2" style="display:none">間隔＋</button><button class="dgx" id="dgAr" style="display:none">入力右寄せ</button><button class="dgx" id="dgAl" style="display:none">入力左寄せ</button><button class="dgx" id="dgAc" style="display:none">入力中央</button><button class="dgx" id="dgAy" style="display:none">年右・月左</button><button class="dgx" id="dgTx" style="display:none">固定文字</button><button class="dgx" id="dgRl" style="display:none">解除</button><button class="p" id="szOk">✕</button></div><div id="gb"><span id="gbt"></span><button id="gbM">同じグループにまとめる</button><button id="gbS">グループから外す</button><button id="gbD">削除</button><button class="p" id="gbOk">完了</button></div><div id="xb"><span id="xbt"></span><button id="xbC">空欄→連投欄</button><button id="xbM">○ ON</button><button id="xbQ">□ ON</button><button id="xbP">＋追加</button><button id="xbY">コピー</button><button id="xbT">種類変更</button><button id="xbA">全部外す</button><button id="xbX">中止</button><button class="p" id="xbOk">決定</button></div>
 <div id="dab"><button id="dmA">←</button><button id="dmS" style="font-size:13px;padding:8px 12px">スタンプ</button><span>「←」「スタンプ」を置けます。動かす・回す・大きさ変更ができます</span></div>
 <div id="fg"><span class="fl" id="fgl"></span><button id="fgc">📷 書類から</button><button id="fgs" class="p">連投モード</button><button id="fgp" class="p">単品連投</button><button id="fge">編集モード</button><button id="fgo">連投順</button></div>
 
-<div id="sm"><span id="smt"></span><div class="smb"><button id="smN">名称</button><button id="smU">選択</button><button id="smE">追加</button><button id="smDt">日付欄</button><button id="smDg">日付の調整</button><button id="smD">削除</button><button id="smS">サイズ</button><button id="smA">基準位置</button><button id="smC">空欄認識</button><button id="smO">連投順</button><button id="smQ">連番名称</button><button id="smK">全体⇄単品</button><button id="smZ">入力を消す</button><button id="smL">全選択</button><button id="smM">◉フォーム</button><button class="p" id="smX">完了</button></div></div><div id="sf"><span>◉フォーム</span><button id="sfR">自動認識フォーム</button><button id="sfN">◯を追加(新グループ)</button><button id="sfG">同じグループに◯追加</button><button id="sfS">☑を追加</button><button id="sfK">✔︎⇄〇 切替</button><button id="sfO">⬭ 囲み追加(新グループ)</button><button id="sfH">⬭ グループ編集</button><button id="sfC">⬭ 色</button><button id="sfW">スイッチ入力欄</button><button id="sfU">選択</button><button id="sfL">全選択</button><button id="sfD">選択を削除</button><button id="sfE">グループ編集</button><button class="p" id="sfX">閉じる</button></div><div id="smo"></div><div id="fp"><div id="fps"></div><div id="fbar"><i></i></div><div id="fpb"><button id="fpu">←</button><button id="fpk">空欄</button><button id="fpcam">📷</button><button id="fpd">→</button><span id="fpc"></span><button id="fpe" style="display:none">終了</button><button class="p" id="fpx">完了</button></div></div>
+<div id="sm"><span id="smt"></span><div class="smb"><button id="smN">名称</button><button id="smU">選択</button><button id="smE">追加</button><button id="smDt">日付欄</button><button id="smDg">日付の調整</button><button id="smD">削除</button><button id="smS">サイズ</button><button id="smA">基準位置</button><button id="smC">空欄認識</button><button id="smO">連投順</button><button id="smQ">連番名称</button><button id="smG">グループ</button><button id="smK">全体⇄単品</button><button id="smZ">入力を消す</button><button id="smL">全選択</button><button id="smM">◉フォーム</button><button class="p" id="smX">完了</button></div></div><div id="sf"><span>◉フォーム</span><button id="sfR">自動認識フォーム</button><button id="sfN">◯を追加(新グループ)</button><button id="sfG">同じグループに◯追加</button><button id="sfS">☑を追加</button><button id="sfK">✔︎⇄〇 切替</button><button id="sfO">⬭ 囲み追加(新グループ)</button><button id="sfH">⬭ グループ編集</button><button id="sfC">⬭ 色</button><button id="sfW">スイッチ入力欄</button><button id="sfU">選択</button><button id="sfL">全選択</button><button id="sfD">選択を削除</button><button id="sfE">グループ編集</button><button class="p" id="sfX">閉じる</button></div><div id="smo"></div><div id="fp"><div id="fps"></div><div id="fbar"><i></i></div><div id="fpb"><button id="fpu">←</button><button id="fpk">空欄</button><button id="fpcam">📷</button><button id="fpd">→</button><span id="fpc"></span><button id="fpe" style="display:none">終了</button><button class="p" id="fpx">完了</button></div></div>
 <div class="ctx" id="pr">
 <button class="col on" style="background:#111" data-c="#111111"></button><button class="col" style="background:#e11d48" data-c="#e11d48"></button><button class="col" style="background:#2563eb" data-c="#2563eb"></button><button class="col" style="background:#16a34a" data-c="#16a34a"></button><button class="col" style="background:#f59e0b" data-c="#f59e0b"></button><button class="col" style="background:#fff" data-c="#ffffff"></button>
 <button class="mkc" id="mkp" data-c="#ff9ec7" title="薄いピンクのマーカー" style="background:#ff9ec7"></button><button class="mkc" id="mky" data-c="#fff04d" title="黄色のマーカー" style="background:#fff04d"></button><button class="mkc" id="mkg" data-c="#9ff0b4" title="薄い緑のマーカー" style="background:#9ff0b4"></button><button class="mkc" id="mkb" data-c="#8fd3ff" title="水色のマーカー" style="background:#8fd3ff"></button><span id="mkt" style="font-size:12px;color:var(--mut)">←マーカー</span><input type="color" id="cc" value="#111111" style="width:28px;height:28px;padding:0;border:0;background:none"><span style="font-size:12px;color:var(--mut)">太さ</span><input id="wd" type="range" min="1" max="14" value="3" style="width:90px">
@@ -469,7 +470,7 @@ const pgList=()=>tplEdit?tplEdit.pgs:pages;
 function pgLabel(){const L=pgList();$("pgl").textContent=(L.indexOf(cur)+1)+" / "+L.length}
 function goPage(d){if(!cur)return;const L=pgList(),n=L[L.indexOf(cur)+d];if(!n)return toast(d>0?"最後のページです":"最初のページです",1200);endEdit();commit();openEd(n)}
 $("pgP").onclick=()=>goPage(-1);$("pgN").onclick=()=>goPage(1);
-async function openEd(pg){let kz=null;if(qp&&qp.on&&tplEdit&&cur&&ec.width&&baseW){kz={z:ec.getBoundingClientRect().width/baseW,fx:(wrap.scrollLeft+wrap.clientWidth/2)/Math.max(1,wrap.scrollWidth),fy:(wrap.scrollTop+wrap.clientHeight/2)/Math.max(1,wrap.scrollHeight)}}if(smOn&&!(files[pg.f]&&files[pg.f].xl))smEnd();sbAll();cur=pg;emode=null;ruler={on:false,a:.5,b:.4,deg:0};rotInfo=null;rulerUI();pgLabel();sel=null;$("ed").style.display="flex";setMode(qp&&qp.on&&tplEdit?"text":"pen");await redrawBase();if(kz&&kz.z>1.02){ec.style.width=baseW*kz.z+"px";wrap.scrollLeft=kz.fx*wrap.scrollWidth-wrap.clientWidth/2;wrap.scrollTop=kz.fy*wrap.scrollHeight-wrap.clientHeight/2}qSync();if(qp&&qp.on)qOpts()}
+async function openEd(pg){let kz=null;if(cur&&cur!==pg&&ec.width&&baseW&&$("ed").style.display=="flex"){kz={z:ec.getBoundingClientRect().width/baseW,fx:(wrap.scrollLeft+wrap.clientWidth/2)/Math.max(1,wrap.scrollWidth),fy:(wrap.scrollTop+wrap.clientHeight/2)/Math.max(1,wrap.scrollHeight)}}sbAll();cur=pg;emode=null;ruler={on:false,a:.5,b:.4,deg:0};rotInfo=null;rulerUI();pgLabel();sel=null;$("ed").style.display="flex";setMode(qp&&qp.on&&tplEdit?"text":"pen");await redrawBase();if(kz&&kz.z>1.02){ec.style.width=baseW*kz.z+"px";wrap.scrollLeft=kz.fx*wrap.scrollWidth-wrap.clientWidth/2;wrap.scrollTop=kz.fy*wrap.scrollHeight-wrap.clientHeight/2;paint()}qSync();if(qp&&qp.on)qOpts();if(smOn){smSync();paint()}}
 const baseCv=document.createElement("canvas");
 async function redrawBase(){selR=null;if(!cur._base)cur._base=snapOf(cur);
   {const A0=ang(cur),pw=A0%180==0?cur.W:cur.H,ph=A0%180==0?cur.H:cur.W;baseW=Math.max(120,Math.min(wrap.clientWidth-4,(wrap.clientHeight-4)*pw/ph,900))}
@@ -618,7 +619,14 @@ let saveH=null;
 async function openPick(){if(!(window.showOpenFilePicker&&isDesk()))return $("fi").click();
   try{const hs=await showOpenFilePicker({multiple:true,types:[{description:"PDF・Excel",accept:{"application/pdf":[".pdf"],"application/vnd.ms-excel":[".xlsx",".xlsm",".xls"],"image/*":[".tif",".tiff"]}}]}),fl=await Promise.all(hs.map(h=>h.getFile())),dt=new DataTransfer();fl.forEach(x=>dt.items.add(x));
     if(fl.length==1&&/\.pdf$/i.test(fl[0].name)&&!pages.length)saveH=hs[0];const fi=$("fi");fi.files=dt.files;fi.dispatchEvent(new Event("change"))}catch(e){if(!(e&&e.name=="AbortError"))$("fi").click()}}
-async function saveOver(){
+async function tplOverwrite(ids,asNew){try{const all=await tdb("all");let n=0;
+    for(const id of ids){const r=all.find(x=>x.id==id);if(!r)continue;const P=pages.filter(p=>files[p.f]&&files[p.f].tpl==id),arr=[];P.forEach(p=>{arr[p.i]=p});for(let k=0;k<arr.length;k++)if(!arr[k])arr[k]={items:[]};
+      const nr=asNew?{...r,id:String(Date.now()+n),name:r.name+"のコピー",created:Date.now()}:{...r};nr.fields=fieldsFrom(arr);nr.pages=Math.max(r.pages||0,arr.length);await tdb("put",nr);n++;
+      if(asNew)P.forEach(p=>{files[p.f].tpl=nr.id})}
+    toast(n?(asNew?"テンプレートを別名で保存しました(名前の後ろに「のコピー」)":"テンプレートを上書きしました(欄の位置・名前・順番)"):"元のテンプレートが見つかりません",3500)}catch(e){toast("テンプレートを保存できませんでした")}}
+function saveOver(){const ids=[...new Set(pages.map(p=>files[p.f]&&files[p.f].tpl).filter(Boolean))];if(!ids.length)return savePdf();
+  sheet("上書き保存",[["テンプレートを上書き(欄の位置・名前・順番)",()=>tplOverwrite(ids,false)],["テンプレートを別名で保存",()=>tplOverwrite(ids,true)],["PDFとして保存(入力した内容入り)",savePdf]])}
+async function savePdf(){
   const list=pages.filter(p=>!tplEdit||!tplEdit.pgs.includes(p));if(!list.length)return say("ページがありません");
   try{say("上書き保存を作成中…");const b=await build(list),one=new Set(list.map(p=>p.f)),nm=one.size==1?files[list[0].f].name.replace(/\.[A-Za-z0-9]+$/,"")+".pdf":"結合PDF.pdf";
     if(window.showSaveFilePicker&&isDesk()){try{if(!saveH)saveH=await showSaveFilePicker({suggestedName:nm,types:[{description:"PDF",accept:{"application/pdf":[".pdf"]}}]});const w=await saveH.createWritable();await w.write(b);await w.close();return say("上書き保存しました: "+saveH.name)}catch(e){if(e&&e.name=="AbortError")return say("保存をキャンセルしました");saveH=null}}
@@ -635,7 +643,7 @@ $("bAdd").onclick=()=>sheet("追加",[["ファイルから",()=>openPick()],["�
 function xdwGuide(name){say("");sheet("「"+name+"」は読めません。PDFにしてから追加してください",[["DocuWorks Viewerで開き、印刷→Microsoft Print to PDFで保存したPDFを追加します",()=>{}]])}
 $("bShare").onclick=()=>sheet("共有・書き出し",[["選択したページ",()=>exp(true)],["すべてのページ",()=>exp(false)],["選択ページをテンプレートに保存",()=>tplSave(true)],["全ページをテンプレートに保存",()=>tplSave(false)]]);
 $("eAdd").onclick=()=>sheet("ページに追加",[["ファイルから(PDF・画像)",()=>$("pf").click()],["写真から",()=>$("pi").click()]]);
-$("eMore").onclick=()=>sheet("その他",[["ページを回転",()=>$("rt").click()],...(cur&&cur._undo?[["トリミングを元に戻す",undoCrop]]:[]),["ペンの書き込みを全消去",()=>$("cl").click()],["テキストを全消去",()=>clearText()],["範囲選択を全消去",()=>clearShapes()],["全空欄認識",()=>xlStart()],["◉フォーム",()=>sheet("◉フォーム",[["◉フォーム設置",()=>tgMenu()],["自動認識フォーム",()=>xlStart({m:1})],["◉グループ編集",()=>tgEStart()]])],["説明書",()=>openManual()],...(cur&&cur.items.some(i=>i.lock)?[["固定した画像を解除",()=>{cur.items.forEach(i=>{delete i.lock});paint();toast("固定を解除しました")}]]:[])]);
+$("eMore").onclick=()=>sheet("その他",[["ページを回転",()=>$("rt").click()],...(cur&&cur._undo?[["トリミングを元に戻す",undoCrop]]:[]),["ペンの書き込みを全消去",()=>$("cl").click()],["テキストを全消去",()=>clearText()],["範囲選択を全消去",()=>clearShapes()],["全空欄認識",()=>xlStart()],...(cur&&files[cur.f]&&files[cur.f].tpl?[["テンプレートのPDFを差し替え",()=>{const i=document.createElement("input");i.type="file";i.accept="application/pdf,.pdf,.xlsx,.xlsm";i.onchange=()=>tplReplace2(i.files[0]);i.click()}]]:[]),["◉フォーム",()=>sheet("◉フォーム",[["◉フォーム設置",()=>tgMenu()],["自動認識フォーム",()=>xlStart({m:1})],["◉グループ編集",()=>tgEStart()]])],["説明書",()=>openManual()],...(cur&&cur.items.some(i=>i.lock)?[["固定した画像を解除",()=>{cur.items.forEach(i=>{delete i.lock});paint();toast("固定を解除しました")}]]:[])]);
 async function addItemFile(f){
   try{
     let c,w=.5;
@@ -1100,7 +1108,7 @@ function kbPre(){try{let k=$("kbp");if(!k){k=document.createElement("input");k.i
 async function tplMake(r,q){try{return await tplMake0(r,q)}catch(e){say("");toast("テンプレートを開けませんでした("+((e&&e.message)||e)+")。もう一度試すか、テンプレートを作り直してください",9000)}}
 async function tplMake0(r,q){
   snap();say("開いています…");
-  const bytes=new Uint8Array(new Uint8Array(r.pdf)),doc=await Promise.race([pdfjsLib.getDocument({data:bytes.slice()}).promise,new Promise((_,j)=>setTimeout(()=>j(new Error("PDFの読み込みが止まりました")),30000))]),fi=files.push({name:r.name,bytes,doc})-1,pgs=[],inst="t"+Date.now();
+  const bytes=new Uint8Array(new Uint8Array(r.pdf)),doc=await Promise.race([pdfjsLib.getDocument({data:bytes.slice()}).promise,new Promise((_,j)=>setTimeout(()=>j(new Error("PDFの読み込みが止まりました")),30000))]),fi=files.push({name:r.name,bytes,doc,tpl:r.id})-1,pgs=[],inst="t"+Date.now();
   for(let i=0;i<doc.numPages;i++){const p=await doc.getPage(i+1),v=p.view;pgs.push({f:fi,i,r:0,base:p.rotate%360,W:v[2]-v[0],H:v[3]-v[1],sel:false,strokes:[],items:[]})}
   let n=0,first=null;
   let bad=0;r.fields.forEach(f=>{try{
@@ -1228,7 +1236,7 @@ function smReveal(){if(!smOn||!cur)return;const L=smTg();if(!L.length)return;con
   if(bot>wr.bottom-pad||top<wr.top+pad){const mid=(top+bot)/2,want=wr.top+wr.height*.4;wrap.scrollTop+=mid-want}}
 function smSync(){const L=smTg(),t=$("smt"),dgL=smOn?dgSel():null;
   if(smOn){const key=L.length?L[0]:null,same=key===smRvK;smRvK=key;if(key&&!same){clearTimeout(smRvT);smRvT=setTimeout(smReveal,90);setTimeout(smReveal,350)}}if(smOn&&!smTry){const rep=dgL?(dgL.find(i=>i.field)||dgL[0]):L.length==1?L[0]:null;if(rep&&szbIt!==rep&&!(szbIt&&szbIt.cand))szbOpen(rep);else if(!rep&&szbIt&&!szbIt.cand){$("szb").style.display="none";szbIt=null}}
-  $("szG").style.display=$("szGl").style.display=dgL?"":"none";document.querySelectorAll(".dgx").forEach(e=>e.style.display=dgL?"":"none");t.textContent=L.length>1?L.length+"個の欄を選択中(まとめて操作できます)":L.length==1?"選択中:"+(L[0].field=="input"?"連投欄「"+(L[0].lbl||"")+"」":L[0].field=="toggle"?"選択ボタン":"文字"):(smMulti?"タップで追加・解除":"欄をタップで選択");$("smU").classList.toggle("on",smMulti);$("sfU").classList.toggle("on",smMulti);0}
+  $("szG").style.display=$("szGl").style.display=dgL?"":"none";document.querySelectorAll(".dgx").forEach(e=>e.style.display=dgL?"":"none");t.textContent=L.length>1?L.length+"個の欄を選択中"+(L.some(i=>!cur.items.includes(i))?"(他のページも含む)":"")+"(まとめて操作できます)":L.length==1?"選択中:"+(L[0].field=="input"?"連投欄「"+(L[0].lbl||"")+"」":L[0].field=="toggle"?"選択ボタン":"文字"):(smMulti?"タップで追加・解除":"欄をタップで選択");$("smU").classList.toggle("on",smMulti);$("sfU").classList.toggle("on",smMulti);0}
 var smMq=null;
 function smCen(i){return i.cell?[(i.cell.x0+i.cell.x1)/2,(i.cell.y0+i.cell.y1)/2]:[i.a,i.b]}
 function smMqDone(M){const x0=Math.min(M.q0[0],M.q1[0]),x1=Math.max(M.q0[0],M.q1[0]),y0=Math.min(M.q0[1],M.q1[1]),y1=Math.max(M.q0[1],M.q1[1]);
@@ -1250,6 +1258,18 @@ function smSeries(){const L=smTg().filter(i=>i.field=="input");if(L.length<2)ret
   O.forEach((it,j)=>{const m=S[j%k],c=Math.floor(j/k),n=+m[2]+c;let d=String(n);if(m[2][0]=="0"&&m[2].length>1)d=d.padStart(m[2].length,"0");it.lbl=m[1]+d+m[3];if(it.ph)setItemStr(it,pgOf(it)||cur,it.lbl)});
   paint();smSync();toast(O.length+"か所に連番の名前を付けました"+(k>1?"("+k+"個1組)":"")+":"+O[0].lbl+"〜"+O[O.length-1].lbl,3500)}
 $("smQ").onclick=smSeries;
+function smGroup(){const L=[...smSet].filter(i=>i.field=="input"&&!i.auto);if(sel&&sel.field=="input"&&!L.includes(sel))L.push(sel);
+  if(!L.length)return toast("先に欄を選んでください。「選択」を押すと、ページをまたいで何か所でも選べます",4500);
+  const pgN=it=>pages.findIndex(p=>p.items.includes(it))+1,allIn=()=>pages.flatMap(p=>p.items.filter(i=>i.field=="input"));
+  const join=()=>{const T=L[0],A=T.inst||("x"+Date.now());T.inst=A;const others=[...new Set(L.map(i=>i.inst).filter(x=>x&&x!==A))];
+      others.forEach(B=>{let mx=Math.max(0,...allIn().filter(i=>i.inst===A).map(i=>i.no||0));const map={};allIn().filter(i=>i.inst===B).forEach(i=>{if(!(i.no in map))map[i.no]=++mx;i.no=map[i.no];i.inst=A})});
+      L.forEach(i=>{i.inst=A;i.no=T.no;delete i.local});smSet=new Set(L);paint();smSync();toast(L.length+"か所を同じグループにしました(1回の入力で全部に入ります)"+(new Set(L.map(pgN)).size>1?"。ページをまたいでいます":""),4000)};
+  const split=()=>{L.forEach(i=>{const mx=Math.max(0,...allIn().filter(o=>o.inst===i.inst).map(o=>o.no||0));i.no=mx+1});paint();smSync();toast(L.length+"か所をグループから外しました(別々に入力します)",3000)};
+  const same=it=>allIn().filter(o=>o!==it&&o.inst===it.inst&&o.no===it.no),info=L.length==1?same(L[0]):[];
+  sheet(L.length>1?L.length+"か所を選択中("+[...new Set(L.map(pgN))].map(n=>n+"ページ").join("・")+")":"「"+(L[0].lbl||"")+"」"+(info.length?"(同じグループ:"+info.map(o=>(o.lbl||"")+"/"+pgN(o)+"ページ").join("、")+")":""),[
+    ...(L.length>1?[["同じグループにする(1回の入力で全部に入る)",join]]:[]),["グループから外す(別々に入力)",split],
+    ...(L.length==1&&info.length?[["同じグループの欄をすべて選ぶ",()=>{smMulti=true;smSet=new Set([L[0],...info]);smSync();paint()}]]:[])])}
+$("smG").onclick=smGroup;
 $("smK").onclick=()=>{const L=smTg().filter(i=>i.field=="input");if(!L.length)return toast("連投欄を選んでください");const to=!L.every(i=>i.local);L.forEach(i=>{if(to)i.local=true;else delete i.local});paint();smSync();toast(L.length+"か所を「"+(to?"このページ専用(単品)":"全体共通")+"」にしました",3000)};
 function swMake(t,q){const pg=cur,W=pg.W,H=pg.H,A=ang(pg);t.tid=t.tid||("t"+Date.now().toString(36)+Math.random().toString(36).slice(2,5));
   const ex=pg.items.find(i=>i.dep===t.tid);if(ex){smSet=new Set([ex]);sel=ex;smSync();paint();return toast("この選択ボタンには、すでに入力欄があります",2500)}
@@ -1393,7 +1413,7 @@ function fieldsFrom(list){
   list.forEach((p,pi)=>p.items.forEach(it=>{if(it.k=="t"){if(it.field=="input"&&it.no)mx=Math.max(mx,it.no);raw.push({pi,it,no:it.field=="input"?it.no:0})}}));
   raw.forEach(x=>{if(x.it.field=="input"&&!x.no)x.no=++mx});
   const nos=[...new Set(raw.filter(x=>x.it.field=="input").map(x=>x.no))].sort((a,b)=>a-b),rank=Object.fromEntries(nos.map((n,i)=>[n,i+1]));
-  return raw.map(({pi,it,no})=>({page:pi,a:it.a,b:it.b,s:it.s,c:it.c,sx:it.sx||1,sy:it.sy||1,rot:it.rot||0,anc:it.anc,cell:it.cell?{...it.cell}:undefined,s0:it.cell?(it.s0||it.s):undefined,ring:it.ring||undefined,local:it.local||undefined,auto:it.auto||undefined,ad:it.ad,sh:it.sh,fx:it.fx,lit:it.lit,nid:it.nid,nfc:it.nfc,tid:it.tid,dep:it.dep,dg:it.dg,choices:it.choices,type:it.field=="input"?"input":it.field=="toggle"?"toggle":"fixed",no:it.field=="input"?rank[no]:undefined,str:it.str,grp:it.grp,rd:it.rd}))}
+  return raw.map(({pi,it,no})=>({page:pi,a:it.a,b:it.b,s:it.s,c:it.c,sx:it.sx||1,sy:it.sy||1,rot:it.rot||0,anc:it.anc,cell:it.cell?{...it.cell}:undefined,s0:it.cell?(it.s0||it.s):undefined,ring:it.ring||undefined,local:it.local||undefined,auto:it.auto||undefined,ad:it.ad,sh:it.sh,fx:it.fx,lit:it.lit,nid:it.nid,nfc:it.nfc,tid:it.tid,dep:it.dep,dg:it.dg,choices:it.choices,type:it.field=="input"?"input":it.field=="toggle"?"toggle":"fixed",no:it.field=="input"?rank[no]:undefined,str:it.field=="input"?(it.lbl||it.str):it.str,grp:it.grp,rd:it.rd}))}
 $("tsok").onclick=async()=>{
   const name=$("tsn").value.trim()||"テンプレート",list=tsList;$("ts").style.display="none";
   let ex=null;try{ex=(await tdb("all")).find(r=>r.name==name)}catch(_){}
@@ -1407,7 +1427,7 @@ async function tplDoSave(name,list,id){
     say("テンプレート「"+name+"」を保存しました。「追加」→「テンプレートから」で使えます")
   }catch(e){say("テンプレートを保存できませんでした")}}
 // ---- テンプレート自体の編集モード
-async function tplEditStart(r){try{return await tplEditStart0(r)}catch(e){say("");toast("テンプレートを開けませんでした("+((e&&e.message)||e)+")",9000)}}
+async function tplEditStart(r){try{$("tl").style.display="none";const n0=pages.length;await tplMake(r,true);const pg=pages.slice(n0).find(p=>files[p.f]&&files[p.f].tpl==r.id);if(!pg)return;await openEd(pg);smStart();toast("編集モードで開きました。直したら「保存」→「テンプレートを上書き」で保存できます",5000)}catch(e){say("");toast("テンプレートを開けませんでした("+((e&&e.message)||e)+")",9000)}}
 async function tplEditStart0(r){
   $("tl").style.display="none";snap();say("開いています…");
   const bytes=new Uint8Array(new Uint8Array(r.pdf)),doc=await Promise.race([pdfjsLib.getDocument({data:bytes.slice()}).promise,new Promise((_,j)=>setTimeout(()=>j(new Error("PDFの読み込みが止まりました")),30000))]),fi=files.push({name:r.name,bytes,doc})-1,pgs=[];
@@ -1457,6 +1477,14 @@ async function tplEditSave(exit){
     const r=tplEdit.r;await tdb("put",{...r,fields:fieldsFrom(tplEdit.pgs),pages:tplEdit.pgs.length});
     toast("テンプレートを保存しました");if(exit)tplEditEnd()
   }catch(e){toast("保存できませんでした")}}
+async function tplReplace2(f){const id=cur&&files[cur.f]&&files[cur.f].tpl;if(!id||!f)return;try{say("差し替え中…");let bytes;
+    if(/\.xls[xm]$/i.test(f.name)){const x=await xlsxToPdf(f);bytes=new Uint8Array(x.bytes)}else bytes=new Uint8Array(await f.arrayBuffer());
+    const all=await tdb("all"),r=all.find(x=>x.id==id);if(!r){say("");return toast("元のテンプレートが見つかりません")}
+    const doc=await pdfjsLib.getDocument({data:bytes.slice()}).promise,fi=files.push({name:r.name,bytes,doc,tpl:id})-1,old=pages.filter(p=>files[p.f]&&files[p.f].tpl==id),byI=[];old.forEach(p=>{byI[p.i]=p});const np=[];
+    for(let k=0;k<doc.numPages;k++){const p=await doc.getPage(k+1),v=p.view;np.push({f:fi,i:k,r:0,base:p.rotate%360,W:v[2]-v[0],H:v[3]-v[1],sel:false,strokes:[],items:byI[k]?byI[k].items:[]})}
+    const pos=Math.max(0,pages.indexOf(old[0]));pages=pages.filter(p=>!old.includes(p));pages.splice(pos,0,...np);
+    await tdb("put",{...r,pdf:bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),pages:np.length,fields:fieldsFrom(np)});
+    say("");draw();await openEd(np[0]);toast("テンプレートのPDFを差し替えて保存しました(入力欄はそのまま)",5000)}catch(e){say("");toast("差し替えできませんでした")}}
 async function tplReplacePdf(f){
   if(!tplEdit||!f)return;try{say("差し替え中…");let bytes;
     if(/\.xls[xm]$/i.test(f.name)){const r=await xlsxToPdf(f);bytes=new Uint8Array(r.bytes)}else bytes=new Uint8Array(await f.arrayBuffer());
@@ -1659,9 +1687,9 @@ const MAN=[
 ["start","はじめに",null,["PDFの結合・分割・回転・手書き・文字入れ・写真の追加・共有・印刷を、1つのアプリでできます。","書類の空欄を自動で見つけて「連投欄(入力欄)」にし、氏名・住所などを順番に入れていくのが得意です。Excelもそのまま読み込めます。","目次の項目をタップすると、その説明へ飛びます。","データは端末の中だけで処理されます(外部に送られません)。","ホーム画面の下に「ビルド v○○」と出ます。更新したときは、この番号で最新かどうかを確認できます。"]],
 ["home","ホーム画面",home,["① ページの一覧です。タップで選択(もう一度で解除)。各ページ下の「◀ ✎ ▶」で並べ替え・編集。","② 追加:PDF・Excel・写真を追加。","③ テンプレ:保存したテンプレートやお客様セットを呼び出します。","④ 全選択 ⑤ 回転 ⑥ 削除 ⑦ 戻す(回転・削除は選んだページに働きます)。","⑧ 上書き:開いた元のファイルに上書き保存します(パソコンのEdgeなど。iPhoneは保存先で「置き換える」を選びます)。","⑨ 共有:PDF・JPEG・PNGで書き出し。テンプレートへの保存もここから。","⑩ 印刷:そのまま印刷画面を開きます(iPhoneは共有シートの「プリント」)。"]],
 ["edit","編集画面の見かた",editor,["① 戻す/やり直し:1操作ずつ。","② ‹ › で前後のページへ移動。","③ －＋:画面の拡大縮小。二本指でも拡大・移動できます(PCは Ctrl+ホイール)。","④ 保存:上書き保存。","⑤ ホーム:ホーム画面へ戻ります。","⑥ 色や太さ(選んだモードで内容が変わります)。","⑦ 下のボタン列は左右にスライドできます。","⑧ その他:全空欄認識・◉フォーム・全消去・この説明書など。"]],
-["auto","全空欄認識(空欄を自動で入力欄に)",null,["「その他」→「全空欄認識」で、書類の記入欄を自動で探して紫の枠で表示します。","見つけるもの:罫線で囲まれた空欄/「氏名＿＿＿＿」のような下線だけの欄/「病名「　　」」のような括弧の中の空き/「　年　月　日」の日付/□や○の選択欄。","欄の名前は、左や上の見出し(氏名・住所・医療機関名…)から自動でつきます。","いらない枠はタップで外します。四角く囲むとまとめて外す/入れるができます。ダブルタップで枠の大きさを調整。","「決定」で連投欄になります。他の書類と同じ意味の欄(氏名とお名前、電話とTEL など)は、自動で同じグループになり一緒に入力されます。","見つけるもの(追加):「住所又は所在　　　|」のような見出しのうしろの空き、「　頃から」「　円」「　台」の前の空き、( 　:　 から 　:　 ) の中のすきま。PDFの中の細い線・点線も、はっきりした線として読み取ります。","スキャンした書類(文字データの無いPDF)は、先にページの文字を読み取ってから欄を探します。初回は読み取りの準備に数十秒、1ページ数秒〜十数秒かかります(通信が必要)。読み取りが難しい書類は、欄の名前が「連投欄1…」になることがあります。"]],
+["auto","全空欄認識(空欄を自動で入力欄に)",null,["「その他」→「全空欄認識」で、書類の記入欄を自動で探して紫の枠で表示します。","見つけるもの:罫線で囲まれた空欄/「氏名＿＿＿＿」のような下線だけの欄/「病名「　　」」のような括弧の中の空き/「　年　月　日」の日付/□や○の選択欄。","欄の名前は、左や上の見出し(氏名・住所・医療機関名…)から自動でつきます。","いらない枠はタップで外します。四角く囲むとまとめて外す/入れるができます。ダブルタップで枠の大きさを調整。","緑のボタンで直せます:「＋追加」=タップした場所に空欄を足す/「コピー」=枠や○をタップ→貼りたい場所をタップ(続けて貼れます)/「種類変更」=タップするたびに 空欄→○→□→空欄。もう一度押すと元の操作に戻ります。","「決定」で連投欄になります。他の書類と同じ意味の欄(氏名とお名前、電話とTEL など)は、自動で同じグループになり一緒に入力されます。","見つけるもの(追加):「住所又は所在　　　|」のような見出しのうしろの空き、「　頃から」「　円」「　台」の前の空き、( 　:　 から 　:　 ) の中のすきま。PDFの中の細い線・点線も、はっきりした線として読み取ります。","スキャンした書類(文字データの無いPDF)は、先にページの文字を読み取ってから欄を探します。初回は読み取りの準備に数十秒、1ページ数秒〜十数秒かかります(通信が必要)。読み取りが難しい書類は、欄の名前が「連投欄1…」になることがあります。"]],
 ["fill","連投モード(順番に入力)",null,["欄を作ると、画面下に「連投モード」「単品連投」「編集モード」「連投順」が出ます。","連投モード:①②…の順に、キーボードで次々入力。Enterで次の欄、←→で前後へ。入力中の欄へ画面がなめらかに移動します。","単品連投:そのページだけの欄を順に入力します。","連投順:入力の順番を、長押し(または≡をつかんで)上下に動かして並べ替え。日付欄(元号・年・月・日)は1つのまとまりとして扱います。","プルダウンのある欄は、候補から選べます。","○◉やスイッチ入力欄は、タップで切り替えると次の入力欄へ自動で進みます。"]],
-["sm","編集モード(欄を整える)",null,["「編集モード」で、欄の名前・位置・大きさなどを直します。ボタンは役割ごとに色分けしています。","青:名称/連番名称(名前を変える・①②の連番をつける)。","水色:選択/全選択。","緑:追加/日付欄/日付の調整(欄を足す・日付欄を置く)。","赤:削除/入力を消す。","黄:サイズ/基準位置(幅・高さ・文字の大きさ、左寄せ・中央・右寄せ)。","紫:空欄認識/連投順/全体⇄単品(全体=同じ名前の欄に一緒に入る、単品=このページだけ)。","ピンク:◉フォーム。紺:完了(編集モードを終わる)。","編集中は、欄に青い見本の文字(山田 太郎、090-1234-5678 など)が出るので、実際に入る位置や大きさを確かめられます。見本は保存・印刷されません。","欄や○を選ぶと、重なった部分の名前(茶色の文字)だけが薄くなり、下が見えます。"]],
+["sm","編集モード(欄を整える)",null,["「編集モード」で、欄の名前・位置・大きさなどを直します。ボタンは役割ごとに色分けしています。","青:名称/連番名称(名前を変える・①②の連番をつける)。","水色:選択/全選択。","緑:追加/日付欄/日付の調整(欄を足す・日付欄を置く)。","赤:削除/入力を消す。","黄:サイズ/基準位置(幅・高さ・文字の大きさ、左寄せ・中央・右寄せ)。","紫:空欄認識/連投順/全体⇄単品(全体=同じ名前の欄に一緒に入る、単品=このページだけ)。","グループ(ピンク):「選択」を押して欄を選ぶと、ページをまたいで何か所でも選べます(‹ › でページを移っても選んだまま・拡大もそのまま)。「グループ」→「同じグループにする」で、1回の入力で全部に入ります。外す・同じグループの欄をまとめて選ぶ、もできます。","ピンク:◉フォーム。紺:完了(編集モードを終わる)。","編集中は、欄に青い見本の文字(山田 太郎、090-1234-5678 など)が出るので、実際に入る位置や大きさを確かめられます。見本は保存・印刷されません。","欄や○を選ぶと、重なった部分の名前(茶色の文字)だけが薄くなり、下が見えます。"]],
 ["date","日付欄",null,["編集モードの「日付欄」で、元号・年・月・日・曜日のセットを置けます。欄の名前は「年」「月」「日」だけのシンプルな形です。","曜日は自動です。年月日を入れると(月)(火)…が自動で入ります。","「日付の調整」で、間隔・右寄せ/左寄せ・年右月左・固定文字を調整できます。","以前に作った日付欄は古い名前のままです。新しい形にしたいときは作り直してください。"]],
 ["form","◉フォーム(○を◉に・☑)",null,["「その他」→「◉フォーム」から、「◉フォーム設置」「自動認識フォーム」「◉グループ編集」を選べます。","自動認識フォーム:書類の○や□を見つけて、タップで◉や✓に切り替わる選択欄にします。","編集モードの「◉フォーム」では次ができます:","◯を追加(新グループ)/同じグループに◯追加:同じグループは1つだけ◉になります。","☑を追加:チェック欄を置きます。横の「✔︎⇄〇 切替」で、印を ✔︎ と 〇 で切り替え(大きい枠の中に〇をつける書類向け)。選んだ☑に押すと、その印が入れ替わります。","⬭ 囲み追加:文字を楕円で囲む選択欄。⬭ グループ編集・⬭ 色 で調整。グループ内で1つ選ぶと、選ばれなかった楕円は表示されません。","スイッチ入力欄:○や楕円を選ぶと、そのまま入力欄の入力へ進みます。"]],
 ["xl","Excelを読み込む",null,["Excel(.xlsx/.xlsm)は「追加」からそのまま読み込めます。罫線・結合・文字の大きさ・中央揃え・縮小して全体を表示・フォーム部品の○□も読み取ります(マクロは動きませんが、印刷したときの見た目を再現します)。","読み込んだら「その他」→「全空欄認識」で、空欄を連投欄にします。","プルダウン:Excelの入力規則(リスト)がある欄は、同じ候補から選べる欄になります。","数式:SUM・AVERAGE・ROUND・IF などの簡単な数式は、そのまま計算されます。金額などを入れると、合計や税込の欄が自動で変わります(自動計算の欄は連投では飛ばします)。","別のシートを参照する数式や、VLOOKUPなど対応していない関数は、読み込んだときの値のままになります。"]],
@@ -1672,9 +1700,9 @@ const MAN=[
 ["range","範囲選択・囲い",encl,["「範囲選択」で四角くドラッグすると、文字のコピー(OCR)、画像のコピー、トリミング、「線で囲う」ができます。","線で囲う:色・太さ・斜線/格子/モザイク/塗りつぶし。「形変更」で台形やひし形・多角形にもできます。"]],
 ["stamp","スタンプと矢印",stamp,["① スタンプを置くと、左下にオレンジの丸が出ます。","② その丸からドラッグすると、矢印を伸ばして場所を指せます。"]],
 ["image","写真・画像・PDFを重ねる",null,["編集画面の「追加」から、PDF・TIFF・写真をページに貼れます。ドラッグで移動、二本指で拡大縮小。","地図などは「固定」で動かなくなります(解除は「その他」から)。"]],
-["tpl","テンプレート・お客様セット",tpl,["よく使う書類と連投欄を保存して、何度も呼び出せます。","① 作り方:欄を作ったら、ホーム画面の「共有」→「テンプレートに保存」。","② 使い方:「テンプレ」→「使う」。そのまま連投モードで入力できます。","③ お客様セット:テンプレ一覧の「＋お客様セットを作る」で、複数の書類を選んで1つのセットにします。セットを使うと全部の書類がまとめて開き、氏名・住所・電話などの同じ項目は1回の入力で全書類に入ります。","④ 編集:一覧の「編集」。「番号・順番」でグループを設定、「上書き保存」で保存。","⑤ 共有:ファイルにして相手に送れます。相手は「他の人のテンプレートを取り込む」で読み込みます。"]],
+["tpl","テンプレート・お客様セット",tpl,["よく使う書類と連投欄を保存して、何度も呼び出せます。","① 作り方:欄を作ったら、ホーム画面の「共有」→「テンプレートに保存」。","② 使い方:「テンプレ」→「使う」。そのまま連投モードで入力できます。","③ お客様セット:テンプレ一覧の「＋お客様セットを作る」で、複数の書類を選んで1つのセットにします。セットを使うと全部の書類がまとめて開き、氏名・住所・電話などの同じ項目は1回の入力で全書類に入ります。","④ 編集:一覧の「編集」で、テンプレートが編集モードで開きます。直したら上の「保存」→「テンプレートを上書き」。「別名で保存」もここから。PDFだけ新しくしたいときは「その他」→「テンプレートのPDFを差し替え」。","⑤ 共有:ファイルにして相手に送れます。相手は「他の人のテンプレートを取り込む」で読み込みます。"]],
 ["camera","書類から自動入力(カメラ)",null,["連投の画面の「📷」で、撮った書類から住所・氏名・電話番号を読み取り、連投欄へ入れます。","読み取り結果は一覧で出るので、直してから「連投欄に入れる」を押します。","うまく読めないときは、明るい場所で真上から撮ってください。"]],
-["share","保存・共有・印刷",null,["上書き:編集した内容を元のファイルに保存します。iPhoneでは保存先の「ファイル」で同じ名前を選び「置き換える」。","共有:ファイル名を変えて、PDF/JPEG/PNGで書き出し(複数ページの画像はZIP)。","印刷:つながっているプリンターを選んでそのまま印刷。iPhoneは共有シートの「プリント」から。"]],
+["share","保存・共有・印刷",null,["上書き:編集した内容を元のファイルに保存します。iPhoneでは保存先の「ファイル」で同じ名前を選び「置き換える」。テンプレートから開いた書類は「テンプレートを上書き(欄の位置・名前・順番)」「別名で保存」「PDFとして保存」から選べます。","共有:ファイル名を変えて、PDF/JPEG/PNGで書き出し(複数ページの画像はZIP)。","印刷:つながっているプリンターを選んでそのまま印刷。iPhoneは共有シートの「プリント」から。"]],
 ["undo","戻す・消す",null,["「戻す」は1動作ずつ取り消し。ページ削除も戻せます。","その他:ペンの全消去/テキストの全消去/囲い・斜線の全消去。"]],
 ["pc","パソコンで使うとき",null,["拡大縮小:Ctrl(Mac は ⌘)+ホイール、または Ctrl + / -。Ctrl+0 で元の大きさ。","Ctrl+Z で戻る、Delete で選んだ文字・画像を削除。連投中は Enter・Tab で次の欄へ。"]],
 ["update","アプリの更新",null,["新しい版にしたときは、アプリを完全に閉じて2回開き直してください。ホーム画面の「ビルド v○○」が新しい番号になれば更新完了です。"]]
@@ -2012,7 +2040,7 @@ function xlUI(){const C=xlC;$("smC").classList.toggle("dis",!!C||smForm);$("sfR"
   const tg=(id,on,t)=>{const b=$(id);b.classList.add("tg");b.classList.toggle("on",on);b.classList.toggle("off",!on);b.textContent=t+(on?" ON":" OFF")};
   tg("xbC",C.useC,"空欄");tg("xbM",C.useM,"○("+nO+")");tg("xbQ",C.useQ,"□("+nQ+")");
   $("xbM").style.display=nO?"":"none";$("xbQ").style.display=nQ?"":"none";$("xbC").style.display=C.cells.length&&!C.mo?"":"none";
-  $("xbA").textContent=n?"全部外す":"全部入れる";$("xbA").style.display=C.cells.length&&!C.mo?"":"none"}
+  $("xbA").textContent=n?"全部外す":"全部入れる";["xbP","xbY","xbT"].forEach(k=>$(k).classList.toggle("on",C.tool==({xbP:"add",xbY:"copy",xbT:"type"})[k]));$("xbP").style.display=$("xbY").style.display=$("xbT").style.display=C.mo?"none":"";$("xbA").style.display=C.cells.length&&!C.mo?"":"none"}
 function xlDraw(x,pg,cw,ch,A){
   const C=xlC,W=pg.W,H=pg.H,k=(A%180==0?cw:ch)/W,P=(px,py)=>{const [u,v]=toDisp((px-C.vx)/W,1-(py-C.vy)/H,A);return[u*cw,v*ch]};
   x.save();x.lineWidth=Math.max(1.2,cw/400);
@@ -2031,8 +2059,20 @@ function xlRange(){
   const M=C.marks.filter(m=>(m.kind=="c"?C.useM:C.useQ)&&inR(m.cx,m.cy));if(M.length){const on=M.some(m=>m.skip);M.forEach(m=>m.skip=!on);nm=M.length;onM=on?1:0}
   xlUI();paint();
   toast(nc||nm?(nc?"空欄 "+nc+" か所を"+(onC?"連投欄に入れました":"外しました"):"")+(nc&&nm?" / ":"")+(nm?"○□ "+nm+" か所を"+(onM?"入れました":"外しました"):"")+"(もう一度同じ範囲を囲むと反対になります)":"範囲内に何もありません",3000)}
+function xlTool(t){const C=xlC;if(!C)return;C.tool=C.tool===t?null:t;C.clip=null;xlUI();
+  toast(C.tool=="add"?"置きたい場所をタップすると、空欄を追加します(続けて置けます)":C.tool=="copy"?"コピーしたい枠(または○□)をタップ → 貼り付けたい場所をタップ(続けて貼れます)":C.tool=="type"?"枠をタップするたびに 空欄 → ○ → □ → 空欄 と種類が変わります":"いつもの操作(タップで外す・入れる)に戻りました",4000)}
+function xlHit(C,px,py){let bm=null,bd=1e9;C.marks.forEach(m=>{const d=Math.hypot(px-m.cx,py-m.cy);if(d<Math.max(m.size*.75,6)&&d<bd){bd=d;bm=m}});if(bm)return{m:bm};let best=null;C.cells.forEach(c=>{if(px>=c.x0&&px<=c.x1&&py>=c.y0&&py<=c.y1&&(!best||(c.x1-c.x0)*(c.y1-c.y0)<(best.x1-best.x0)*(best.y1-best.y0)))best=c});return best?{c:best}:null}
+function xlToolTap(C,px,py){const h=xlHit(C,px,py);
+  if(C.tool=="add"){const w=C.lastW||90,hh=C.lastH||16;C.cells.push({x0:px-w/2,x1:px+w/2,y0:py-hh/2,y1:py+hh/2,on:true,lbl:"",add:true});C.useC=true;xlUI();paint();return}
+  if(C.tool=="copy"){if(!C.clip){if(!h)return toast("コピーする枠か○□をタップしてください");C.clip=h.c?{c:{...h.c}}:{m:{...h.m}};toast("コピーしました。貼り付けたい場所をタップしてください",2500);return}
+    if(C.clip.c){const o=C.clip.c,w=o.x1-o.x0,hh=o.y1-o.y0;C.cells.push({...o,x0:px-w/2,x1:px+w/2,y0:py-hh/2,y1:py+hh/2,on:true,dg:undefined});C.useC=true}else{C.marks.push({...C.clip.m,cx:px,cy:py,skip:false});if(C.clip.m.kind=="c")C.useM=true;else C.useQ=true}xlUI();paint();return}
+  if(C.tool=="type"){if(!h)return;if(h.c){const c=h.c,sz=Math.max(8,Math.min(c.x1-c.x0,c.y1-c.y0)*.9);C.cells.splice(C.cells.indexOf(c),1);C.marks.push({kind:"c",cx:(c.x0+c.x1)/2,cy:(c.y0+c.y1)/2,size:sz,on:false,from:c});C.useM=true}
+    else if(h.m.kind=="c"){h.m.kind="s";h.m.skip=false;C.useQ=true}
+    else{const m=h.m;C.marks.splice(C.marks.indexOf(m),1);const c=m.from||{x0:m.cx-45,x1:m.cx+45,y0:m.cy-8,y1:m.cy+8,lbl:""};C.cells.push({...c,on:true});C.useC=true}
+    xlUI();paint();return}}
 function xlToggle(e){
   const C=xlC;if(!C)return;const q=pt(e),W=C.pg.W,H=C.pg.H,px=q[0]*W+C.vx,py=(1-q[1])*H+C.vy;
+  if(C.tool)return xlToolTap(C,px,py);
   {let bm=null,bd=1e9;C.marks.forEach(m=>{if(!(m.kind=="c"?C.useM:C.useQ))return;const d=Math.hypot(px-m.cx,py-m.cy);if(d<Math.max(m.size*.75,5)&&d<bd){bd=d;bm=m}});if(bm){bm.skip=!bm.skip;xlUI();paint();return}}
   if(!C.useC)return;let best=null;
   C.cells.forEach(c=>{if(px>=c.x0&&px<=c.x1&&py>=c.y0&&py<=c.y1&&(!best||(c.x1-c.x0)*(c.y1-c.y0)<(best.x1-best.x0)*(best.y1-best.y0)))best=c});
@@ -2075,6 +2115,7 @@ $("xbX").onclick=()=>{xlC=null;xlUI();paint()};
 $("xbC").onclick=()=>{if(xlC){xlC.useC=!xlC.useC;xlUI();paint()}};
 $("xbM").onclick=()=>{if(xlC){xlC.useM=!xlC.useM;xlUI();paint()}};
 $("xbQ").onclick=()=>{if(xlC){xlC.useQ=!xlC.useQ;xlUI();paint()}};
+$("xbP").onclick=()=>xlTool("add");$("xbY").onclick=()=>xlTool("copy");$("xbT").onclick=()=>xlTool("type");
 $("xbA").onclick=()=>{if(xlC){const any=xlC.cells.some(c=>c.on);xlC.cells.forEach(c=>c.on=!any);xlUI();paint()}};
 
 // ---- v37: .xlsx を直接読み込み(表を画像PDFにして、空欄・○□・フォーム部品は別モデルで保持)
