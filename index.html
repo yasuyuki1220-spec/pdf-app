@@ -143,7 +143,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="custB" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;background:#ecfdf5;border:1.5px solid #34d399;border-radius:12px;padding:8px 10px;margin-bottom:8px"><b id="custBn" style="flex:1;color:#065f46;font-size:15px"></b><button id="custBs" style="border:0;border-radius:9px;padding:7px 12px;background:#059669;color:#fff;font-weight:700">保存</button><button id="custBx" style="border:1px solid #6ee7b7;border-radius:9px;padding:7px 10px;background:#fff;color:#065f46">閉じる</button></div><div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v128</small></div>
+<div id="empty"><svg><use href="#i-img"/></svg><br>PDFや写真を追加して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v129</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -1344,7 +1344,7 @@ function smMqDone(M){const x0=Math.min(M.q0[0],M.q1[0]),x1=Math.max(M.q0[0],M.q1
   smSet=new Set(L);smMulti=true;sel=null;smSync();paint();toast(L.length+"か所を選びました。名称で連番、グループ、削除などをまとめて使えます",3500)}
 function smSeries(){const L=smTg().filter(i=>i.field=="input");if(L.length<2)return toast("連投欄を2つ以上選んでください(範囲ドラッグで囲めます)");
   const A=ang(cur),D=i=>{const c=smCen(i),p=toDisp(c[0],c[1],A);return [p[0]*ec.width,p[1]*ec.height]},RX=/^(.*?)(\d+)(\D*)$/;
-  const seeds=L.filter(i=>RX.test(i.lbl||""));if(!seeds.length)return toast("先頭の欄の名前に数字を入れてください(例:項目1 / 組なら OP1 と OP名1 の両方)",4500);
+  const seeds=L.filter(i=>RX.test(i.lbl||""));if(!seeds.length)return toast("連番にするには、先に1つ目の欄の名前を「品名1」のように数字付きにしてから選んでください",5000);
   const k=seeds.length,xs=L.map(i=>D(i)[0]),ys=L.map(i=>D(i)[1]),hs=Math.max(...xs)-Math.min(...xs),vs=Math.max(...ys)-Math.min(...ys);
   let O,rowMajor=true;
   if(k==1){O=hs>=vs?L.slice().sort((p,q)=>D(p)[0]-D(q)[0]):L.slice().sort((p,q)=>D(p)[1]-D(q)[1])}
@@ -1353,7 +1353,7 @@ function smSeries(){const L=smTg().filter(i=>i.field=="input");if(L.length<2)ret
     const key=i=>{const d=D(i);return rowMajor?[Math.round(d[1]/tol),d[0]]:[Math.round(d[0]/tw),d[1]]};
     O=L.slice().sort((p,q)=>{const a=key(p),b=key(q);return a[0]-b[0]||a[1]-b[1]});
     if(!seeds.every(s=>O.indexOf(s)<k))return toast("数字入りの欄は、組の先頭(左上)に集めて選んでください",4500)}
-  const S=O.slice(0,k).map(i=>RX.exec(i.lbl||""));if(S.some(m=>!m))return toast("先頭の"+k+"か所すべてに数字を入れてください",4000);
+  const S=O.slice(0,k).map(i=>RX.exec(i.lbl||""));if(S.some(m=>!m))return toast("連番にするには、いちばん左上の欄の名前を「品名1」のように数字付きにしてください",5000);
   O.forEach((it,j)=>{const m=S[j%k],c=Math.floor(j/k),n=+m[2]+c;let d=String(n);if(m[2][0]=="0"&&m[2].length>1)d=d.padStart(m[2].length,"0");it.lbl=m[1]+d+m[3];if(it.ph)setItemStr(it,pgOf(it)||cur,it.lbl)});
   paint();smSync();toast(O.length+"か所に連番の名前を付けました"+(k>1?"("+k+"個1組)":"")+":"+O[0].lbl+"〜"+O[O.length-1].lbl,3500)}
 $("smQ").onclick=smSeries;
@@ -1378,7 +1378,8 @@ function swMake(t,q){const pg=cur,W=pg.W,H=pg.H,A=ang(pg);t.tid=t.tid||("t"+Date
   const it={k:"t",a,b,str:lbl,s:s0,s0,c:"#111111",rot:-A,sx:1,sy:1,anc:"l",field:"input",no:n,ph:true,lbl,inst,xlc:true,dep:t.tid,cell:{x0:a-cw/2/W,x1:a+cw/2/W,y0:b-ch/2/H,y1:b+ch/2/H}};
   fitItem(it,pg);pg.items.push(it);smSet=new Set([it]);smMulti=false;sel=it;smSync();paint();toast("右に入力欄を付けました。ドラッグで移動、下のボタンでサイズを変えられます。選択ボタンがONのときだけ連投に出ます",5000)}
 function smRename(it){if(!it||it.field!="input")return toast("連投欄を選んでください(選択ボタンに名前はありません)");const v=prompt("欄の名前",it.lbl||"");if(v&&v.trim()){it.lbl=v.trim();if(it.ph)setItemStr(it,pgOf(it)||cur,it.lbl);custJoin(it);paint();smSync()}}
-$("smN").onclick=()=>{const L=smTg(),LI=L.filter(i=>i.field=="input");L.length==1?smRename(L[0]):LI.length>1?smSeries():toast("先に欄をタップで選んでください(2つ以上選ぶと連番で名前を付けられます)",3000)};
+$("smN").onclick=()=>{const L=smTg(),LI=L.filter(i=>i.field=="input");if(L.length==1)return smRename(L[0]);if(LI.length<2)return toast("先に欄をタップで選んでください",3000);
+  sheet(LI.length+"か所を選択中:名前をどうしますか?",[["1つずつ名前を変える(選んだ順)",async()=>{for(const it of LI){const v=prompt("欄の名前("+(LI.indexOf(it)+1)+"/"+LI.length+")",it.lbl||"");if(v===null)break;if(v.trim()){it.lbl=v.trim();if(it.ph)setItemStr(it,pgOf(it)||cur,it.lbl);custJoin(it)}}paint();smSync()}],["全部同じ名前にする(同じ内容が入ります)",()=>{const v=prompt("欄の名前(選んだ"+LI.length+"か所すべて)",LI[0].lbl||"");if(!v||!v.trim())return;LI.forEach(it=>{it.lbl=v.trim();if(it.ph)setItemStr(it,pgOf(it)||cur,it.lbl)});LI.forEach(custJoin);paint();smSync();toast(LI.length+"か所を「"+v.trim()+"」にしました",2500)}],["連番で名前を付ける(例:品名1・品名2…)",smSeries]])};
 $("smS").onclick=()=>{const L=smTg();L.length?szbOpen(L[0]):toast("先に欄をタップで選んでください")};
 $("smA").onclick=()=>{const L=smTg().filter(i=>i.field=="input");if(!L.length)return toast("先に連投欄を選んでください");const set=a=>{L.forEach(i=>{i.anc=a;if(i.cell)fitItem(i,pgOf(i)||cur)});paint();toast(L.length+"か所を「"+{l:"左端",c:"中央",r:"右端"}[a]+"」基準にしました")};sheet("文字の基準位置("+L.length+"か所)",[["左端基準(右へ伸びる・基本)",()=>set("l")],["中央基準",()=>set("c")],["右端基準(左へ伸びる)",()=>set("r")]])};
 $("smD").onclick=()=>{const L=smTg();if(!L.length)return toast("先に欄をタップで選んでください");const pg=cur;pg.items=pg.items.filter(x=>!L.includes(x));smSet.clear();sel=null;smSync();paint();toast(L.length+"か所を削除しました")};
