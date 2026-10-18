@@ -148,7 +148,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="custB" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;background:#ecfdf5;border:1.5px solid #34d399;border-radius:12px;padding:8px 10px;margin-bottom:8px"><b id="custBn" style="flex:1;color:#065f46;font-size:15px"></b><button id="custBs" style="border:0;border-radius:9px;padding:7px 12px;background:#059669;color:#fff;font-weight:700">保存</button><button id="custBx" style="border:1px solid #6ee7b7;border-radius:9px;padding:7px 10px;background:#fff;color:#065f46">閉じる</button></div><div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v139</small></div>
+<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v140</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -1263,13 +1263,17 @@ function synEdit(){let W=SYN.map(x=>x.slice());const ov=document.createElement("
   draw();document.body.appendChild(ov);ov.style.display="flex"}
 function bundleMerge(NI,EX){
   if(!EX.length||!NI.length)return null;
-  const ok=i=>i.field=="input"&&!i.auto&&!i.dg&&!i.local&&!i.dep&&lblCanon(i.lbl),pi=it=>pages.findIndex(p=>p.items.includes(it)),
-    cnt=(L,fn)=>{const c={};return L.map(i=>{const k=lblCanon(i.lbl);c[k]=(c[k]||0)+1;return[i,k+"#"+c[k]]})};
-  const ex=EX.filter(ok).sort((a,b)=>pi(a)-pi(b)||(a.no||0)-(b.no||0)),em=new Map();cnt(ex).forEach(([i,k])=>{if(!em.has(k))em.set(k,i)});
-  const ni=NI.filter(ok).sort((a,b)=>(a.no||0)-(b.no||0)),gm=new Map();let merged=0;
-  cnt(ni).forEach(([i,k])=>{const m=em.get(k);if(m&&!gm.has(i.no)){gm.set(i.no,m.no);merged++}});
+  const ok=i=>i.field=="input"&&!i.auto&&!i.dg&&!i.local&&!i.dep&&lblCanon(i.lbl),pi=it=>pages.findIndex(p=>p.items.includes(it));
+  // 既存の書類は1つのグループ体系にそろえる(別々の連投だった分も、番号がぶつからないよう振り直して合流)
   const iv={};EX.forEach(i=>{iv[i.inst]=(iv[i.inst]||0)+1});const inst=Object.keys(iv).sort((a,b)=>iv[b]-iv[a])[0]||EX[0].inst;
-  let mx=Math.max(0,...EX.map(i=>i.no||0));[...new Set(NI.map(i=>i.no))].sort((a,b)=>a-b).forEach(o=>{if(!gm.has(o))gm.set(o,++mx)});
+  Object.keys(iv).filter(k=>k!==inst).sort((x,y)=>iv[y]-iv[x]).forEach(k=>{const part=EX.filter(i=>i.inst===k),base=EX.filter(i=>i.inst===inst);if(part.length)bundleMerge(part,base)});
+  let mx=Math.max(0,...EX.map(i=>i.no||0));
+  // 名前ごとに「グループ番号」を出てくる順に並べる(同じグループの複数欄は1つと数える)
+  const G=new Map();EX.filter(ok).sort((a,b)=>pi(a)-pi(b)||(a.no||0)-(b.no||0)).forEach(i=>{const k=lblCanon(i.lbl),a=G.get(k)||[];if(!G.has(k))G.set(k,a);if(!a.includes(i.no))a.push(i.no)});
+  const ni=NI.filter(ok).sort((a,b)=>(a.no||0)-(b.no||0)),gm=new Map(),used=new Set(),seen=new Map();let merged=0;
+  ni.forEach(i=>{if(gm.has(i.no))return;const k=lblCanon(i.lbl),a=seen.get(k)||[];if(!seen.has(k))seen.set(k,a);if(!a.includes(i.no))a.push(i.no);
+    const c=(G.get(k)||[])[a.indexOf(i.no)];if(c!=null&&!used.has(c)){gm.set(i.no,c);used.add(c);merged++}});
+  [...new Set(NI.map(i=>i.no))].sort((a,b)=>a-b).forEach(o=>{if(!gm.has(o))gm.set(o,++mx)});
   NI.forEach(i=>{i.no=gm.get(i.no);i.inst=inst});return{inst,merged}}
 const curInst=()=>(sel&&sel.inst)||((cur&&cur.items.find(i=>i.inst))||{}).inst;
 const depOff=(it,pg)=>{if(!it.dep)return false;const t=(pg||pgOf(it)||cur).items.find(o=>o.field=="toggle"&&o.tid===it.dep);return !!(t&&t.off)};
