@@ -148,7 +148,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="custB" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;background:#ecfdf5;border:1.5px solid #34d399;border-radius:12px;padding:8px 10px;margin-bottom:8px"><b id="custBn" style="flex:1;color:#065f46;font-size:15px"></b><button id="custBs" style="border:0;border-radius:9px;padding:7px 12px;background:#059669;color:#fff;font-weight:700">保存</button><button id="custBx" style="border:1px solid #6ee7b7;border-radius:9px;padding:7px 10px;background:#fff;color:#065f46">閉じる</button></div><div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v136</small></div>
+<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v137</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -648,8 +648,12 @@ async function tplOverwrite(ids,asNew){try{const all=await tdb("all");let n=0;
       const nr=asNew?{...r,id:String(Date.now()+n),name:r.name+"のコピー",created:Date.now(),ord:undefined}:{...r};nr.fields=fieldsFrom(arr);nr.pages=Math.max(r.pages||0,arr.length);await tdb("put",nr);n++;
       if(asNew)P.forEach(p=>{files[p.f].tpl=nr.id})}
     toast(n?(asNew?"テンプレートを別名で保存しました(名前の後ろに「のコピー」)":"テンプレートを上書きしました(欄の位置・名前・順番)"):"元のテンプレートが見つかりません",3500)}catch(e){toast("テンプレートを保存できませんでした")}}
+async function tplRename(id,list){let all=[];try{all=await tdb("all")}catch(_){}const r=all.find(x=>x.id==id);if(!r)return toast("テンプレートが見つかりません");const v=prompt("テンプレートの名前",r.name);if(!v||!v.trim()||v.trim()===r.name)return;
+  r.name=v.trim().slice(0,60);try{await tdb("put",r)}catch(e){return toast("名前を変えられませんでした")}files.forEach(f=>{if(f&&f.tpl==id)f.name=r.name});if(typeof draw=="function"&&!cur)draw();toast("テンプレート名を「"+r.name+"」にしました",2500);if(list)tplList()}
+function tplRenameCur(){const ids=[...new Set(pages.map(p=>files[p.f]&&files[p.f].tpl).filter(Boolean))];if(!ids.length)return toast("テンプレートから開いた書類がありません");if(ids.length==1)return tplRename(ids[0]);
+  tdb("all").then(all=>sheet("どのテンプレートの名前を変えますか?",ids.map(id=>{const r=all.find(x=>x.id==id);return[(r&&r.name)||"(不明)",()=>tplRename(id)]}))).catch(()=>{})}
 function saveOver(){const ids=[...new Set(pages.map(p=>files[p.f]&&files[p.f].tpl).filter(Boolean))];if(!ids.length&&!custCur)return savePdf();
-  sheet("上書き保存",[...(custCur?[["お客様「"+custCur.name+"」に保存",()=>custSave(false)]]:[]),...(ids.length?[["テンプレートを上書き(欄の位置・名前・順番)",()=>tplOverwrite(ids,false)],["テンプレートを別名で保存",()=>tplOverwrite(ids,true)]]:[]),["PDFとして保存(入力した内容入り)",savePdf]])}
+  sheet("上書き保存",[...(custCur?[["お客様「"+custCur.name+"」に保存",()=>custSave(false)]]:[]),...(ids.length?[["テンプレートを上書き(欄の位置・名前・順番)",()=>tplOverwrite(ids,false)],["テンプレートを別名で保存",()=>tplOverwrite(ids,true)],["テンプレートの名前を変える",tplRenameCur]]:[]),["PDFとして保存(入力した内容入り)",savePdf]])}
 async function savePdf(){
   const list=pages.filter(p=>!tplEdit||!tplEdit.pgs.includes(p));if(!list.length)return say("ページがありません");
   try{say("上書き保存を作成中…");const b=await build(list),one=new Set(list.map(p=>p.f)),nm=one.size==1?files[list[0].f].name.replace(/\.[A-Za-z0-9]+$/,"")+".pdf":"結合PDF.pdf";
@@ -671,7 +675,7 @@ $("bMan").onclick=()=>openManual();$("heroM").onclick=e=>{e.stopPropagation();op
  $("heroL").innerHTML=L.map(t=>"<li>"+t+"</li>").join("")}
 $("bShare").onclick=()=>sheet("共有・書き出し・印刷",[["選択したページ",()=>exp(true)],["すべてのページ",()=>exp(false)],["印刷",printPages],["選択ページをテンプレートに保存",()=>tplSave(true)],["全ページをテンプレートに保存",()=>tplSave(false)]]);
 $("eAdd").onclick=()=>sheet("ページに追加",[["ファイルから(PDF・画像)",()=>$("pf").click()],["写真から",()=>$("pi").click()]]);
-$("eMore").onclick=()=>sheet("その他",[["ページを回転",()=>$("rt").click()],...(cur&&cur._undo?[["トリミングを元に戻す",undoCrop]]:[]),["全消去(ペン・テキスト・範囲選択)",()=>sheet("このページで全部消すもの",[["ペンの書き込み",()=>$("cl").click()],["テキスト",()=>clearText()],["範囲選択(モザイク・塗り)",()=>clearShapes()]])],["全空欄認識",()=>xlStart()],["編集モード(欄を作る・整える)",()=>smStart()],...(cur&&files[cur.f]&&files[cur.f].tpl?[["テンプレートのPDFを差し替え",()=>{const i=document.createElement("input");i.type="file";i.accept="application/pdf,.pdf,.xlsx,.xlsm";i.onchange=()=>tplReplace2(i.files[0]);i.click()}]]:[]),["◉フォーム",()=>sheet("◉フォーム",[["◉フォーム設置",()=>tgMenu()],["自動認識フォーム",()=>xlStart({m:1})],["◉グループ編集",()=>tgEStart()]])],["説明書",()=>openManual()],...(cur&&cur.items.some(i=>i.lock)?[["固定した画像を解除",()=>{cur.items.forEach(i=>{delete i.lock});paint();toast("固定を解除しました")}]]:[])]);
+$("eMore").onclick=()=>sheet("その他",[["ページを回転",()=>$("rt").click()],...(cur&&cur._undo?[["トリミングを元に戻す",undoCrop]]:[]),["全消去(ペン・テキスト・範囲選択)",()=>sheet("このページで全部消すもの",[["ペンの書き込み",()=>$("cl").click()],["テキスト",()=>clearText()],["範囲選択(モザイク・塗り)",()=>clearShapes()]])],["全空欄認識",()=>xlStart()],["編集モード(欄を作る・整える)",()=>smStart()],...(cur&&files[cur.f]&&files[cur.f].tpl?[["テンプレートの名前を変える",()=>tplRename(files[cur.f].tpl)],["テンプレートのPDFを差し替え",()=>{const i=document.createElement("input");i.type="file";i.accept="application/pdf,.pdf,.xlsx,.xlsm";i.onchange=()=>tplReplace2(i.files[0]);i.click()}]]:[]),["◉フォーム",()=>sheet("◉フォーム",[["◉フォーム設置",()=>tgMenu()],["自動認識フォーム",()=>xlStart({m:1})],["◉グループ編集",()=>tgEStart()]])],["説明書",()=>openManual()],...(cur&&cur.items.some(i=>i.lock)?[["固定した画像を解除",()=>{cur.items.forEach(i=>{delete i.lock});paint();toast("固定を解除しました")}]]:[])]);
 async function addItemFile(f){
   try{
     let c,w=.5;
@@ -1094,7 +1098,7 @@ function tplSave(selOnly){
   if(!list.length)return say(selOnly?"保存するページを選択してください":"ページがありません");
   tsList=list;let ni=0,nf=0;list.forEach(p=>p.items.forEach(it=>{if(it.k=="t"){it.field=="input"?ni++:nf++}}));
   $("tsh").textContent="連投欄 "+ni+"個・固定の文字 "+nf+"個。ペンや画像は、元のPDFに焼き込んで保存します。";
-  $("tsn").value=files[list[0].f].name+"のテンプレート";$("ts").style.display="flex"}
+  $("tsn").value=String(files[list[0].f].name||"").replace(/のテンプレート$/,"");$("ts").style.display="flex"}
 $("tsx").onclick=()=>{$("ts").style.display="none"};
 var tlSel=null;
 async function tplSetMake(){if(!tlSel||tlSel.length<2)return toast("2つ以上の書類を選んでください",2500);const ids=tlSel.slice(),nm=prompt("書類セットの名前(例: 車庫証明セット)","");if(!nm||!nm.trim())return;
@@ -1198,7 +1202,7 @@ async function tplList(){
   if(!L.length&&!SETS.length){const d=document.createElement("div");d.style.cssText="padding:12px;color:var(--mut);font-size:14px;line-height:1.7";d.textContent="まだテンプレートがありません。編集画面で文字を置き、入力したい所を「連投欄にする」にしてから、共有 →「テンプレートに保存」を選んでください。";c.appendChild(d)}
   L.forEach(r=>{
     const row=document.createElement("div"),tn=document.createElement("div"),sm=document.createElement("small"),b1=document.createElement("button"),b2=document.createElement("button");
-    row.className="tr";row._rec=r;tn.className="tn";tn.textContent=r.name;if(tlSel){const k=tlSel.indexOf(r.id);row.style.outline=k>=0?"2px solid var(--ac)":"";if(k>=0)tn.textContent=(k+1)+". "+r.name;row.onclick=()=>{const j=tlSel.indexOf(r.id);if(j>=0)tlSel.splice(j,1);else tlSel.push(r.id);tplList()}}sm.textContent="連投欄 "+r.fields.filter(f=>f.type=="input").length+"・固定 "+r.fields.filter(f=>f.type!="input").length+"・"+(r.pages||1)+"ページ";tn.appendChild(sm);
+    row.className="tr";row._rec=r;tn.className="tn";tn.textContent=r.name;if(!tlSel){const pe=document.createElement("span");pe.textContent=" ✎";pe.title="名前を変える";pe.style.cssText="color:var(--ac);cursor:pointer;font-weight:400;padding:0 4px";pe.onclick=ev=>{ev.stopPropagation();tplRename(r.id,true)};tn.appendChild(pe)}if(tlSel){const k=tlSel.indexOf(r.id);row.style.outline=k>=0?"2px solid var(--ac)":"";if(k>=0)tn.textContent=(k+1)+". "+r.name;row.onclick=()=>{const j=tlSel.indexOf(r.id);if(j>=0)tlSel.splice(j,1);else tlSel.push(r.id);tplList()}}sm.textContent="連投欄 "+r.fields.filter(f=>f.type=="input").length+"・固定 "+r.fields.filter(f=>f.type!="input").length+"・"+(r.pages||1)+"ページ";tn.appendChild(sm);
     const b3=document.createElement("button");b3.textContent="共有";b3.onclick=()=>tplShare(r);b1.className="p";b1.textContent="使う";b1.onclick=()=>{kbPre();$("tl").style.display="none";tplMake(r)};b2.textContent="削除";
     b2.onclick=()=>sheet("「"+r.name+"」を削除しますか?",[["削除する",async()=>{await tdb("del",r.id);tplList()}]]);
     const cv=document.createElement("canvas");cv.style.cssText="width:44px;height:auto;min-height:56px;border:1px solid var(--bd);border-radius:4px;background:#fff";
@@ -1757,7 +1761,7 @@ const MAN=[
 ["stamp","スタンプと矢印",stamp,["① スタンプを置くと、左下にオレンジの丸が出ます。","② その丸からドラッグすると、矢印を伸ばして場所を指せます。"]],
 ["image","写真・画像・PDFを重ねる",null,["編集画面の「追加」から、PDF・TIFF・写真をページに貼れます。ドラッグで移動、二本指で拡大縮小。","地図などは「固定」で動かなくなります(解除は「その他」から)。"]],
 ["cust","お客様リスト",tpl,["お客様ごとに「書類一式+入力した内容」を保存して、あとで呼び出せます(テンプレートとは別のリストです)。","① 作り方:ホームの「お客様」→「＋新しいお客様」で名前を入れ、テンプレート・書類セット・普通のPDF/写真/Excelのどれからでも始められます。1つだけでもOK。今開いている書類からも作れます。","② 保存:ホーム上の緑の帯の「保存」、または「上書き」→「お客様に保存」。一度保存したお客様は、編集画面からホームに戻るたびに自動保存されます。","③ 後から書類を足す:お客様を開いたまま書類やテンプレートを追加し、連投欄を作ると、氏名・住所など同じ名前の欄には入力済みの内容が自動で入ります。欄の名前を変えたとき・編集モードを終えたとき・連投モードを始めたときもつながります(「完全完了」で文字にした内容も使えます)。","並べ替え:テンプレート・書類セット・お客様の一覧は、行を長押しして浮いたら上下に動かすと順番を入れ替えられます。","自動で入った欄には、画面だけ緑の点線が付きます(保存・印刷には出ません)。タップすればふつうに直せます。連投モードでは「この書類だけ」ボタンで、その書類の欄だけグループから外して別の内容を入れられます(他の書類は変わりません)。","⚙ 自動入力の設定:どの欄の名前を同じものとして扱うかを決めます。初期設定は「氏名・名前・お名前・名称・法人名…」「住所・ご住所・住居…」「電話番号・携帯電話…」など。書き換え・項目の追加・削除・初期設定に戻す、ができます。同じ行の名前の欄には、全部同じ文字が自動で入ります。","④ 開く:「お客様」→「開く」。書類・入力内容・◉の状態がそのまま戻ります。","⑤ 閉じる:緑の帯の「閉じる」。保存して閉じる/保存せずに閉じる を選べます。"]],
-["tpl","テンプレート・書類セット",tpl,["よく使う書類と連投欄を保存して、何度も呼び出せます。","① 作り方:欄を作ったら、ホーム画面の「共有」→「テンプレートに保存」。","② 使い方:「テンプレ」→「使う」。そのまま連投モードで入力できます。","③ 書類セット:テンプレ一覧の「＋書類セットを作る」で、複数のテンプレートを1つのセットにします。セットを使うと全部の書類がまとめて開き、氏名・住所・電話などの同じ項目は1回の入力で全書類に入ります。","④ 編集:一覧の「編集」で、テンプレートが編集モードで開きます。直したら上の「保存」→「テンプレートを上書き」。「別名で保存」もここから。PDFだけ新しくしたいときは「その他」→「テンプレートのPDFを差し替え」。","⑤ 共有:ファイルにして相手に送れます。相手は「他の人のテンプレートを取り込む」で読み込みます。"]],
+["tpl","テンプレート・書類セット",tpl,["よく使う書類と連投欄を保存して、何度も呼び出せます。","① 作り方:欄を作ったら、ホーム画面の「共有」→「テンプレートに保存」。","② 使い方:「テンプレ」→「使う」。そのまま連投モードで入力できます。","③ 書類セット:テンプレ一覧の「＋書類セットを作る」で、複数のテンプレートを1つのセットにします。セットを使うと全部の書類がまとめて開き、氏名・住所・電話などの同じ項目は1回の入力で全書類に入ります。","④ 編集:一覧の「編集」で、テンプレートが編集モードで開きます。直したら上の「保存」→「テンプレートを上書き」。「別名で保存」もここから。PDFだけ新しくしたいときは「その他」→「テンプレートのPDFを差し替え」。","名前の変更:一覧の名前の横の「✎」、または編集中に「上書き」→「テンプレートの名前を変える」(「その他」からも)。","⑤ 共有:ファイルにして相手に送れます。相手は「他の人のテンプレートを取り込む」で読み込みます。"]],
 ["share","保存・共有・印刷",null,["上書き:編集した内容を元のファイルに保存します。iPhoneでは保存先の「ファイル」で同じ名前を選び「置き換える」。テンプレートから開いた書類は「テンプレートを上書き(欄の位置・名前・順番)」「別名で保存」「PDFとして保存」から選べます。","共有:ファイル名を変えて、PDF/JPEG/PNGで書き出し(複数ページの画像はZIP)。","印刷:「共有」→「印刷」。iPhoneは共有シートの「プリント」からでも印刷できます。"]],
 ["undo","戻す・消す",null,["「戻す」は1動作ずつ取り消し。ページ削除も戻せます。","その他 →「全消去」で、ペン・テキスト・範囲選択をまとめて消せます。"]],
 ["pc","パソコンで使うとき",null,["拡大縮小:Ctrl(Mac は ⌘)+ホイール、または Ctrl + / -。Ctrl+0 で元の大きさ。","Ctrl+Z で戻る、Delete で選んだ文字・画像を削除。連投中は Enter・Tab で次の欄へ。"]],
