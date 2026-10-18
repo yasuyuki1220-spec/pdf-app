@@ -127,6 +127,8 @@ input[type=range]{accent-color:var(--ac)}
 #cg .cgr{display:flex;align-items:center;gap:8px;margin-top:6px}#cg .cgr small{flex:1;margin:0}#cg #cgok{border:0;border-radius:10px;background:#4338ca;color:#fff;padding:8px 18px;font-size:14px;font-weight:700}
 #cg .cgs{display:block;margin-top:6px}#cg #cgpa{flex:1;border:0;border-radius:10px;background:#eef0f6;color:#4338ca;padding:9px 10px;font-size:14px;font-weight:700}
 #fpcam,#fgc{display:none!important}
+#nmE,#nrE{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;z-index:80}#nmE .box,#nrE .box{background:var(--card);width:100%;max-width:620px;margin:0 auto;border-radius:22px 22px 0 0;padding:12px 14px calc(14px + env(safe-area-inset-bottom,0px));max-height:88%;overflow:auto}#nmE .st,#nrE .st{font-weight:700;margin-bottom:8px}#nmI{width:100%;box-sizing:border-box;font:inherit;font-size:16px;border:1px solid var(--bd);border-radius:12px;padding:10px;background:var(--bg);color:var(--fg)}.nc{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.nc button{border:1px solid var(--bd);background:none;border-radius:999px;padding:6px 12px;font-size:14px;color:inherit}.nc button.on{background:var(--ac);color:#fff;border-color:var(--ac)}#nmE .sh,#nrE .sh{display:block;color:var(--mut);font-size:12px;line-height:1.5;margin:4px 2px}#nmE .row,#nrE .row{display:flex;gap:8px;margin-top:10px}#nmE .row button,#nrE .row button{border:1px solid var(--bd);background:none;border-radius:10px;padding:8px 12px;color:inherit}#nmE .row button.p,#nrE .row button.p{background:var(--ac);color:#fff;border-color:var(--ac)}#nrE .nr{padding:8px 0;border-bottom:1px solid var(--bd)}#nmH button{border:1px solid var(--ac);background:none;color:var(--ac);border-radius:8px;padding:4px 10px;font-size:13px;margin-left:6px}
+#pkE{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;z-index:75}#pkE .box{background:var(--card);width:100%;max-width:620px;margin:0 auto;border-radius:22px 22px 0 0;padding:12px 14px calc(14px + env(safe-area-inset-bottom,0px));max-height:90%;overflow:auto}#pkE .st{font-weight:700;margin-bottom:6px}#pkE h4{margin:12px 0 4px;font-size:14px}#pkE .sh{display:block;color:var(--mut);font-size:12px;line-height:1.5;margin:2px 2px 6px}#pkE label.pr{display:flex;gap:8px;align-items:center;padding:7px 2px;border-bottom:1px solid var(--bd);font-size:15px}#pkE label.pr input{width:20px;height:20px}#pkE .row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}#pkE .row button{border:1px solid var(--bd);background:none;border-radius:10px;padding:9px 12px;color:inherit;font-size:14px}#pkE .row button.p{background:var(--ac);color:#fff;border-color:var(--ac)}
 </style></head><body>
 <svg style="display:none"><defs>
 <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
@@ -148,7 +150,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="custB" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;background:#ecfdf5;border:1.5px solid #34d399;border-radius:12px;padding:8px 10px;margin-bottom:8px"><b id="custBn" style="flex:1;color:#065f46;font-size:15px"></b><button id="custBs" style="border:0;border-radius:9px;padding:7px 12px;background:#059669;color:#fff;font-weight:700">保存</button><button id="custBx" style="border:1px solid #6ee7b7;border-radius:9px;padding:7px 10px;background:#fff;color:#065f46">閉じる</button></div><div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v140</small></div>
+<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v142</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -207,7 +209,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="row"><button class="p" id="bxok">囲う</button><button class="p" id="bxok2">形変更</button><button id="bxx">キャンセル</button></div></div></div>
 <div id="pc"><div class="box"><div class="st">写真をトリミング(四隅をドラッグ)</div><canvas id="pcv"></canvas><div class="chips"><button class="chip on" data-r="0">自由</button><button class="chip" data-r="1">1:1</button><button class="chip" data-r="1.3333">4:3</button><button class="chip" data-r="0.75">3:4</button><button class="chip" data-r="1.7778">16:9</button></div><div class="row"><button class="p" id="pcok">トリミングして使う</button><button id="pcn">そのまま使う</button><button id="pcx">キャンセル</button></div></div></div>
 <div id="cuL"><div class="box"><div class="st">お客様リスト</div><div id="cuLc"></div><div class="row"><button class="p" id="cuLn">＋新しいお客様</button><button id="cuLx">閉じる</button></div></div></div>
-<div id="tl"><div class="box"><div class="st">テンプレートから追加</div><div id="tlc"></div><div class="row"><button class="p" id="tli">他の人のテンプレートを取り込む</button><button id="tlx">閉じる</button></div><input id="tlf" type="file" accept=".json,application/json" hidden></div></div>
+<div id="tl"><div class="box"><div class="st">テンプレートから追加</div><div id="tlc"></div><div class="row"><button class="p" id="tli">他の人のテンプレートを取り込む</button><button id="tlp">📦 共有パック</button><button id="tlx">閉じる</button></div><input id="tlf" type="file" accept=".json,application/json" hidden></div></div>
 <div id="tf"><div class="box"><div class="st" id="tft"></div><div id="tfc"></div><div class="row"><button class="p" id="tfok">作成</button><button id="tfx">キャンセル</button></div></div></div>
 <div id="ts"><div class="box"><div class="st">テンプレートとして保存</div><div id="tsh" style="font-size:13px;color:var(--mut);padding:0 4px 8px;line-height:1.5"></div><input id="tsn" type="text"><div class="row"><button class="p" id="tsok">保存</button><button id="tsx">キャンセル</button></div></div></div>
 <div id="to"><div class="box"><div class="st">連投欄のグループ(A・B・C…)<div style="font-size:12px;font-weight:400;color:var(--mut);line-height:1.5;margin-top:4px">同じ文字(A・A・A)の欄は、別ページでも1回の入力で同時に入ります。各欄の「グループ ▾」で A/B/C を選んで変更。▲▼で入力する順番(A→B→C)を入れ替え。名前タップで画面上のその欄を選べます。</div></div><div id="toc"></div><div class="row"><button class="p" id="tox">閉じる</button></div></div></div>
@@ -1232,9 +1234,10 @@ async function tplMake0(r,q){
     if(f.type=="toggle"){it.field="toggle";it.off=true;it.rd=f.rd;it.grp=f.grp?f.grp+"@"+inst:undefined}
     if(f.type=="input"){it.field="input";it.no=f.no||++n;it.ph=true;it.lbl=f.str;it.inst=inst;if(!first)first=pg}
     if(it.cell)fitItem(it,pg);pg.items.push(it)}catch(e){bad++}});
-  let bm=null;{const NI=pgs.flatMap(p=>p.items.filter(i=>i.field=="input")),EX=pages.flatMap(p=>p.items.filter(i=>i.field=="input"));bm=bundleMerge(NI,EX)}
+  let bm=null,EXs=[];{const NI=pgs.flatMap(p=>p.items.filter(i=>i.field=="input")),EX=pages.flatMap(p=>p.items.filter(i=>i.field=="input"));EXs=EX;bm=bundleMerge(NI,EX)}
   pages.push(...pgs);const gf=grpFill();say("");draw();if(bad)toast(bad+"個の欄を読み込めませんでした",6000);if(bm&&bm.merged)toast("他の書類と同じ項目 "+bm.merged+" か所を、同じグループにまとめました"+(gf?"(入力済みの "+gf+" か所は自動で反映。緑の点線の欄です。タップで直せます)":""),4500);
   fxRecalc();
+  if(!q&&bm)await nameReview(pgs.flatMap(p=>p.items),EXs);
   if(q){}
   else if(first){await openEd(first);fillStart(bm?bm.inst:inst);if("ontouchstart" in window)setTimeout(()=>{if(fillInst===inst&&!kbUp()&&$("ov").style.display!="flex")sheet("入力を始めます(キーボードを出します)",[["入力を始める",()=>fpGo(Math.max(0,fpI),true)]])},1000)}
   else{await openEd(pgs[0]||pages[pages.length-1]);say("");toast("「"+r.name+"」を開きました(連投欄なし)。編集モードで欄を追加できます",4000)}}
@@ -1252,6 +1255,57 @@ function lblCanon(l){let t=String(l||"").normalize("NFKC").toLowerCase().replace
   t=t.replace(/^(ご|お|御)/,"").replace(/(記入欄|欄)$/,"");if(!t)return null;
   const M=synMap(),g=M.get(t)||M.get(synN(t))||(rm&&t=="名"?M.get(synN("氏名")):null);if(g)return role+g;
   return role+t}
+
+// ---- v141 名前の入力(名簿から選ぶ・その場で登録)と、取り込み時の名前の確認
+const nmEsc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/'/g,"&#39;");
+function nameKnown(v){const k=lblCanon(v);return !!k&&/(^|:)g:/.test(k)}
+function nameSim(a,b){const x=synN(a).replace(/\d+$/,""),y=synN(b).replace(/\d+$/,"");if(!x||!y)return 0;if(x==y)return 1;if((x.length>=2&&y.includes(x))||(y.length>=2&&x.includes(y)))return .8;
+  const bg=s=>{const r=new Set();for(let i=0;i<s.length-1;i++)r.add(s.slice(i,i+2));return r},A=bg(x),B=bg(y);let c=0;A.forEach(t=>{if(B.has(t))c++});const d=A.size&&B.size?2*c/(A.size+B.size):0;
+  const sa=new Set(x),sb=new Set(y);let k=0;sa.forEach(t=>{if(sb.has(t))k++});const j=k>=2?k/new Set([...sa,...sb]).size*.9:0;return Math.max(d,j)}
+function nameWords(g){return[g[0],...String(g[1]).split(/[,、，\n]/)].map(s=>s.trim()).filter(Boolean)}
+function nameCands(lbl,exL){const out=[];SYN.forEach((g,i)=>{const s=Math.max(0,...nameWords(g).map(w=>nameSim(lbl,w)));if(s>=.34)out.push({s,name:g[0],gi:i})});
+  exL.forEach(l=>{const s=nameSim(lbl,l);if(s>=.34&&!out.some(o=>o.name==l))out.push({s,name:l,gi:-1})});return out.sort((a,b)=>b.s-a.s).slice(0,3)}
+function nameReg(v,gi){const W=SYN.map(x=>x.slice());W[gi][1]=(W[gi][1]?W[gi][1]+",":"")+v;synSave(W)}
+function askName(title,cur){return new Promise(res=>{
+  const ov=document.createElement("div");ov.id="nmE";let reg=false;
+  const exL=[...new Set(pages.flatMap(p=>p.items.filter(i=>i.field=="input"&&i.lbl&&lblCanon(i.lbl)&&!nameKnown(i.lbl)).map(i=>String(i.lbl).trim())))].slice(0,12);
+  ov.innerHTML="<div class='box'><div class='st'>"+nmEsc(title)+"</div><input id='nmI' autocomplete='off' enterkeyhint='done'><div class='nc' id='nmC'></div><div id='nmH' class='sh'></div><div class='row'><button class='p' id='nmOk'>決定</button><button id='nmX'>やめる</button></div></div>";
+  document.body.appendChild(ov);const I=ov.querySelector("#nmI"),C=ov.querySelector("#nmC"),H=ov.querySelector("#nmH");I.value=cur||"";
+  const fin=v=>{ov.remove();res(v)};
+  const upd=()=>{const v=I.value.trim();
+    let L=[...SYN.filter(g=>g[0]).map(g=>({n:g[0],w:nameWords(g)})),...exL.filter(l=>!SYN.some(g=>g[0]==l)).map(l=>({n:l,w:[l]}))];
+    if(v&&synN(v))L=L.filter(o=>o.w.some(w=>nameSim(v,w)>=.3||synN(w).includes(synN(v))));
+    C.innerHTML=L.slice(0,14).map((o,i)=>"<button data-n='"+nmEsc(o.n)+"'>"+nmEsc(o.n)+"</button>").join("");
+    C.querySelectorAll("button").forEach(b=>b.onclick=()=>{I.value=b.dataset.n;reg=false;upd();I.focus()});
+    if(!v)H.innerHTML="候補の名前を選ぶと、他の書類の同じ項目と自動でつながります。";
+    else if(nameKnown(v))H.innerHTML="✓ 自動入力の対象です(同じ仲間の欄は自動で入ります)";
+    else if(!reg)H.innerHTML="この名前はまだ自動入力の対象ではありません。<button id='nmR'>仲間に登録</button>";
+    else{H.innerHTML="どの項目の仲間にしますか?<div class='nc'>"+SYN.map((g,i)=>g[0]?"<button data-g='"+i+"'>"+nmEsc(g[0])+"</button>":"").join("")+"</div>";
+      H.querySelectorAll("button[data-g]").forEach(b=>b.onclick=()=>{nameReg(v,+b.dataset.g);reg=false;toast("「"+v+"」を「"+SYN[+b.dataset.g][0]+"」の仲間に登録しました",2500);upd()})}
+    const r=H.querySelector("#nmR");if(r)r.onclick=()=>{reg=true;upd()}};
+  I.oninput=()=>{reg=false;upd()};I.onkeydown=e=>{if(e.key=="Enter"){e.preventDefault();fin(I.value.trim())}};
+  ov.querySelector("#nmOk").onclick=()=>fin(I.value.trim());ov.querySelector("#nmX").onclick=()=>fin(null);
+  upd();setTimeout(()=>{I.focus();I.select()},50)})}
+// 取り込んだ書類の欄の名前が、他の書類の項目と少し違うとき「同じもの?」と聞く(答えは名簿に覚える)
+async function nameReview(NI,EX){try{
+  if(!EX||!EX.length||!NI||!NI.length)return;
+  const isIn=i=>i.field=="input"&&!i.auto&&!i.dg&&!i.local&&!i.dep&&lblCanon(i.lbl);
+  const exC=new Set(EX.filter(isIn).map(i=>lblCanon(i.lbl)));let skip=[];try{skip=JSON.parse(localStorage.getItem("pdfapp_nrno")||"[]")}catch(_){}
+  const exL=[...new Set(EX.filter(isIn).filter(i=>!nameKnown(i.lbl)).map(i=>String(i.lbl).trim()))],R=[],seen=new Set();
+  NI.filter(isIn).forEach(i=>{const l=String(i.lbl).trim(),c=lblCanon(l);if(seen.has(l)||exC.has(c)||nameKnown(l)||skip.includes(c))return;seen.add(l);
+    const cs=nameCands(l,exL.filter(x=>lblCanon(x)!=c));if(cs.length)R.push({l,c,cs,pick:cs[0].s>=.7?0:-1})});
+  if(!R.length)return;
+  const ok=await new Promise(res=>{const ov=document.createElement("div");ov.id="nrE";
+    const draw=()=>{ov.innerHTML="<div class='box'><div class='st'>名前の確認</div><small class='sh'>次の欄は、他の書類の項目と名前が少し違います。同じものなら選んでください。選んだ内容は覚えて、次からは自動で同じ扱いになります(⚙ 自動入力の設定で変更できます)。</small>"+R.map((r,ri)=>"<div class='nr'><b>"+nmEsc(r.l)+"</b><div class='nc'>"+r.cs.map((c,ci)=>"<button data-r='"+ri+"' data-c='"+ci+"' class='"+(r.pick==ci?"on":"")+"'>"+nmEsc(c.name)+" と同じ</button>").join("")+"<button data-r='"+ri+"' data-c='-1' class='"+(r.pick<0?"on":"")+"'>別の項目</button></div></div>").join("")+"<div class='row'><button class='p' id='nrOk'>決定</button><button id='nrX'>あとで</button></div></div>";
+      ov.querySelectorAll(".nc button").forEach(b=>b.onclick=()=>{R[+b.dataset.r].pick=+b.dataset.c;draw()});
+      ov.querySelector("#nrOk").onclick=()=>{ov.remove();res(true)};ov.querySelector("#nrX").onclick=()=>{ov.remove();res(false)}};
+    draw();document.body.appendChild(ov)});
+  if(!ok)return;
+  const W=SYN.map(x=>x.slice());let ch=0;
+  R.forEach(r=>{if(r.pick<0){skip.push(r.c);return}const c=r.cs[r.pick];if(c.gi>=0)W[c.gi][1]=(W[c.gi][1]?W[c.gi][1]+",":"")+r.l;else W.push([c.name,r.l]);r.hit=true;ch++});
+  try{localStorage.setItem("pdfapp_nrno",JSON.stringify(skip.slice(-200)))}catch(_){}
+  if(ch){synSave(W);const H=new Set(R.filter(r=>r.hit).map(r=>r.l));NI.filter(i=>isIn(i)&&H.has(String(i.lbl).trim())).forEach(custJoin)}
+}catch(e){}}
 function synEdit(){let W=SYN.map(x=>x.slice());const ov=document.createElement("div");ov.id="synE";
   const draw=()=>{ov.innerHTML="<div class='box'><div class='st'>⚙ 自動入力の設定</div><small class='sh'>同じ行に書いた名前の欄は、同じものとして扱います。どれか1か所に入力すると、他の書類の同じ仲間の欄にも自動で入ります(全空欄認識・テンプレート追加・お客様の書類追加のとき)。名前は「,」で区切ります。</small><div class='sl'>"+W.map((g,i)=>"<div class='sr'><input class='sk' data-i='"+i+"' value='"+g[0].replace(/'/g,"&#39;")+"' placeholder='まとめ名'><textarea class='sv' data-i='"+i+"' rows='2' placeholder='例: 氏名,お名前,名称'>"+String(g[1]).replace(/</g,"&lt;")+"</textarea><button class='sx' data-i='"+i+"'>✕</button></div>").join("")+"</div><div class='row'><button id='synA'>＋ 項目を追加</button><button id='synR'>初期設定に戻す</button><button class='p' id='synOk'>保存</button><button id='synX'>閉じる</button></div></div>";
     ov.querySelectorAll(".sk").forEach(e=>e.oninput=()=>{W[+e.dataset.i][0]=e.value});ov.querySelectorAll(".sv").forEach(e=>e.oninput=()=>{W[+e.dataset.i][1]=e.value});
@@ -1363,7 +1417,7 @@ $("szAl").onclick=()=>szbAnc("l");$("szAc").onclick=()=>szbAnc("c");$("szAr").on
 $("szNm").onclick=()=>{const L=szbL().filter(i=>i.field=="input");if(!L.length)return;const on=!L.every(i=>i.num);L.forEach(i=>{if(on)i.num=true;else delete i.num;if(!i.ph){const pg=pgOf(i)||cur;setItemStr(i,pg,on?i.str:String(i.str).replace(/,/g,""))}});szbSync();paint();toast(on?L.length+"か所を金額欄にしました(数字に自動でカンマが付きます)":"金額欄を解除しました",2500)};
 function fsRebuild(keep){if(!fillInst)return;const inst=fillInst,i=fpI;fillStart(inst);if(keep&&fillL.length)setTimeout(()=>fpGo(Math.min(i,fillL.length-1),false),50)}
 function fsMenu(it){const pg=pgOf(it)||cur;sheet("連投欄の設定:"+(it.lbl||""),[
-  ["名前を変える",()=>{const v=prompt("連投欄の名前",it.lbl||"");if(v&&v.trim()){it.lbl=v.trim();if(it.ph)setItemStr(it,pg,it.lbl);custJoin(it);fsRebuild(true);paint()}}],
+  ["名前を変える",async()=>{const v=await askName("連投欄の名前",it.lbl||"");if(v&&v.trim()){it.lbl=v.trim();if(it.ph)setItemStr(it,pg,it.lbl);custJoin(it);fsRebuild(true);paint()}}],
   ["文字の基準位置:左端(右へ伸びる)",()=>setAnc(it,"l")],["文字の基準位置:中央",()=>setAnc(it,"c")],["文字の基準位置:右端(左へ伸びる)",()=>setAnc(it,"r")],
   ["幅・高さを変える",()=>szbOpen(it)],
   ["この連投欄を消す",()=>{pg.items=pg.items.filter(x=>x!==it);sel=null;fsRebuild(true);paint()}]])}
@@ -1440,9 +1494,9 @@ function swMake(t,q){const pg=cur,W=pg.W,H=pg.H,A=ang(pg);t.tid=t.tid||("t"+Date
   [u,v]=toDisp(t.a,t.b,A),[a,b]=toUnrot(clamp(u+(tw/2+cw/2+6)/dispW,.05,.95),v,A),lbl="スイッチ入力"+n;
   const it={k:"t",a,b,str:lbl,s:s0,s0,c:"#111111",rot:-A,sx:1,sy:1,anc:"l",field:"input",no:n,ph:true,lbl,inst,xlc:true,dep:t.tid,cell:{x0:a-cw/2/W,x1:a+cw/2/W,y0:b-ch/2/H,y1:b+ch/2/H}};
   fitItem(it,pg);pg.items.push(it);smSet=new Set([it]);smMulti=false;sel=it;smSync();paint();toast("右に入力欄を付けました。ドラッグで移動、下のボタンでサイズを変えられます。選択ボタンがONのときだけ連投に出ます",5000)}
-function smRename(it){if(!it||it.field!="input")return toast("連投欄を選んでください(選択ボタンに名前はありません)");const v=prompt("欄の名前",it.lbl||"");if(v&&v.trim()){it.lbl=v.trim();if(it.ph)setItemStr(it,pgOf(it)||cur,it.lbl);custJoin(it);paint();smSync()}}
+async function smRename(it){if(!it||it.field!="input")return toast("連投欄を選んでください(選択ボタンに名前はありません)");const v=await askName("欄の名前",it.lbl||"");if(v&&v.trim()){it.lbl=v.trim();if(it.ph)setItemStr(it,pgOf(it)||cur,it.lbl);custJoin(it);paint();smSync()}}
 $("smN").onclick=()=>{const L=smTg(),LI=L.filter(i=>i.field=="input");if(L.length==1)return smRename(L[0]);if(LI.length<2)return toast("先に欄をタップで選んでください",3000);
-  sheet(LI.length+"か所を選択中:名前をどうしますか?",[["1つずつ名前を変える(選んだ順)",async()=>{for(const it of LI){const v=prompt("欄の名前("+(LI.indexOf(it)+1)+"/"+LI.length+")",it.lbl||"");if(v===null)break;if(v.trim()){it.lbl=v.trim();if(it.ph)setItemStr(it,pgOf(it)||cur,it.lbl);custJoin(it)}}paint();smSync()}],["全部同じ名前にする(同じ内容が入ります)",()=>{const v=prompt("欄の名前(選んだ"+LI.length+"か所すべて)",LI[0].lbl||"");if(!v||!v.trim())return;LI.forEach(it=>{it.lbl=v.trim();if(it.ph)setItemStr(it,pgOf(it)||cur,it.lbl)});LI.forEach(custJoin);paint();smSync();toast(LI.length+"か所を「"+v.trim()+"」にしました",2500)}],["連番で名前を付ける(例:品名1・品名2…)",smSeries]])};
+  sheet(LI.length+"か所を選択中:名前をどうしますか?",[["1つずつ名前を変える(選んだ順)",async()=>{for(const it of LI){const v=await askName("欄の名前("+(LI.indexOf(it)+1)+"/"+LI.length+")",it.lbl||"");if(v===null)break;if(v.trim()){it.lbl=v.trim();if(it.ph)setItemStr(it,pgOf(it)||cur,it.lbl);custJoin(it)}}paint();smSync()}],["全部同じ名前にする(同じ内容が入ります)",async()=>{const v=await askName("欄の名前(選んだ"+LI.length+"か所すべて)",LI[0].lbl||"");if(!v||!v.trim())return;LI.forEach(it=>{it.lbl=v.trim();if(it.ph)setItemStr(it,pgOf(it)||cur,it.lbl)});LI.forEach(custJoin);paint();smSync();toast(LI.length+"か所を「"+v.trim()+"」にしました",2500)}],["連番で名前を付ける(例:品名1・品名2…)",smSeries]])};
 $("smS").onclick=()=>{const L=smTg();L.length?szbOpen(L[0]):toast("先に欄をタップで選んでください")};
 $("smA").onclick=()=>{const L=smTg().filter(i=>i.field=="input");if(!L.length)return toast("先に連投欄を選んでください");const set=a=>{L.forEach(i=>{i.anc=a;if(i.cell)fitItem(i,pgOf(i)||cur)});paint();toast(L.length+"か所を「"+{l:"左端",c:"中央",r:"右端"}[a]+"」基準にしました")};sheet("文字の基準位置("+L.length+"か所)",[["左端基準(右へ伸びる・基本)",()=>set("l")],["中央基準",()=>set("c")],["右端基準(左へ伸びる)",()=>set("r")]])};
 $("smD").onclick=()=>{const L=smTg();if(!L.length)return toast("先に欄をタップで選んでください");const pg=cur;pg.items=pg.items.filter(x=>!L.includes(x));smSet.clear();sel=null;smSync();paint();toast(L.length+"か所を削除しました")};
@@ -1576,12 +1630,81 @@ $("tli").onclick=()=>$("tlf").click();
 $("tlf").onchange=async e=>{
   const f=e.target.files[0];e.target.value="";if(!f)return;
   try{
-    const o=JSON.parse(await f.text());if(o.app!=="pdfmatome"||typeof o.pdf!=="string"||!Array.isArray(o.fields))throw 0;
+    const o=JSON.parse(await f.text());if(o.app==="pdfapp-pack"){$("tl").style.display="none";return packAsk(o,"共有パック")}if(o.app!=="pdfmatome"||typeof o.pdf!=="string"||!Array.isArray(o.fields))throw 0;
     const bin=atob(o.pdf),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
-    const fields=o.fields.slice(0,200).map(x=>({page:+x.page||0,a:+x.a,b:+x.b,s:+x.s||.03,c:/^#[0-9a-f]{6}$/i.test(x.c)?x.c:"#111111",sx:+x.sx||1,sy:+x.sy||1,rot:+x.rot||0,anc:["l","c","r"].includes(x.anc)?x.anc:"l",type:x.type=="input"?"input":x.type=="toggle"?"toggle":"fixed",no:+x.no||undefined,rd:!!x.rd,grp:x.grp?String(x.grp).slice(0,60):undefined,cell:x.cell&&[x.cell.x0,x.cell.x1,x.cell.y0,x.cell.y1].every(Number.isFinite)?{x0:+x.cell.x0,x1:+x.cell.x1,y0:+x.cell.y0,y1:+x.cell.y1}:undefined,s0:+x.s0||undefined,halo:!!x.halo||undefined,arr:Array.isArray(x.arr)?x.arr.slice(0,20).filter(o=>o&&Array.isArray(o.t)&&o.t.length==2&&o.t.every(Number.isFinite)).map(o=>({t:[+o.t[0],+o.t[1]],c:/^#[0-9a-f]{6}$/i.test(o.c)?o.c:"#111111",w:+o.w||.0035})):undefined,str:String(x.str||"").slice(0,200)}));
+    const fields=o.fields.slice(0,600).map(fcClean).filter(Boolean);
     await tdb("put",{id:String(Date.now()),name:String(o.name||"取り込み").slice(0,60),created:Date.now(),pdf:u,fields,pages:+o.pages||1});
     toast("取り込みました");tplList()
   }catch(err){toast("このファイルは取り込めません")}};
+
+
+// ---- v142 共有パック(テンプレ・書類セット・自動入力の名簿をまとめて渡す/受け取る)
+function fcClean(x){if(!x||typeof x!=="object")return null;if(!Number.isFinite(+x.a)||!Number.isFinite(+x.b)||x.a===null||x.b===null)return null;
+  const n=v=>(v===null||v===""||v===undefined||!Number.isFinite(+v))?undefined:+v,st=(v,m=200)=>String(v).slice(0,m),col=v=>/^#[0-9a-f]{6}$/i.test(v)?v:"#111111";
+  const o={page:n(x.page)||0,a:+x.a,b:+x.b,s:n(x.s)||.03,c:col(x.c),sx:n(x.sx)||1,sy:n(x.sy)||1,rot:n(x.rot)||0,anc:["l","c","r"].includes(x.anc)?x.anc:"l",type:x.type=="input"?"input":x.type=="toggle"?"toggle":"fixed",str:x.str==null?"":st(x.str)};
+  if(n(x.no))o.no=n(x.no);if(x.rd)o.rd=true;if(x.grp)o.grp=st(x.grp,60);if(n(x.s0))o.s0=n(x.s0);
+  if(x.cell&&[x.cell.x0,x.cell.x1,x.cell.y0,x.cell.y1].every(v=>Number.isFinite(+v)&&v!==null))o.cell={x0:+x.cell.x0,x1:+x.cell.x1,y0:+x.cell.y0,y1:+x.cell.y1};
+  ["ring","halo","num","local","auto"].forEach(k=>{if(x[k])o[k]=true});
+  ["vlbl","fxl","ad","sh","fx","tid","dep","dg"].forEach(k=>{if(x[k]!=null&&(typeof x[k]=="string"||typeof x[k]=="number"))o[k]=typeof x[k]=="string"?st(x[k],400):x[k]});
+  ["lit","nid","nfc"].forEach(k=>{if(x[k]!=null){try{const j=JSON.stringify(x[k]);if(j&&j.length<20000)o[k]=JSON.parse(j)}catch(_){}}});
+  if(Array.isArray(x.choices))o.choices=x.choices.slice(0,100).map(v=>st(v,100));
+  if(Array.isArray(x.arr))o.arr=x.arr.slice(0,20).filter(q=>q&&Array.isArray(q.t)&&q.t.length==2&&q.t.every(v=>Number.isFinite(+v)&&v!==null)).map(q=>({t:[+q.t[0],+q.t[1]],c:col(q.c),w:+q.w||.0035}));
+  return o}
+function synMerge(inc){const W=SYN.map(x=>x.slice());let ad=0;
+  (Array.isArray(inc)?inc:[]).slice(0,300).forEach(g=>{if(!Array.isArray(g)||g.length!=2)return;const k=String(g[0]).trim().slice(0,40),ws=String(g[1]).split(/[,、，\n]/).map(s=>s.trim().slice(0,40)).filter(Boolean).slice(0,80);if(!k)return;
+    const m=W.find(x=>synN(x[0])==synN(k)||nameWords(x).some(w=>synN(w)==synN(k)));
+    if(m){const have=new Set(nameWords(m).map(synN)),add=[k,...ws].filter((w,i,a)=>!have.has(synN(w))&&a.findIndex(z=>synN(z)==synN(w))==i);if(add.length){m[1]=(m[1]?m[1]+",":"")+add.join(",");ad+=add.length}}
+    else{W.push([k,ws.join(",")]);ad++}});
+  if(ad)synSave(W);return ad}
+async function packBuild(ids,withSyn){
+  const L=await tdb("all"),want=new Set(ids);L.filter(r=>r.set&&want.has(r.id)).forEach(s=>(s.ids||[]).forEach(i=>want.add(i)));
+  const tpls=L.filter(r=>!r.cust&&!r.set&&want.has(r.id)).map(r=>({id:r.id,name:r.name,pages:r.pages||1,created:r.created,ord:r.ord,fields:r.fields,pdf:b64(new Uint8Array(new Uint8Array(r.pdf)))}));
+  const sets=L.filter(r=>r.set&&ids.includes(r.id)).map(r=>({id:r.id,name:r.name,created:r.created,ord:r.ord,ids:(r.ids||[]).filter(i=>tpls.some(t=>t.id==i))}));
+  return{app:"pdfapp-pack",v:1,created:Date.now(),tpls,sets,syn:withSyn?SYN.map(x=>x.slice()):undefined}}
+function packInfo(o){return"テンプレート "+(o.tpls||[]).length+"件"+((o.sets||[]).length?"・書類セット "+o.sets.length+"件":"")+(Array.isArray(o.syn)&&o.syn.length?"・自動入力の名簿 "+o.syn.length+"項目":"")}
+function packValid(o){return o&&o.app==="pdfapp-pack"&&Array.isArray(o.tpls)&&o.tpls.every(t=>t&&typeof t.pdf==="string"&&Array.isArray(t.fields))}
+function packAsk(o,label,ver){
+  if(!packValid(o))return toast("このファイルは取り込めません");
+  sheet((label||"共有パック")+":"+packInfo(o)+"。取り込みますか?",[["取り込む(同じテンプレートは上書き)",()=>packImport(o,"ow",ver)],["新しいものだけ追加(今あるものは残す)",()=>packImport(o,"new",ver)]])}
+async function packImport(o,mode,ver){try{
+  say("取り込み中…");const L=await tdb("all"),have=new Map(L.map(r=>[r.id,r])),idMap=new Map();let nt=0,ns=0,sk=0,seq=0;
+  for(const t of o.tpls.slice(0,300)){let id=String(t.id||Date.now()+"_"+(++seq)).slice(0,60);const ex=have.get(id);
+    if(ex&&(ex.cust||ex.set)){id=String(Date.now())+"_"+(++seq)}else if(ex&&mode=="new"){idMap.set(String(t.id),id);sk++;continue}
+    const bin=atob(t.pdf),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+    const fields=t.fields.slice(0,600).map(fcClean).filter(Boolean);
+    await tdb("put",{id,name:String(t.name||"取り込み").slice(0,60),created:ex&&ex.created||Number(t.created)||Date.now(),pdf:u,fields,pages:+t.pages||1,ord:ex?ex.ord:(Number.isFinite(+t.ord)?+t.ord:undefined)});idMap.set(String(t.id),id);nt++}
+  for(const s of(o.sets||[]).slice(0,100)){let id=String(s.id||"set"+Date.now()+"_"+(++seq)).slice(0,60);const ex=have.get(id);
+    if(ex&&!ex.set){id="set"+Date.now()+"_"+(++seq)}else if(ex&&mode=="new"){sk++;continue}
+    const ids=(s.ids||[]).map(i=>idMap.get(String(i))||(have.has(String(i))?String(i):null)).filter(Boolean);if(!ids.length)continue;
+    await tdb("put",{id,name:String(s.name||"書類セット").slice(0,60),created:ex&&ex.created||Number(s.created)||Date.now(),set:true,ids,fields:[],pages:0,pdf:new ArrayBuffer(0),ord:ex?ex.ord:(Number.isFinite(+s.ord)?+s.ord:undefined)});ns++}
+  const sn=o.syn?synMerge(o.syn):0;
+  if(ver){try{localStorage.setItem("pdfapp_packver",String(ver))}catch(_){}}
+  say("");toast("取り込みました:テンプレート "+nt+"件"+(ns?"・セット "+ns+"件":"")+(sn?"・名簿に "+sn+"語を追加":"")+(sk?"(今あるもの "+sk+"件はそのまま)":""),5000);
+  if($("tl").style.display=="flex")tplList()
+}catch(e){say("");toast("取り込めませんでした("+((e&&e.message)||e)+")",6000)}}
+async function packRemote(manual){try{
+  const r=await fetch("shared-pack.json?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw 0;const o=await r.json();if(!packValid(o))throw 0;
+  const ver=String(o.created||0);let seen="";try{seen=localStorage.getItem("pdfapp_packver")||""}catch(_){}
+  if(seen==ver){if(manual)sheet("会社の共通パックは取り込み済みです(最新)",[["もう一度取り込む",()=>packAsk(o,"会社の共通パック",ver)]]);return}
+  if(!manual&&(cur||pages.length))return;
+  packAsk(o,manual?"会社の共通パック":"会社の共通パックが更新されています",ver)
+}catch(e){if(manual)toast("会社の共通パックはまだありません(配る人が GitHub に shared-pack.json を置くと、ここで受け取れます)",6000)}}
+async function packUI(){
+  let L=[];try{L=await tdb("all")}catch(_){return toast("この環境では使えません")}
+  const OK=r=>r.ord!=null?r.ord:-(r.created||0);L.sort((a,b)=>OK(a)-OK(b));const T=L.filter(r=>!r.cust&&!r.set),S=L.filter(r=>r.set);
+  const ov=document.createElement("div");ov.id="pkE";
+  const row=(r,k)=>"<label class='pr'><input type='checkbox' class='pc' data-id='"+nmEsc(r.id)+"' checked><span>"+(k?"📚 ":"")+nmEsc(r.name)+"</span></label>";
+  ov.innerHTML="<div class='box'><div class='st'>📦 共有パック</div><small class='sh'>テンプレート・書類セット・自動入力の名簿(仲間の名前)を1つのファイルにして、他のスタッフや自分の別の端末に渡せます。お客様の情報は入りません。</small><h4>書き出す</h4>"+((T.length||S.length)?S.map(r=>row(r,1)).join("")+T.map(r=>row(r,0)).join("")+"<label class='pr'><input type='checkbox' id='pkS' checked><span>自動入力の名簿も入れる</span></label>":"<small class='sh'>まだテンプレートがありません。</small>")+"<div class='row'><button class='p' id='pkE1'"+((T.length||S.length)?"":" disabled")+">書き出して共有</button></div><h4>受け取る</h4><div class='row'><button id='pkI'>ファイルから取り込む</button><button id='pkR'>会社の共通パックを確認</button></div><small class='sh'>「会社の共通パック」は、配る人が GitHub に置いた shared-pack.json を受け取ります。更新があれば、アプリを開いたときにもお知らせします。</small><div class='row'><button id='pkX'>閉じる</button></div><input id='pkF' type='file' accept='.json,application/json' hidden></div>";
+  document.body.appendChild(ov);
+  ov.querySelector("#pkX").onclick=()=>ov.remove();
+  ov.querySelector("#pkE1").onclick=async()=>{const ids=[...ov.querySelectorAll(".pc")].filter(c=>c.checked).map(c=>c.dataset.id);if(!ids.length)return toast("渡すものを選んでください");
+    const ws=ov.querySelector("#pkS").checked;ov.remove();$("tl").style.display="none";try{say("共有パックを作成中…");const o=await packBuild(ids,ws);
+      await deliverFiles([new File([JSON.stringify(o)],"shared-pack.json",{type:"application/json"})],"共有パック")}catch(e){say("共有パックを作れませんでした")}};
+  const F=ov.querySelector("#pkF");ov.querySelector("#pkI").onclick=()=>F.click();
+  F.onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;try{const o=JSON.parse(await f.text());ov.remove();packAsk(o,"共有パック")}catch(_){toast("このファイルは取り込めません")}};
+  ov.querySelector("#pkR").onclick=()=>{ov.remove();packRemote(true)}}
+$("tlp").onclick=packUI;
+setTimeout(()=>{if(navigator.onLine!==false)packRemote(false)},3500);
 
 let tplEdit=null;
 function addChip(d,pg){
@@ -1790,7 +1913,7 @@ const MAN=[
 ["stamp","スタンプと矢印",stamp,["① スタンプを置くと、左下にオレンジの丸が出ます。","② その丸からドラッグすると、矢印を伸ばして場所を指せます。"]],
 ["image","写真・画像・PDFを重ねる",null,["編集画面の「追加」から、PDF・TIFF・写真をページに貼れます。ドラッグで移動、二本指で拡大縮小。","地図などは「固定」で動かなくなります(解除は「その他」から)。"]],
 ["cust","お客様リスト",tpl,["お客様ごとに「書類一式+入力した内容」を保存して、あとで呼び出せます(テンプレートとは別のリストです)。","① 作り方:ホームの「お客様」→「＋新しいお客様」で名前を入れ、テンプレート・書類セット・普通のPDF/写真/Excelのどれからでも始められます。1つだけでもOK。今開いている書類からも作れます。","② 保存:ホーム上の緑の帯の「保存」、または「上書き」→「お客様に保存」。一度保存したお客様は、編集画面からホームに戻るたびに自動保存されます。","③ 後から書類を足す:お客様を開いたまま書類やテンプレートを追加し、連投欄を作ると、氏名・住所など同じ名前の欄には入力済みの内容が自動で入ります。欄の名前を変えたとき・編集モードを終えたとき・連投モードを始めたときもつながります(「完全完了」で文字にした内容も使えます)。","並べ替え:テンプレート・書類セット・お客様の一覧は、行を長押しして浮いたら上下に動かすと順番を入れ替えられます。","自動で入った欄には、画面だけ緑の点線が付きます(保存・印刷には出ません)。タップすればふつうに直せます。連投モードでは「この書類だけ」ボタンで、その書類の欄だけグループから外して別の内容を入れられます(他の書類は変わりません)。","⚙ 自動入力の設定:どの欄の名前を同じものとして扱うかを決めます。初期設定は「氏名・名前・お名前・名称・法人名…」「住所・ご住所・住居…」「電話番号・携帯電話…」など。書き換え・項目の追加・削除・初期設定に戻す、ができます。同じ行の名前の欄には、全部同じ文字が自動で入ります。","④ 開く:「お客様」→「開く」。書類・入力内容・◉の状態がそのまま戻ります。","⑤ 閉じる:緑の帯の「閉じる」。保存して閉じる/保存せずに閉じる を選べます。"]],
-["tpl","テンプレート・書類セット",tpl,["よく使う書類と連投欄を保存して、何度も呼び出せます。","① 作り方:欄を作ったら、ホーム画面の「共有」→「テンプレートに保存」。","② 使い方:「テンプレ」→「使う」。そのまま連投モードで入力できます。","③ 書類セット:テンプレ一覧の「＋書類セットを作る」で、複数のテンプレートを1つのセットにします。セットを使うと全部の書類がまとめて開き、氏名・住所・電話などの同じ項目は1回の入力で全書類に入ります。","④ 編集:一覧の「編集」で、テンプレートが編集モードで開きます。直したら上の「保存」→「テンプレートを上書き」。「別名で保存」もここから。PDFだけ新しくしたいときは「その他」→「テンプレートのPDFを差し替え」。","名前の変更:一覧の名前の横の「✎」、または編集中に「上書き」→「テンプレートの名前を変える」(「その他」からも)。","⑤ 共有:ファイルにして相手に送れます。相手は「他の人のテンプレートを取り込む」で読み込みます。"]],
+["tpl","テンプレート・書類セット",tpl,["よく使う書類と連投欄を保存して、何度も呼び出せます。","① 作り方:欄を作ったら、ホーム画面の「共有」→「テンプレートに保存」。","② 使い方:「テンプレ」→「使う」。そのまま連投モードで入力できます。","③ 書類セット:テンプレ一覧の「＋書類セットを作る」で、複数のテンプレートを1つのセットにします。セットを使うと全部の書類がまとめて開き、氏名・住所・電話などの同じ項目は1回の入力で全書類に入ります。","④ 編集:一覧の「編集」で、テンプレートが編集モードで開きます。直したら上の「保存」→「テンプレートを上書き」。「別名で保存」もここから。PDFだけ新しくしたいときは「その他」→「テンプレートのPDFを差し替え」。","名前の変更:一覧の名前の横の「✎」、または編集中に「上書き」→「テンプレートの名前を変える」(「その他」からも)。","⑤ 共有:ファイルにして相手に送れます。相手は「他の人のテンプレートを取り込む」で読み込みます。","⑥ 共有パック:一覧の「📦 共有パック」で、テンプレ・書類セット・自動入力の名簿をまとめて1つのファイルにして渡せます(お客様の情報は入りません)。受け取る側は同じ画面の「ファイルから取り込む」。GitHub に shared-pack.json を置くと、スタッフ全員の端末に更新のお知らせが出て、1タップで取り込めます。"]],
 ["share","保存・共有・印刷",null,["上書き:編集した内容を元のファイルに保存します。iPhoneでは保存先の「ファイル」で同じ名前を選び「置き換える」。テンプレートから開いた書類は「テンプレートを上書き(欄の位置・名前・順番)」「別名で保存」「PDFとして保存」から選べます。","共有:ファイル名を変えて、PDF/JPEG/PNGで書き出し(複数ページの画像はZIP)。","印刷:「共有」→「印刷」。iPhoneは共有シートの「プリント」からでも印刷できます。"]],
 ["undo","戻す・消す",null,["「戻す」は1動作ずつ取り消し。ページ削除も戻せます。","その他 →「全消去」で、ペン・テキスト・範囲選択をまとめて消せます。"]],
 ["pc","パソコンで使うとき",null,["拡大縮小:Ctrl(Mac は ⌘)+ホイール、または Ctrl + / -。Ctrl+0 で元の大きさ。","Ctrl+Z で戻る、Delete で選んだ文字・画像を削除。連投中は Enter・Tab で次の欄へ。"]],
@@ -2211,7 +2334,7 @@ function xlOk(){
   MK.forEach(m=>{
     const it={k:"t",a:(m.cx-C.vx)/W,b:1-(m.cy-C.vy)/H,str:m.kind=="c"?"◉":"✓",s:(m.size*(m.kind=="c"?1.15:1.35))/W,c:"#111111",rot:0,sx:1,sy:1,anc:"c",field:"toggle",off:!m.on,rd:m.kind=="c",grp:m.grp};
     addItem(it);nm++});
-  {const bm=bundleMerge(NI,pages.flatMap(p=>p.items.filter(i=>i.field=="input"&&!NI.includes(i))));const gf=grpFill();if(bm&&bm.merged)setTimeout(()=>toast("他の書類と同じ項目 "+bm.merged+" か所を、同じグループにまとめました"+(gf?"(入力済みの "+gf+" か所は自動で反映。緑の点線の欄です。タップで直せます)":""),4500),4600)}
+  {const EXI=pages.flatMap(p=>p.items.filter(i=>i.field=="input"&&!NI.includes(i))),bm=bundleMerge(NI,EXI);setTimeout(()=>nameReview(NI,EXI).then(()=>{try{paint()}catch(_){}}),700);const gf=grpFill();if(bm&&bm.merged)setTimeout(()=>toast("他の書類と同じ項目 "+bm.merged+" か所を、同じグループにまとめました"+(gf?"(入力済みの "+gf+" か所は自動で反映。緑の点線の欄です。タップで直せます)":""),4500),4600)}
   if(nf)fxOn=true;fxRecalc();sel=null;emode=null;setHint();syncPanel();paint();
   if(isXl()&&nc){if(!smOn)smStart();smOrder()}
   toast("連投欄 "+nc+" か所"+(nd?"(うちプルダウン "+nd+" か所)":"")+(nf?"(うち自動計算 "+nf+" か所)":"")+"、切替 "+nm+" か所を作りました。○や□は1タップで切り替わります",4500)}
