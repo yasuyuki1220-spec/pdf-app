@@ -152,7 +152,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="custB" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;background:#ecfdf5;border:1.5px solid #34d399;border-radius:12px;padding:8px 10px;margin-bottom:8px"><b id="custBn" style="flex:1;color:#065f46;font-size:15px"></b><button id="custBs" style="border:0;border-radius:9px;padding:7px 12px;background:#059669;color:#fff;font-weight:700">保存</button><button id="custBx" style="border:1px solid #6ee7b7;border-radius:9px;padding:7px 10px;background:#fff;color:#065f46">閉じる</button></div><div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v147</small></div>
+<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v148</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -371,7 +371,7 @@ function xlAuto(pg,r){
     {const it={k:"t",a:0,b:0,str:lbl,s:fs/W,s0:fs/W,c:"#111111",rot:0,sx:1,sy:1,anc:"l",field:"input",no:++n,ph:true,lbl,inst,xlc:true,cell:{x0:c.x0/W,x1:c.x1/W,y0:1-c.y1/H,y1:1-c.y0/H}};fitItem(it,pg);pg.items.push(it)}});
   const sid="gx"+Date.now(),rows=[];r.marks.filter(m=>m.kind=="c").slice().sort((p,q)=>q.cy-p.cy).forEach(m=>{const o=rows.find(o=>Math.abs(o.cy-m.cy)<m.size*.7);if(o)o.l.push(m);else rows.push({cy:m.cy,l:[m]})});
   let gi=0;rows.forEach(o=>{o.l.sort((p,q)=>p.cx-q.cx);let pv=null;o.l.forEach(m=>{if(!pv||m.cx-pv.cx>m.size*10)gi++;m.grp=sid+"_"+gi;pv=m})});
-  r.marks.forEach(m=>{pg.items.push({k:"t",a:m.cx/W,b:1-m.cy/H,str:m.kind=="c"?"◉":"✓",s:(m.size*(m.kind=="c"?1.15:1.35))/W,c:"#111111",rot:0,sx:1,sy:1,anc:"c",field:"toggle",off:!m.on,rd:m.kind=="c",grp:m.grp});nm++});
+  r.marks.forEach(m=>{pg.items.push({k:"t",a:m.cx/W,b:1-m.cy/H,str:m.kind=="c"?"◉":"✓",s:(m.size*(m.kind=="c"?1.15:1.35))/W,c:"#111111",rot:0,sx:m.kx||1,sy:m.ky||1,anc:"c",field:"toggle",off:!m.on,rd:m.kind=="c",grp:m.grp});nm++});
   return [n,nm]}
 function xlNext(dir){const it=editing;if(!it)return;const L=cur.items.filter(i=>i.xlc&&i.field=="input").sort((p,q)=>(p.no||0)-(q.no||0)),k=L.indexOf(it),nx=L[k+dir];endEdit();if(!nx){toast(dir>0?"最後の連投欄です":"最初の連投欄です",1800);return}startEdit(nx,true)}
 
@@ -2271,8 +2271,8 @@ function xlDraw(x,pg,cw,ch,A){
     if(c.on){x.fillStyle="rgba(124,58,237,.12)";x.fillRect(X,Y,w,h);x.strokeStyle="#7c3aed";x.setLineDash([5,3])}else{x.fillStyle="rgba(120,120,120,.08)";x.fillRect(X,Y,w,h);x.strokeStyle="rgba(120,120,120,.6)";x.setLineDash([2,3])}
     x.strokeRect(X+1,Y+1,Math.max(1,w-2),Math.max(1,h-2))});
   x.setLineDash([]);x.strokeStyle="#7c3aed";
-  C.marks.forEach(m=>{if(!(m.kind=="c"?C.useM:C.useQ))return;const p=P(m.cx,m.cy),r=xlRr(m)*k;x.beginPath();x.strokeStyle=m.skip?"rgba(120,120,120,.7)":(m.kind=="c"?"#7c3aed":"#db2777");x.lineWidth=m.skip?Math.max(1,cw/600):Math.max(1.5,cw/380);x.setLineDash(m.skip?[2,3]:[]);if(m.kind=="c")x.arc(p[0],p[1],r,0,7);else x.rect(p[0]-r,p[1]-r,2*r,2*r);x.stroke()});x.setLineDash([]);
-  if(C.ms&&C.ms.size){x.setLineDash([]);x.strokeStyle="#2563eb";x.lineWidth=Math.max(2,cw/300);C.ms.forEach(o=>{if(o.x0!=null){const p=P(o.x0,o.y0),q=P(o.x1,o.y1);x.strokeRect(Math.min(p[0],q[0])-1,Math.min(p[1],q[1])-1,Math.abs(p[0]-q[0])+2,Math.abs(p[1]-q[1])+2)}else{const p=P(o.cx,o.cy),r=xlRr(o)*k+2;x.strokeRect(p[0]-r,p[1]-r,2*r,2*r)}})}
+  C.marks.forEach(m=>{if(!(m.kind=="c"?C.useM:C.useQ))return;const p=P(m.cx,m.cy),r=xlRr(m)*k;x.beginPath();x.strokeStyle=m.skip?"rgba(120,120,120,.7)":(m.kind=="c"?"#7c3aed":"#db2777");x.lineWidth=m.skip?Math.max(1,cw/600):Math.max(1.5,cw/380);x.setLineDash(m.skip?[2,3]:[]);{const rx=r*(m.kx||1),ry=r*(m.ky||1);if(m.kind=="c")x.ellipse(p[0],p[1],rx,ry,0,0,7);else x.rect(p[0]-rx,p[1]-ry,2*rx,2*ry)}x.stroke()});x.setLineDash([]);
+  if(C.ms&&C.ms.size){x.setLineDash([]);x.strokeStyle="#2563eb";x.lineWidth=Math.max(2,cw/300);C.ms.forEach(o=>{if(o.x0!=null){const p=P(o.x0,o.y0),q=P(o.x1,o.y1);x.strokeRect(Math.min(p[0],q[0])-1,Math.min(p[1],q[1])-1,Math.abs(p[0]-q[0])+2,Math.abs(p[1]-q[1])+2)}else{const p=P(o.cx,o.cy),r=xlRr(o)*k,rx=r*(o.kx||1)+2,ry=r*(o.ky||1)+2;x.strokeRect(p[0]-rx,p[1]-ry,2*rx,2*ry)}})}
   if(C.tool=="move"&&C.sel&&(C.cells.includes(C.sel)||C.marks.includes(C.sel))){const o=C.sel;x.setLineDash([]);x.strokeStyle="#2563eb";x.lineWidth=2.5;if(o.x0!=null){const p=P(o.x0,o.y0),q=P(o.x1,o.y1);x.strokeRect(Math.min(p[0],q[0]),Math.min(p[1],q[1]),Math.abs(p[0]-q[0]),Math.abs(p[1]-q[1]))}else{const p=P(o.cx,o.cy),r=xlRr(o)*k;x.strokeRect(p[0]-r,p[1]-r,2*r,2*r)}
     const zf=x.canvas.id=="ec"&&baseW?Math.max(1,(ec.getBoundingClientRect().width||baseW)/baseW):1,hr=Math.max(6,cw/zf/70);xlHandles(C,o).forEach(h=>{const p=P(h[0],h[1]);x.beginPath();x.arc(p[0],p[1],hr,0,7);x.fillStyle="#fff";x.fill();x.lineWidth=2;x.strokeStyle="#2563eb";x.stroke()})}
   if(C.rect){const p=toDisp(C.rect.a[0],C.rect.a[1],A),q=toDisp(C.rect.b[0],C.rect.b[1],A),X=Math.min(p[0],q[0])*cw,Y=Math.min(p[1],q[1])*ch,w=Math.abs(p[0]-q[0])*cw,h=Math.abs(p[1]-q[1])*ch;x.setLineDash([6,4]);x.lineWidth=Math.max(1.5,cw/350);x.strokeStyle="#2563eb";x.fillStyle="rgba(37,99,235,.14)";x.fillRect(X,Y,w,h);x.strokeRect(X,Y,w,h)}
@@ -2331,7 +2331,7 @@ function xlToggle(e){
 // ---- v144 全空欄認識: 複数選択・等間隔整列・サイズ(＋/−)・☑〼の検出
 const xlRr=m=>m.size*(m.kind=="c"?.5:.62);
 function xlTargets(){const C=xlC;if(!C)return[];const ok=o=>C.cells.includes(o)||C.marks.includes(o);if(C.tool=="msel")return[...(C.ms||[])].filter(ok);if(C.tool=="move"&&C.sel&&ok(C.sel))return[C.sel];return[]}
-function xlScale(f,ax){const C=xlC;xlTargets().forEach(o=>{if(o.x0!=null){const cx=(o.x0+o.x1)/2,cy=(o.y0+o.y1)/2;let w=o.x1-o.x0,h=o.y1-o.y0;if(ax!="h")w=Math.max(4,w*f);if(ax!="w")h=Math.max(3,h*f);o.x0=cx-w/2;o.x1=cx+w/2;o.y0=cy-h/2;o.y1=cy+h/2;C.lastW=w;C.lastH=h}else if(ax)o.size=Math.max(3,o.size*f)})}
+function xlScale(f,ax){const C=xlC;xlTargets().forEach(o=>{if(o.x0!=null){const cx=(o.x0+o.x1)/2,cy=(o.y0+o.y1)/2;let w=o.x1-o.x0,h=o.y1-o.y0;if(ax!="h")w=Math.max(4,w*f);if(ax!="w")h=Math.max(3,h*f);o.x0=cx-w/2;o.x1=cx+w/2;o.y0=cy-h/2;o.y1=cy+h/2;C.lastW=w;C.lastH=h}else if(ax=="b")o.size=Math.max(3,o.size*f);else if(ax=="w")o.kx=Math.max(.2,(o.kx||1)*f);else if(ax=="h")o.ky=Math.max(.2,(o.ky||1)*f)})}
 function xlHold(id,fn){const b=$(id);let t=null,iv=null;const stop=()=>{if(t==null&&iv==null)return;clearTimeout(t);clearInterval(iv);t=iv=null;xlUI();paint()};
   b.onpointerdown=e=>{e.preventDefault();if(!xlTargets().length)return;xlSnap();fn();paint();t=setTimeout(()=>{t=null;iv=setInterval(()=>{fn();paint()},70)},350);try{b.setPointerCapture(e.pointerId)}catch(_){}};
   ["onpointerup","onpointercancel","onpointerleave"].forEach(ev=>b[ev]=stop)}
@@ -2360,7 +2360,7 @@ function xlOk(){
   if(MK.length){const sid="gx"+Date.now(),rows=[];MK.filter(m=>m.kind=="c").slice().sort((p,q)=>q.cy-p.cy).forEach(m=>{const r=rows.find(r=>Math.abs(r.cy-m.cy)<m.size*.7);if(r)r.l.push(m);else rows.push({cy:m.cy,l:[m]})});
     let gi=0;rows.forEach(r=>{r.l.sort((p,q)=>p.cx-q.cx);let pv=null;r.l.forEach(m=>{if(!pv||m.cx-pv.cx>m.size*10)gi++;m.grp=sid+"_"+gi;pv=m})})}
   MK.forEach(m=>{
-    const it={k:"t",a:(m.cx-C.vx)/W,b:1-(m.cy-C.vy)/H,str:m.kind=="c"?"◉":tgSq,s:(m.size*(m.kind=="c"?1.15:1.35))/W,c:"#111111",rot:0,sx:1,sy:1,anc:"c",field:"toggle",off:!m.on,rd:m.kind=="c",grp:m.grp};if(m.kind!="c"&&tgPick)it.pick=true;
+    const it={k:"t",a:(m.cx-C.vx)/W,b:1-(m.cy-C.vy)/H,str:m.kind=="c"?"◉":tgSq,s:(m.size*(m.kind=="c"?1.15:1.35))/W,c:"#111111",rot:0,sx:m.kx||1,sy:m.ky||1,anc:"c",field:"toggle",off:!m.on,rd:m.kind=="c",grp:m.grp};if(m.kind!="c"&&tgPick)it.pick=true;
     addItem(it);nm++});
   {const EXI=pages.flatMap(p=>p.items.filter(i=>i.field=="input"&&!NI.includes(i))),bm=bundleMerge(NI,EXI);setTimeout(()=>nameReview(NI,EXI).then(()=>{try{paint()}catch(_){}}),700);const gf=grpFill();if(bm&&bm.merged)setTimeout(()=>toast("他の書類と同じ項目 "+bm.merged+" か所を、同じグループにまとめました"+(gf?"(入力済みの "+gf+" か所は自動で反映。緑の点線の欄です。タップで直せます)":""),4500),4600)}
   if(nf)fxOn=true;fxRecalc();sel=null;emode=null;setHint();syncPanel();paint();
