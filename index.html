@@ -152,7 +152,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="custB" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;background:#ecfdf5;border:1.5px solid #34d399;border-radius:12px;padding:8px 10px;margin-bottom:8px"><b id="custBn" style="flex:1;color:#065f46;font-size:15px"></b><button id="custBs" style="border:0;border-radius:9px;padding:7px 12px;background:#059669;color:#fff;font-weight:700">保存</button><button id="custBx" style="border:1px solid #6ee7b7;border-radius:9px;padding:7px 10px;background:#fff;color:#065f46">閉じる</button></div><div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v154</small></div>
+<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v156</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -668,9 +668,14 @@ async function savePdf(){
   try{say("上書き保存を作成中…");const b=await build(list),one=new Set(list.map(p=>p.f)),nm=one.size==1?files[list[0].f].name.replace(/\.[A-Za-z0-9]+$/,"")+".pdf":"結合PDF.pdf";
     if(window.showSaveFilePicker&&isDesk()){try{if(!saveH)saveH=await showSaveFilePicker({suggestedName:nm,types:[{description:"PDF",accept:{"application/pdf":[".pdf"]}}]});const w=await saveH.createWritable();await w.write(b);await w.close();return say("上書き保存しました: "+saveH.name)}catch(e){if(e&&e.name=="AbortError")return say("保存をキャンセルしました");saveH=null}}
     await deliverFiles([new File([b],nm,{type:"application/pdf"})],nm.replace(/\.pdf$/i,""));if(!isDesk())toast("「ファイル」に同じ名前で保存すると「置き換える」で上書きできます",5000)}catch(e){say("保存に失敗しました")}}
-async function printPages(){
+async function shrinkPdf(bytes,sc){const {PDFDocument,degrees}=PDFLib,src=await PDFDocument.load(bytes),out=await PDFDocument.create();
+  for(let i=0;i<src.getPageCount();i++){const p=src.getPage(i),mb=p.getMediaBox(),w=mb.width,h=mb.height,r=p.getRotation().angle,emb=await out.embedPage(p),np=out.addPage([w,h]);if(r)np.setRotation(degrees(r));np.drawPage(emb,{x:w*(1-sc)/2,y:h*(1-sc)/2,xScale:sc,yScale:sc})}
+  return await out.save()}
+function printPages(){let k=1;try{k=+localStorage.getItem("pdfapp_prsc")||1}catch(_){}const go=v=>{try{localStorage.setItem("pdfapp_prsc",String(v))}catch(_){}printGo(v)};
+  sheet("印刷",[["縮小して印刷(用紙の端の線が欠けるとき・95%)"+(k<1?" ← 前回":""),()=>go(.95)],["少しだけ縮小して印刷(97%)",()=>go(.97)],["そのままの大きさで印刷(100%)"+(k==1?" ← 前回":""),()=>go(1)]])}
+async function printGo(sc){
   const sl=pages.filter(p=>p.sel),list=sl.length?sl:pages.filter(p=>!tplEdit||!tplEdit.pgs.includes(p));if(!list.length)return say("ページがありません");
-  try{say("印刷用に作成中…");const b=await build(list),f=new File([b],"印刷.pdf",{type:"application/pdf"});
+  try{say("印刷用に作成中…");let b=await build(list);if(sc<1)b=await shrinkPdf(b,sc);const f=new File([b],"印刷.pdf",{type:"application/pdf"});
     if(!isDesk()&&navigator.canShare&&navigator.canShare({files:[f]})){try{say("");toast("開いたメニューの「プリント」を選ぶと、つながっているプリンターが出ます",5000);await navigator.share({files:[f],title:"印刷"});return}catch(e){if(e&&e.name=="AbortError")return}}
     const u=URL.createObjectURL(new Blob([b],{type:"application/pdf"})),fr=document.createElement("iframe");fr.style.cssText="position:fixed;right:0;bottom:0;width:1px;height:1px;border:0;opacity:0";fr.src=u;
     fr.onload=()=>setTimeout(()=>{try{fr.contentWindow.focus();fr.contentWindow.print();say("")}catch(_){window.open(u);say("")}},400);document.body.appendChild(fr);setTimeout(()=>{fr.remove();URL.revokeObjectURL(u)},300000);
@@ -684,7 +689,7 @@ $("bMan").onclick=()=>openManual();$("heroM").onclick=e=>{e.stopPropagation();op
  $("heroL").innerHTML=L.map(t=>"<li>"+t+"</li>").join("")}
 $("bShare").onclick=()=>sheet("共有・書き出し・印刷",[["選択したページ",()=>exp(true)],["すべてのページ",()=>exp(false)],["印刷",printPages],["選択ページをテンプレートに保存",()=>tplSave(true)],["全ページをテンプレートに保存",()=>tplSave(false)]]);
 $("eAdd").onclick=()=>sheet("ページに追加",[["ファイルから(PDF・画像)",()=>$("pf").click()],["写真から",()=>$("pi").click()]]);
-$("eMore").onclick=()=>sheet("その他",[["ページを回転",()=>$("rt").click()],...(cur&&cur._undo?[["トリミングを元に戻す",undoCrop]]:[]),["全消去(ペン・テキスト・範囲選択)",()=>sheet("このページで全部消すもの",[["ペンの書き込み",()=>$("cl").click()],["テキスト",()=>clearText()],["範囲選択(モザイク・塗り)",()=>clearShapes()]])],["全空欄認識",()=>xlStart()],["編集モード(欄を作る・整える)",()=>smStart()],...(cur&&files[cur.f]&&files[cur.f].tpl?[["テンプレートの名前を変える",()=>tplRename(files[cur.f].tpl)],["テンプレートのPDFを差し替え",()=>{const i=document.createElement("input");i.type="file";i.accept="application/pdf,.pdf,.xlsx,.xlsm";i.onchange=()=>tplReplace2(i.files[0]);i.click()}]]:[]),["◉フォーム",()=>sheet("◉フォーム",[["◉フォーム設置",()=>tgMenu()],["自動認識フォーム",()=>xlStart({m:1})],["◉グループ編集",()=>tgEStart()]])],["説明書",()=>openManual()],...(cur&&cur.items.some(i=>i.lock)?[["固定した画像を解除",()=>{cur.items.forEach(i=>{delete i.lock});paint();toast("固定を解除しました")}]]:[])]);
+$("eMore").onclick=()=>sheet("その他",[["Excel読み込み:"+(xlPS?"印刷設定どおり(A4など)→ページに合わせる方式へ":"ページに合わせる→印刷設定どおりへ"),()=>{xlPS=!xlPS;try{localStorage.setItem("pdfapp_xlps",xlPS?"1":"0")}catch(_){}toast(xlPS?"Excelは、印刷設定(用紙・倍率・余白)どおりに読み込みます。次に読み込むExcelから変わります":"Excelは、ページの幅に合わせて読み込みます(従来の方式)。次に読み込むExcelから変わります",5000)}],["ページを回転",()=>$("rt").click()],...(cur&&cur._undo?[["トリミングを元に戻す",undoCrop]]:[]),["全消去(ペン・テキスト・範囲選択)",()=>sheet("このページで全部消すもの",[["ペンの書き込み",()=>$("cl").click()],["テキスト",()=>clearText()],["範囲選択(モザイク・塗り)",()=>clearShapes()]])],["全空欄認識",()=>xlStart()],["編集モード(欄を作る・整える)",()=>smStart()],...(cur&&files[cur.f]&&files[cur.f].tpl?[["テンプレートの名前を変える",()=>tplRename(files[cur.f].tpl)],["テンプレートのPDFを差し替え",()=>{const i=document.createElement("input");i.type="file";i.accept="application/pdf,.pdf,.xlsx,.xlsm";i.onchange=()=>tplReplace2(i.files[0]);i.click()}]]:[]),["◉フォーム",()=>sheet("◉フォーム",[["◉フォーム設置",()=>tgMenu()],["自動認識フォーム",()=>xlStart({m:1})],["◉グループ編集",()=>tgEStart()]])],["説明書",()=>openManual()],...(cur&&cur.items.some(i=>i.lock)?[["固定した画像を解除",()=>{cur.items.forEach(i=>{delete i.lock});paint();toast("固定を解除しました")}]]:[])]);
 async function addItemFile(f){
   try{
     let c,w=.5;
@@ -2409,6 +2414,7 @@ $("xbQ").onclick=()=>{if(xlC){xlSnap();xlC.useQ=!xlC.useQ;xlUI();paint()}};
 $("xbP").onclick=()=>xlTool("add");$("xbK").onclick=tgSqFlip;$("xbS").onclick=()=>xlTool("msel");$("xbAV").onclick=()=>xlAlign("v");$("xbAH").onclick=()=>xlAlign("h");$("xbAZ").onclick=xlSame;$("xbAX").onclick=()=>{if(xlC){xlC.ms=new Set();xlUI();paint()}};xlHold("xbS1",()=>xlScale(.94,"b"));xlHold("xbS2",()=>xlScale(1/.94,"b"));xlHold("xbW1",()=>xlScale(.94,"w"));xlHold("xbW2",()=>xlScale(1/.94,"w"));xlHold("xbH1",()=>xlScale(.94,"h"));xlHold("xbH2",()=>xlScale(1/.94,"h"));$("xbV").onclick=()=>xlTool("move");$("xbR").onclick=()=>xlTool("del");$("xbU").onclick=xlUndo;$("xbY").onclick=()=>xlTool("copy");$("xbT").onclick=()=>xlTool("type");
 $("xbA").onclick=()=>{if(xlC){xlSnap();const any=xlC.cells.some(c=>c.on);xlC.cells.forEach(c=>c.on=!any);xlUI();paint()}};
 
+var xlPS=true;try{xlPS=localStorage.getItem("pdfapp_xlps")!="0"}catch(_){}
 // ---- v37: .xlsx を直接読み込み(表を画像PDFにして、空欄・○□・フォーム部品は別モデルで保持)
 // ---- 数式(Excel互換の簡易エンジン): SUM・AVERAGE・IF・ROUND など。入力した数字から自動で計算します
 const xColL=c=>{let s="";c++;while(c>0){const m=(c-1)%26;s=String.fromCharCode(65+m)+s;c=Math.floor((c-1)/26)}return s};
@@ -2619,11 +2625,23 @@ async function xlsxToPdf(file){
     const cxAt=(c,o)=>{let v=c<cx.length?cx[c]:cx[cx.length-1];if(c>=cx.length)for(let i=cx.length-1;i<c;i++)v+=colW(i);return v+o/12700},ryAt=(r,o)=>{let v=r<ry.length?ry[r]:ry[ry.length-1];if(r>=ry.length)for(let i=ry.length-1;i<r;i++)v+=rowHt(i);return v+o/12700};
     const shapes=(await xShapes(zip,rd,d,sp,cxAt,ryAt,thClr)).filter(s=>s.x1>0&&s.y1>0&&s.x0<cx[maxC+1]&&s.y0<ry[maxR+1]);
     // ページ分割
-    const cwid=cx[maxC+1],M=28,ls=cwid>595-2*M,pw=ls?842:595,ph=ls?595:842,k=Math.min((pw-2*M)/cwid,1.3,pa?(ph-2*M)/ry[maxR+1]:9),use=ph-2*M,ranges=[];
+    const cwid=cx[maxC+1];let M=28,ML=28,MT=28,MB=28,ls=cwid>595-2*M,pw=ls?842:595,ph=ls?595:842,k=Math.min((pw-2*M)/cwid,1.3,pa?(ph-2*M)/ry[maxR+1]:9);
+    {const PS=d.getElementsByTagName("pageSetup")[0],PM=d.getElementsByTagName("pageMargins")[0];
+     if(xlPS&&(PS||PM)){const SPr=d.getElementsByTagName("sheetPr")[0],fitP=!!(SPr&&[...SPr.getElementsByTagName("*")].find(e=>e.localName=="pageSetUpPr"&&/^(1|true)$/.test(e.getAttribute("fitToPage")||""))),
+       PZ={1:[612,792],5:[612,1008],7:[522,756],8:[842,1191],9:[595,842],11:[420,595],12:[729,1032],13:[516,729]},pz=PZ[+xAttr(PS,"paperSize")||9]||[595,842],land=xAttr(PS,"orientation")=="landscape",
+       mg=(n,dv)=>{const v=parseFloat(xAttr(PM,n));return isFinite(v)?v*72:dv};
+       pw=land?pz[1]:pz[0];ph=land?pz[0]:pz[1];ML=mg("left",50.4);const MR=mg("right",50.4);MT=mg("top",54);MB=mg("bottom",54);
+       const aw=pw-ML-MR,ah=ph-MT-MB,rh=ry[maxR+1]||1;let kk=1;
+       if(fitP){const fw=+xAttr(PS,"fitToWidth"),fh=+xAttr(PS,"fitToHeight"),FW=isFinite(fw)&&xAttr(PS,"fitToWidth")!=null&&xAttr(PS,"fitToWidth")!==""?fw:1,FH=isFinite(fh)&&xAttr(PS,"fitToHeight")!=null&&xAttr(PS,"fitToHeight")!==""?fh:1;
+         kk=Math.min(FW>0?aw*FW/cwid:9,FH>0?ah*FH/rh:9,1)}else{const sc=+xAttr(PS,"scale");kk=(isFinite(sc)&&sc>0?sc:100)/100}
+       kk=Math.min(kk,aw/cwid);k=kk;
+       const po=d.getElementsByTagName("printOptions")[0];if(po&&/^(1|true)$/.test(xAttr(po,"horizontalCentered")||""))ML+=Math.max(0,(aw-cwid*k)/2)}
+     M=ML}
+    const use=ph-MT-MB,ranges=[];
     let rs=minR,acc=0;for(let r=minR;r<=maxR;r++){const h=rowHt(r)*k;if(acc+h>use&&r>rs){ranges.push([rs,r-1]);rs=r;acc=0}acc+=h}ranges.push([rs,maxR]);
     for(const [ra,rb] of ranges){
       const S=4,cv=document.createElement("canvas");cv.width=Math.round(pw*S);cv.height=Math.round(ph*S);const x=cv.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,cv.width,cv.height);
-      const X=c=>(M+cx[c]*k)*S,Y=r=>(M+(ry[r]-ry[ra])*k)*S,pdfY=ypt=>ph-ypt,pgM={view:[0,0,pw,ph],cells:[],marks:[],widgets:[],texts:[]};
+      const X=c=>(ML+cx[c]*k)*S,Y=r=>(MT+(ry[r]-ry[ra])*k)*S,pdfY=ypt=>ph-ypt,pgM={view:[0,0,pw,ph],cells:[],marks:[],widgets:[],texts:[]};
       const boxes=[];
       for(let r=ra;r<=rb;r++)for(let c=minC;c<=maxC;c++){const key=r+","+c;if(skip.has(key))continue;const cell=cells.get(key),m=mAt.get(key);if(!cell&&!m)continue;boxes.push({r0:r,c0:c,r1:m?Math.min(m.r1,rb):r,c1:m?m.c1:c,cell:cell||{v:"",s:0},xf:xfs[(cell||{}).s]||dflt})}
       boxes.forEach(b=>{if(b.xf.fill){x.fillStyle=b.xf.fill;x.fillRect(X(b.c0),Y(b.r0),X(b.c1+1)-X(b.c0),Y(b.r1+1)-Y(b.r0))}});
@@ -2648,7 +2666,7 @@ async function xlsxToPdf(file){
         edge(B.left,x0,y0,x0,y1);edge(B.top,x0,y0,x1,y0);edge(Br.right||B.right,x1,y0,x1,y1);edge(Bb.bottom||B.bottom,x0,y1,x1,y1);
         const bordered=[B.left,B.top,B.right,B.bottom,Br.right,Bb.bottom].some(Boolean);
         if((bordered||b.cell.isdv||b.cell.isref||b.cell.calc)&&b.cell.v===""&&b.xf.h!=="centerContinuous"&&(x1-x0)/S>=10&&(y1-y0)/S>=7)pgM.cells.push({x0:x0/S,y0:pdfY(y1/S),x1:x1/S,y1:pdfY(y0/S),empty:true,val:b.cell.dvv,ref:b.cell.isref||undefined,dv:dvAt(b.r0,b.c0)||undefined,ad:b.cell.ad,sh:String([...wb.getElementsByTagName("sheet")].indexOf(sh)),calc:b.cell.calc||undefined})});
-      shapes.forEach(s=>{const X0=(M+s.x0*k)*S,Y0=(M+(s.y0-ry[ra])*k)*S,W=(s.x1-s.x0)*k*S,Hh=(s.y1-s.y0)*k*S;if(Y0+Hh<0||Y0>ph*S)return;
+      shapes.forEach(s=>{const X0=(ML+s.x0*k)*S,Y0=(MT+(s.y0-ry[ra])*k)*S,W=(s.x1-s.x0)*k*S,Hh=(s.y1-s.y0)*k*S;if(Y0+Hh<0||Y0>ph*S)return;
         x.save();if(s.img){x.drawImage(s.img,X0,Y0,W,Hh);x.restore();return}
         const lines=/line|Connector/i.test(s.prst);
         if(lines){if(s.ln){x.strokeStyle=s.ln;x.lineWidth=s.lw*k*S;x.beginPath();x.moveTo(s.flipH?X0+W:X0,s.flipV?Y0+Hh:Y0);x.lineTo(s.flipH?X0:X0+W,s.flipV?Y0:Y0+Hh);x.stroke()}x.restore();return}
@@ -2662,7 +2680,7 @@ async function xlsxToPdf(file){
         x.restore()});
       // フォーム部品を描く(○/□ と表示名)
       ctl.forEach(c=>{const mid=(c.y0+c.y1)/2;if(mid<ry[ra]||mid>=ry[rb+1])return;
-        const px=(M+(c.x0-0)*k)*S,py=(M+((c.y0+c.y1)/2-ry[ra])*k)*S,r=5.5*k*S;
+        const px=(ML+(c.x0-0)*k)*S,py=(MT+((c.y0+c.y1)/2-ry[ra])*k)*S,r=5.5*k*S;
         x.save();x.strokeStyle="#000";x.lineWidth=.8*k*S;x.beginPath();if(c.radio)x.arc(px+r+1.5*k*S,py,r,0,7);else x.rect(px+1.5*k*S,py-r,2*r,2*r);x.stroke();
         x.fillStyle="#000";x.font=(10.5*k*S)+"px 'Hiragino Sans','Yu Gothic','Noto Sans CJK JP',sans-serif";x.textBaseline="middle";x.fillText(c.cap||"",px+2*r+6*k*S,py);x.restore();
         pgM.marks.push({kind:c.radio?"c":"s",cx:(px+r+1.5*k*S)/S,cy:pdfY(py/S),size:11*k,on:c.on})});
