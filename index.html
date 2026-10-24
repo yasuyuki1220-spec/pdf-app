@@ -152,7 +152,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="custB" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;background:#ecfdf5;border:1.5px solid #34d399;border-radius:12px;padding:8px 10px;margin-bottom:8px"><b id="custBn" style="flex:1;color:#065f46;font-size:15px"></b><button id="custBs" style="border:0;border-radius:9px;padding:7px 12px;background:#059669;color:#fff;font-weight:700">保存</button><button id="custBx" style="border:1px solid #6ee7b7;border-radius:9px;padding:7px 10px;background:#fff;color:#065f46">閉じる</button></div><div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v151</small></div>
+<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v152</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -649,10 +649,13 @@ async function openPick(){if(!(window.showOpenFilePicker&&isDesk()))return $("fi
   try{const hs=await showOpenFilePicker({multiple:true,types:[{description:"PDF・Excel",accept:{"application/pdf":[".pdf"],"application/vnd.ms-excel":[".xlsx",".xlsm",".xls"],"image/*":[".tif",".tiff"]}}]}),fl=await Promise.all(hs.map(h=>h.getFile())),dt=new DataTransfer();fl.forEach(x=>dt.items.add(x));
     if(fl.length==1&&/\.pdf$/i.test(fl[0].name)&&!pages.length)saveH=hs[0];const fi=$("fi");fi.files=dt.files;fi.dispatchEvent(new Event("change"))}catch(e){if(!(e&&e.name=="AbortError"))$("fi").click()}}
 async function tplOverwrite(ids,asNew){try{const all=await tdb("all");let n=0;
-    for(const id of ids){const r=all.find(x=>x.id==id);if(!r)continue;const P=pages.filter(p=>files[p.f]&&files[p.f].tpl==id),arr=[];P.forEach(p=>{arr[p.i]=p});for(let k=0;k<arr.length;k++)if(!arr[k])arr[k]={items:[]};
-      const nr=asNew?{...r,id:String(Date.now()+n),name:r.name+"のコピー",created:Date.now(),ord:undefined}:{...r};nr.fields=fieldsFrom(arr);nr.pages=Math.max(r.pages||0,arr.length);await tdb("put",nr);n++;
+    for(const id of ids){const r=all.find(x=>x.id==id);if(!r)continue;const P=pages.filter(p=>files[p.f]&&files[p.f].tpl==id);let arr=[],rb=false;
+      if(P.length&&new Set(P.map(p=>p.f)).size==1){const F=files[P[0].f],nT=F.doc&&F.doc.numPages;if(nT&&(P.length!=nT||!P.every((p,k)=>p.i==k))){
+        try{const src=await PDFLib.PDFDocument.load(F.bytes),out=await PDFLib.PDFDocument.create(),cp=await out.copyPages(src,P.map(p=>p.i));cp.forEach(x=>out.addPage(x));const ob=await out.save();arr=P.slice();rb=ob.buffer.slice(ob.byteOffset,ob.byteOffset+ob.byteLength)}catch(e){rb=false;arr=[]}}}
+      if(!rb){P.forEach(p=>{arr[p.i]=p});for(let k=0;k<arr.length;k++)if(!arr[k])arr[k]={items:[]}}
+      const nr=asNew?{...r,id:String(Date.now()+n),name:r.name+"のコピー",created:Date.now(),ord:undefined}:{...r};nr.fields=fieldsFrom(arr);if(rb){nr.pdf=rb;nr.pages=arr.length}else nr.pages=Math.max(r.pages||0,arr.length);await tdb("put",nr);n++;
       if(asNew)P.forEach(p=>{files[p.f].tpl=nr.id})}
-    toast(n?(asNew?"テンプレートを別名で保存しました(名前の後ろに「のコピー」)":"テンプレートを上書きしました(欄の位置・名前・順番)"):"元のテンプレートが見つかりません",3500)}catch(e){toast("テンプレートを保存できませんでした")}}
+    toast(n?(asNew?"テンプレートを別名で保存しました(名前の後ろに「のコピー」)":"テンプレートを上書きしました(欄の位置・名前・順番・削除したページ)"):"元のテンプレートが見つかりません",3500)}catch(e){toast("テンプレートを保存できませんでした")}}
 async function tplRename(id,list){let all=[];try{all=await tdb("all")}catch(_){}const r=all.find(x=>x.id==id);if(!r)return toast("テンプレートが見つかりません");const v=prompt("テンプレートの名前",r.name);if(!v||!v.trim()||v.trim()===r.name)return;
   r.name=v.trim().slice(0,60);try{await tdb("put",r)}catch(e){return toast("名前を変えられませんでした")}files.forEach(f=>{if(f&&f.tpl==id)f.name=r.name});if(typeof draw=="function"&&!cur)draw();toast("テンプレート名を「"+r.name+"」にしました",2500);if(list)tplList()}
 function tplRenameCur(){const ids=[...new Set(pages.map(p=>files[p.f]&&files[p.f].tpl).filter(Boolean))];if(!ids.length)return toast("テンプレートから開いた書類がありません");if(ids.length==1)return tplRename(ids[0]);
