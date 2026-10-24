@@ -152,7 +152,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="custB" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;background:#ecfdf5;border:1.5px solid #34d399;border-radius:12px;padding:8px 10px;margin-bottom:8px"><b id="custBn" style="flex:1;color:#065f46;font-size:15px"></b><button id="custBs" style="border:0;border-radius:9px;padding:7px 12px;background:#059669;color:#fff;font-weight:700">保存</button><button id="custBx" style="border:1px solid #6ee7b7;border-radius:9px;padding:7px 10px;background:#fff;color:#065f46">閉じる</button></div><div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v150</small></div>
+<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v151</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -1402,7 +1402,7 @@ function fillStop(){cgHide();
 var fsT=null,fsLast=null,szbIt=null;
 const pgOf=it=>pages.find(p=>p.items.includes(it));
 function setAnc(it,anc){it.anc=anc;paint()}
-function szbOpen(it){szbIt=it;sel=it;$("szF1").style.display=$("szF2").style.display="";szbSync();$("szt").textContent=(it.field?"連投欄":"文字")+"の枠・文字サイズ";$("szb").style.display="flex";paint()}
+function szbOpen(it){szbIt=it;sel=it;$("szF1").style.display=$("szF2").style.display="";szbSync();{const n=smOn?smTg().filter(i=>i.field!="toggle").length:1;$("szt").textContent=n>1?n+"か所まとめて:枠・文字サイズ・基準位置":(it.field?"連投欄":"文字")+"の枠・文字サイズ"}$("szb").style.display="flex";paint()}
 function szbOpenCand(c){szbIt={cand:c};$("szF1").style.display=$("szF2").style.display="none";["szAl","szAc","szAr","szNm"].forEach(k=>$(k).style.display="none");$("szt").textContent="空欄の幅・高さ";$("szb").style.display="flex";paint()}
 function szbL(){if(!szbIt||szbIt.cand)return[];return((smOn&&smTg().length)?smTg():[szbIt]).filter(i=>i.k=="t"&&i.field!="toggle")}
 function szbSync(){const it=szbIt&&!szbIt.cand?szbIt:null,a=(it&&it.anc)||"l";["szAl","szAc","szAr"].forEach((k,i)=>{$(k).style.display=it?"":"none";$(k).classList.toggle("p",!!it&&a==["l","c","r"][i])});$("szNm").style.display=it&&it.field=="input"?"":"none";$("szNm").classList.toggle("p",!!(it&&it.num))}
@@ -1453,7 +1453,7 @@ function smReveal(){if(!smOn||!cur)return;const L=smTg();if(!L.length)return;con
   ec.style.marginBottom=Math.round(wr.height*.7)+"px";
   if(bot>wr.bottom-pad||top<wr.top+pad){const mid=(top+bot)/2,want=wr.top+wr.height*.4;wrap.scrollTop+=mid-want}}
 function smSync(){const L=smTg(),t=$("smt"),dgL=smOn?dgSel():null;
-  if(smOn){const key=L.length?L[0]:null,same=key===smRvK;smRvK=key;if(key&&!same){clearTimeout(smRvT);smRvT=setTimeout(smReveal,90);setTimeout(smReveal,350)}}if(smOn&&!smTry){const rep=dgL?(dgL.find(i=>i.field)||dgL[0]):L.length==1?L[0]:null;if(rep&&szbIt!==rep&&!(szbIt&&szbIt.cand))szbOpen(rep);else if(!rep&&szbIt&&!szbIt.cand){$("szb").style.display="none";szbIt=null}}
+  if(smOn){const key=L.length?L[0]:null,same=key===smRvK;smRvK=key;if(key&&!same){clearTimeout(smRvT);smRvT=setTimeout(smReveal,90);setTimeout(smReveal,350)}}if(smOn&&!smTry){const rep=dgL?(dgL.find(i=>i.field)||dgL[0]):L.length==1?L[0]:L.find(i=>i.k=="t"&&i.field!="toggle")||null;if(rep&&szbIt!==rep&&!(szbIt&&szbIt.cand))szbOpen(rep);else if(!rep&&szbIt&&!szbIt.cand){$("szb").style.display="none";szbIt=null}}
   $("szG").style.display=$("szGl").style.display=dgL?"":"none";document.querySelectorAll(".dgx").forEach(e=>e.style.display=dgL?"":"none");t.textContent=L.length>1?L.length+"個の欄を選択中"+(L.some(i=>!cur.items.includes(i))?"(他のページも含む)":"")+"(まとめて操作できます)":L.length==1?"選択中:"+(L[0].field=="input"?"連投欄「"+(L[0].lbl||"")+"」":L[0].field=="toggle"?"選択ボタン":"文字"):(smMulti?"タップで追加・解除":"欄をタップで選択");$("smU").classList.toggle("on",smMulti);$("sfU").classList.toggle("on",smMulti);0}
 var smMq=null;
 function smCen(i){return i.cell?[(i.cell.x0+i.cell.x1)/2,(i.cell.y0+i.cell.y1)/2]:[i.a,i.b]}
