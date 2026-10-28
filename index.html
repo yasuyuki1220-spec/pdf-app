@@ -152,7 +152,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="custB" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;background:#ecfdf5;border:1.5px solid #34d399;border-radius:12px;padding:8px 10px;margin-bottom:8px"><b id="custBn" style="flex:1;color:#065f46;font-size:15px"></b><button id="custBs" style="border:0;border-radius:9px;padding:7px 12px;background:#059669;color:#fff;font-weight:700">保存</button><button id="custBx" style="border:1px solid #6ee7b7;border-radius:9px;padding:7px 10px;background:#fff;color:#065f46">閉じる</button></div><div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v156</small></div>
+<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v158</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -183,7 +183,7 @@ input[type=range]{accent-color:var(--ac)}
 </div>
 <div id="szp"><label>大きさ<input id="sz" type="range" min="1" max="100" value="20"></label><label>幅<input id="sx" type="range" min="20" max="300" value="100"></label><label>高さ<input id="sy" type="range" min="20" max="300" value="100"></label></div>
 <div class="ctx" id="op"><button id="bac">基準:左</button><button id="bfs">枠・文字サイズ</button><span id="opg" style="display:contents"><button id="bgz">サイズ変更</button>
-<button id="rl">↺</button><button id="rr">↻</button></span><button id="bsh">形変更</button><button id="bvd">頂点を減らす</button><button id="blk">固定</button><button id="bhl">白フチ</button><button id="bmv">移動</button><button id="bsz">枠サイズ</button><button id="bsc">全体拡大</button><button id="bfd">連投欄にする</button><button id="bloc">全体共通</button><button id="ex">入力</button><button id="dl">削除</button></div>
+<button id="rl">↺</button><button id="rr">↻</button></span><button id="bsh">形変更</button><button id="bvd">頂点を減らす</button><button id="blk">固定</button><button id="bhl">白フチ</button><button id="bvt">縦書き</button><button id="bmv">移動</button><button id="bsz">枠サイズ</button><button id="bsc">全体拡大</button><button id="bfd">連投欄にする</button><button id="bloc">全体共通</button><button id="ex">入力</button><button id="dl">削除</button></div>
 <div class="ctx" id="shp" style="display:none;background:var(--ac2);border-radius:14px;padding:6px 10px;margin-top:6px">
 <button class="cdot" style="background:#e11d48" data-c="#e11d48"></button><button class="cdot" style="background:#111" data-c="#111111"></button><button class="cdot" style="background:#2563eb" data-c="#2563eb"></button><button class="cdot" style="background:#16a34a" data-c="#16a34a"></button><button class="cdot" style="background:#f59e0b" data-c="#f59e0b"></button><button class="cdot" style="background:#fff" data-c="#ffffff"></button>
 <input id="shw" type="range" min="1" max="10" value="4" style="width:70px"><button class="chip" data-sd="0">実線</button><button class="chip" data-sd="1">点線</button>
@@ -236,11 +236,17 @@ function toDisp(a,b,A){return A==90?[1-b,a]:A==180?[1-a,1-b]:A==270?[b,1-a]:[a,b
 const ang=pg=>(pg.base+pg.r)%360;
 const bytesOf=(c,t="image/jpeg")=>new Promise(r=>c.toBlob(async b=>r(new Uint8Array(await b.arrayBuffer())),t,.9));
 
+function vertDims(it){const f=60,L=String(it.str).split("\n"),m=Math.max(1,...L.map(l=>Array.from(l).length));return{w:Math.ceil(L.length*f*1.25)+16,h:Math.ceil(m*f*1.1)+12}}
+function drawVert(x,it,w){const f=60,L=String(it.str).split("\n"),ROT=/[ー—―－~〜～…‥(){}\[\]（）｛｝［］「」『』〈〉《》〔〕【】<>＜＞\-:：=＝]/,PUN=/[、。，．,.]/,SML=/[ぁぃぅぇぉっゃゅょゎァィゥェォッャュョヮ]/;
+  x.font=f+"px sans-serif";x.fillStyle=it.c;x.textAlign="center";x.textBaseline="middle";
+  L.forEach((l,k)=>{const cx=w-8-(k+.5)*f*1.25;Array.from(l).forEach((ch,i)=>{if(ch==" "||ch=="\u3000")return;const cy=6+(i+.5)*f*1.1;let dx=0,dy=0,rt=false;if(ROT.test(ch))rt=true;else if(PUN.test(ch)){dx=f*.32;dy=-f*.32}else if(SML.test(ch)){dx=f*.12;dy=-f*.12}
+      x.save();x.translate(cx+dx,cy+dy);if(rt)x.rotate(Math.PI/2);if(it.halo){x.lineWidth=12;x.strokeStyle="#fff";x.lineJoin="round";x.strokeText(ch,0,0)}x.fillText(ch,0,0);x.restore()})});x.textAlign="start"}
 function bmOf(it){
   if(it.k=="i")return it.bm;
-  const key=it.str+"|"+it.c+"|"+(it.halo?1:0)+(it.ring?"r":"");
+  const key=it.str+"|"+it.c+"|"+(it.halo?1:0)+(it.ring?"r":"")+(it.vert?"v":"");
   if(it.key!==key){
     if(it.ring){const c=document.createElement("canvas");c.width=200;c.height=120;drawTxt(c.getContext("2d"),it);it.bmc=c;it.key=key;return c}
+    if(it.vert){const d=vertDims(it),c=document.createElement("canvas");c.width=d.w;c.height=d.h;drawVert(c.getContext("2d"),it,d.w);it.bmc=c;it.key=key;return c}
     const L=it.str.split("\n"),f=60,c=document.createElement("canvas"),x=c.getContext("2d");
     x.font=f+"px sans-serif";
     c.width=Math.ceil(Math.max(...L.map(l=>x.measureText(l).width)))+16;c.height=Math.ceil(L.length*f*1.25)+12;
@@ -358,7 +364,7 @@ async function imgToPdf(f){
 var xlTot=[0,0];
 
 // ---- v38.1: 文字をベクターで描く(小さくても読める)・欄(セル)に収まる文字サイズ
-function drawTxt(x,it,K){if(it.ring){x.strokeStyle=it.c;x.lineWidth=7;x.beginPath();x.ellipse(100,60,94,54,0,0,7);x.stroke();return}const L=it.str.split("\n"),f=60;x.font=f+"px sans-serif";x.fillStyle=it.c;x.textBaseline="middle";L.forEach((l,k)=>{const y=6+(k+.5)*f*1.25;if(it.halo){x.lineWidth=12;x.strokeStyle="#fff";x.lineJoin="round";x.strokeText(l,8,y)}x.fillText(l,8,y)})}
+function drawTxt(x,it,K){if(it.ring){x.strokeStyle=it.c;x.lineWidth=7;x.beginPath();x.ellipse(100,60,94,54,0,0,7);x.stroke();return}if(it.vert){drawVert(x,it,vertDims(it).w);return}const L=it.str.split("\n"),f=60;x.font=f+"px sans-serif";x.fillStyle=it.c;x.textBaseline="middle";L.forEach((l,k)=>{const y=6+(k+.5)*f*1.25;if(it.halo){x.lineWidth=12;x.strokeStyle="#fff";x.lineJoin="round";x.strokeText(l,8,y)}x.fillText(l,8,y)})}
 function vecText(x,it,bm,dw,dh){x.save();x.translate(-dw/2,-dh/2);x.scale(dw/bm.width,dh/bm.height);drawTxt(x,it);x.restore()}
 function hiBm(it){const bm=bmOf(it),K=3,c=document.createElement("canvas");c.width=bm.width*K;c.height=bm.height*K;const x=c.getContext("2d");x.scale(K,K);drawTxt(x,it);return c}
 function fitItem(it,pg){const c=it.cell;if(!c)return;const W=pg.W,H=pg.H,pad=2,bw=Math.max(4,(c.x1-c.x0)*W-pad*2),bh=Math.max(3,(c.y1-c.y0)*H-1);
@@ -479,7 +485,7 @@ let sArm=null,stArr=null;
 let _ls=null;function syncPanel(){$("ed").classList.toggle("mv",emode=="move"&&!!sel&&!sel.shape);sbAll();if(sel!==sArm)sArm=null;if(sel!==_ls){_ls=sel;if(sel)$("op").scrollLeft=0}
   if(!sel||sel.shape)szOpen=false;$("szp").style.display=szOpen?"flex":"none";$("bgz").classList.toggle("act",szOpen);
   $("op").style.display=sel?"flex":"none";prVis();$("shp").style.display=sel&&sel.shape?"flex":"none";if(!sel)return;
-  const t=sel.k=="t";$("ex").style.display=$("bmv").style.display=$("bsz").style.display=$("bsc").style.display=$("bfd").style.display=$("bac").style.display=t?"":"none";$("bac").textContent="基準:"+({l:"左",c:"中央",r:"右"}[sel.anc||"l"]);$("bfd").textContent=sel.field=="input"?"固定に戻す":"連投欄にする";$("bfd").classList.toggle("act",sel.field=="input");$("bloc").style.display=sel.field=="input"?"":"none";$("bloc").textContent=sel.local?"ページ専用(単品)":"全体共通";$("bloc").classList.toggle("act",!!sel.local);$("bsc").classList.toggle("act",emode=="scale");$("bmv").style.display=(t||(sel.k=="i"&&!sel.shape))?"":"none";$("blk").style.display=(sel.k=="i"&&!sel.shape)?"":"none";$("blk").textContent=sel.lock?"固定解除":"固定";$("bhl").style.display=t?"":"none";$("bfs").style.display=t?"":"none";$("bhl").classList.toggle("act",!!sel.halo);$("bvd").style.display=(sel.shape&&emode=="shape")?"":"none";$("bsh").style.display=sel.shape?"":"none";$("bsh").classList.toggle("act",emode=="shape");$("opg").style.display=sel.shape?"none":"contents";if(t){["ex","bmv","bsz","bsc","bgz"].forEach(i=>$(i).style.display="none")}if(sel.shape)shpUI();$("bmv").classList.toggle("act",emode=="move");$("bsz").classList.toggle("act",emode=="size");
+  const t=sel.k=="t";$("ex").style.display=$("bmv").style.display=$("bsz").style.display=$("bsc").style.display=$("bfd").style.display=$("bac").style.display=t?"":"none";$("bac").textContent="基準:"+({l:"左",c:"中央",r:"右"}[sel.anc||"l"]);$("bfd").textContent=sel.field=="input"?"固定に戻す":"連投欄にする";$("bfd").classList.toggle("act",sel.field=="input");$("bloc").style.display=sel.field=="input"?"":"none";$("bloc").textContent=sel.local?"ページ専用(単品)":"全体共通";$("bloc").classList.toggle("act",!!sel.local);$("bsc").classList.toggle("act",emode=="scale");$("bmv").style.display=(t||(sel.k=="i"&&!sel.shape))?"":"none";$("blk").style.display=(sel.k=="i"&&!sel.shape)?"":"none";$("blk").textContent=sel.lock?"固定解除":"固定";$("bhl").style.display=t?"":"none";$("bvt").style.display=t?"":"none";$("bvt").classList.toggle("act",!!sel.vert);$("bfs").style.display=t?"":"none";$("bhl").classList.toggle("act",!!sel.halo);$("bvd").style.display=(sel.shape&&emode=="shape")?"":"none";$("bsh").style.display=sel.shape?"":"none";$("bsh").classList.toggle("act",emode=="shape");$("opg").style.display=sel.shape?"none":"contents";if(t){["ex","bmv","bsz","bsc","bgz"].forEach(i=>$(i).style.display="none")}if(sel.shape)shpUI();$("bmv").classList.toggle("act",emode=="move");$("bsz").classList.toggle("act",emode=="size");
   $("sz").value=sel.k=="i"?sel.w*100:sel.s*700-4;$("sx").value=(sel.sx||1)*100;$("sy").value=(sel.sy||1)*100;
 }
 const pgList=()=>tplEdit?tplEdit.pgs:pages;
@@ -668,14 +674,17 @@ async function savePdf(){
   try{say("上書き保存を作成中…");const b=await build(list),one=new Set(list.map(p=>p.f)),nm=one.size==1?files[list[0].f].name.replace(/\.[A-Za-z0-9]+$/,"")+".pdf":"結合PDF.pdf";
     if(window.showSaveFilePicker&&isDesk()){try{if(!saveH)saveH=await showSaveFilePicker({suggestedName:nm,types:[{description:"PDF",accept:{"application/pdf":[".pdf"]}}]});const w=await saveH.createWritable();await w.write(b);await w.close();return say("上書き保存しました: "+saveH.name)}catch(e){if(e&&e.name=="AbortError")return say("保存をキャンセルしました");saveH=null}}
     await deliverFiles([new File([b],nm,{type:"application/pdf"})],nm.replace(/\.pdf$/i,""));if(!isDesk())toast("「ファイル」に同じ名前で保存すると「置き換える」で上書きできます",5000)}catch(e){say("保存に失敗しました")}}
-async function shrinkPdf(bytes,sc){const {PDFDocument,degrees}=PDFLib,src=await PDFDocument.load(bytes),out=await PDFDocument.create();
-  for(let i=0;i<src.getPageCount();i++){const p=src.getPage(i),mb=p.getMediaBox(),w=mb.width,h=mb.height,r=p.getRotation().angle,emb=await out.embedPage(p),np=out.addPage([w,h]);if(r)np.setRotation(degrees(r));np.drawPage(emb,{x:w*(1-sc)/2,y:h*(1-sc)/2,xScale:sc,yScale:sc})}
+async function shrinkPdf(bytes,sc,paper){const {PDFDocument,degrees}=PDFLib,src=await PDFDocument.load(bytes),out=await PDFDocument.create();
+  for(let i=0;i<src.getPageCount();i++){const p=src.getPage(i),mb=p.getMediaBox(),w=mb.width,h=mb.height,r=p.getRotation().angle,emb=await out.embedPage(p),odd=Math.abs(r)%180==90;let tw=w,th=h,k=sc;if(paper){const ew=odd?h:w,eh=odd?w:h,land=ew>eh,pw=land?paper[1]:paper[0],ph=land?paper[0]:paper[1];k=Math.min(pw/ew,ph/eh)*sc;tw=odd?ph:pw;th=odd?pw:ph}
+    const np=out.addPage([tw,th]);if(r)np.setRotation(degrees(r));np.drawPage(emb,{x:(tw-w*k)/2,y:(th-h*k)/2,xScale:k,yScale:k})}
   return await out.save()}
-function printPages(){let k=1;try{k=+localStorage.getItem("pdfapp_prsc")||1}catch(_){}const go=v=>{try{localStorage.setItem("pdfapp_prsc",String(v))}catch(_){}printGo(v)};
-  sheet("印刷",[["縮小して印刷(用紙の端の線が欠けるとき・95%)"+(k<1?" ← 前回":""),()=>go(.95)],["少しだけ縮小して印刷(97%)",()=>go(.97)],["そのままの大きさで印刷(100%)"+(k==1?" ← 前回":""),()=>go(1)]])}
-async function printGo(sc){
+const PAPERS=[["元のページの大きさのまま",null],["A4(210×297mm)",[595,842]],["A3(297×420mm)",[842,1191]],["B4(257×364mm)",[729,1032]],["B5(182×257mm)",[516,729]],["A5(148×210mm)",[420,595]]];
+function printPages(){let pk=0;try{pk=+localStorage.getItem("pdfapp_prpp")||0}catch(_){}sheet("印刷する用紙",PAPERS.map((q,i)=>[q[0]+(i==pk?" ← 前回":""),()=>{try{localStorage.setItem("pdfapp_prpp",String(i))}catch(_){}printSc(q[1])}]))}
+function printSc(paper){let k=1;try{k=+localStorage.getItem("pdfapp_prsc")||1}catch(_){}const go=v=>{try{localStorage.setItem("pdfapp_prsc",String(v))}catch(_){}printGo(v,paper)};
+  sheet("印刷の大きさ"+(paper?"(用紙に合わせて中央に置きます)":""),[["縮小して印刷(用紙の端の線が欠けるとき・95%)"+(k<1?" ← 前回":""),()=>go(.95)],["少しだけ縮小して印刷(97%)",()=>go(.97)],["そのままの大きさで印刷(100%)"+(k==1?" ← 前回":""),()=>go(1)]])}
+async function printGo(sc,paper){
   const sl=pages.filter(p=>p.sel),list=sl.length?sl:pages.filter(p=>!tplEdit||!tplEdit.pgs.includes(p));if(!list.length)return say("ページがありません");
-  try{say("印刷用に作成中…");let b=await build(list);if(sc<1)b=await shrinkPdf(b,sc);const f=new File([b],"印刷.pdf",{type:"application/pdf"});
+  try{say("印刷用に作成中…");let b=await build(list);if(sc<1||paper)b=await shrinkPdf(b,sc,paper);const f=new File([b],"印刷.pdf",{type:"application/pdf"});
     if(!isDesk()&&navigator.canShare&&navigator.canShare({files:[f]})){try{say("");toast("開いたメニューの「プリント」を選ぶと、つながっているプリンターが出ます",5000);await navigator.share({files:[f],title:"印刷"});return}catch(e){if(e&&e.name=="AbortError")return}}
     const u=URL.createObjectURL(new Blob([b],{type:"application/pdf"})),fr=document.createElement("iframe");fr.style.cssText="position:fixed;right:0;bottom:0;width:1px;height:1px;border:0;opacity:0";fr.src=u;
     fr.onload=()=>setTimeout(()=>{try{fr.contentWindow.focus();fr.contentWindow.print();say("")}catch(_){window.open(u);say("")}},400);document.body.appendChild(fr);setTimeout(()=>{fr.remove();URL.revokeObjectURL(u)},300000);
@@ -1066,7 +1075,7 @@ function clearText(){
   sheet("このページに追加した文字を全て消しますか?",[["消す",()=>{endEdit();cur.items=cur.items.filter(i=>i.k!="t");if(sel&&sel.k=="t"){sel=null;emode=null;setHint();syncPanel()}paint();toast("文字を全て消しました")}]])}
 
 let cT=null;
-const sigOf=pg=>pg.strokes.length+"|"+pg.items.map(i=>[i.a,i.b,i.rot,i.w,i.s,i.sx,i.sy,i.c,i.str,i.field,i.off,i.lock,i.halo,i.s0,i.cell?[i.cell.x0,i.cell.x1,i.cell.y0,i.cell.y1].join():"",i.arr?i.arr.map(t=>t.t.join()).join("/"):"",i.shape?[i.shape.m,i.shape.c,i.shape.wd,i.shape.d,i.shape.rel.join()].join():""].join(",")).join(";");
+const sigOf=pg=>pg.strokes.length+"|"+pg.items.map(i=>[i.a,i.b,i.rot,i.w,i.s,i.sx,i.sy,i.c,i.str,i.field,i.off,i.lock,i.halo,i.vert,i.s0,i.cell?[i.cell.x0,i.cell.x1,i.cell.y0,i.cell.y1].join():"",i.arr?i.arr.map(t=>t.t.join()).join("/"):"",i.shape?[i.shape.m,i.shape.c,i.shape.wd,i.shape.d,i.shape.rel.join()].join():""].join(",")).join(";");
 function snapOf(pg){return{sig:sigOf(pg),strokes:pg.strokes.slice(),items:pg.items.map(it=>({it,p:{...it,shape:it.shape?{...it.shape,rel:it.shape.rel.map(r=>r.slice())}:undefined}}))}}
 function commit(){
   if(!cur||editing)return;
@@ -1074,7 +1083,7 @@ function commit(){
   if(sigOf(cur)!==cur._base.sig){(cur._hist=cur._hist||[]).push(cur._base);if(cur._hist.length>80)cur._hist.shift();cur._base=snapOf(cur);cur._redo=[]}}
 function restoreSnap(sn){sel=null;emode=null;
   cur.strokes=sn.strokes.slice();
-  cur.items=sn.items.map(x=>{const p={...x.p};if(!p.shape)delete p.shape;Object.assign(x.it,p);x.it.field=p.field;x.it.lock=p.lock;x.it.halo=p.halo;if(!p.arr)delete x.it.arr;if(!p.cell)delete x.it.cell;return x.it});
+  cur.items=sn.items.map(x=>{const p={...x.p};if(!p.shape)delete p.shape;Object.assign(x.it,p);x.it.field=p.field;x.it.lock=p.lock;x.it.halo=p.halo;x.it.vert=p.vert;if(!p.arr)delete x.it.arr;if(!p.cell)delete x.it.cell;return x.it});
   cur._base=snapOf(cur);setHint();syncPanel();paint()}
 function undoLast(){
   if(xlC)return xlUndo();
@@ -1672,7 +1681,7 @@ function fcClean(x){if(!x||typeof x!=="object")return null;if(!Number.isFinite(+
   const o={page:n(x.page)||0,a:+x.a,b:+x.b,s:n(x.s)||.03,c:col(x.c),sx:n(x.sx)||1,sy:n(x.sy)||1,rot:n(x.rot)||0,anc:["l","c","r"].includes(x.anc)?x.anc:"l",type:x.type=="input"?"input":x.type=="toggle"?"toggle":"fixed",str:x.str==null?"":st(x.str)};
   if(n(x.no))o.no=n(x.no);if(x.rd)o.rd=true;if(x.pick)o.pick=true;if(x.grp)o.grp=st(x.grp,60);if(n(x.s0))o.s0=n(x.s0);
   if(x.cell&&[x.cell.x0,x.cell.x1,x.cell.y0,x.cell.y1].every(v=>Number.isFinite(+v)&&v!==null))o.cell={x0:+x.cell.x0,x1:+x.cell.x1,y0:+x.cell.y0,y1:+x.cell.y1};
-  ["ring","halo","num","local","auto"].forEach(k=>{if(x[k])o[k]=true});
+  ["ring","halo","num","local","auto","vert"].forEach(k=>{if(x[k])o[k]=true});
   ["vlbl","fxl","ad","sh","fx","tid","dep","dg"].forEach(k=>{if(x[k]!=null&&(typeof x[k]=="string"||typeof x[k]=="number"))o[k]=typeof x[k]=="string"?st(x[k],400):x[k]});
   ["lit","nid","nfc"].forEach(k=>{if(x[k]!=null){try{const j=JSON.stringify(x[k]);if(j&&j.length<20000)o[k]=JSON.parse(j)}catch(_){}}});
   if(Array.isArray(x.choices))o.choices=x.choices.slice(0,100).map(v=>st(v,100));
@@ -1852,6 +1861,7 @@ $("bvd").onclick=()=>{
   if(R.length<=3)return toast("三角形より減らせません");
   R.splice(shLast>=0&&shLast<R.length?shLast:R.length-1,1);shLast=-1;bakeShape(sel,cur,R.map(v=>[sel.a+v[0],sel.b+v[1]]));paint();toast("頂点を減らしました")};
 $("blk").onclick=()=>{if(!sel)return;sel.lock=!sel.lock;if(sel.lock){sel=null;emode=null;setHint();toast("固定しました。解除は「その他」→「固定した画像を解除」")}syncPanel();paint()};
+$("bvt").onclick=()=>{if(sel&&sel.k=="t"){sel.vert=!sel.vert;sel.key=null;syncPanel();paint()}};
 $("bhl").onclick=()=>{if(sel&&sel.k=="t"){sel.halo=!sel.halo;syncPanel();paint()}};
 let dimSt=null,dmL="出入口",dmD=null;
 function dimEnd(){
