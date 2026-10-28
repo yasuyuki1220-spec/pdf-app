@@ -130,7 +130,8 @@ input[type=range]{accent-color:var(--ac)}
 #nmE,#nrE{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;z-index:80}#nmE .box,#nrE .box{background:var(--card);width:100%;max-width:620px;margin:0 auto;border-radius:22px 22px 0 0;padding:12px 14px calc(14px + env(safe-area-inset-bottom,0px));max-height:88%;overflow:auto}#nmE .st,#nrE .st{font-weight:700;margin-bottom:8px}#nmI{width:100%;box-sizing:border-box;font:inherit;font-size:16px;border:1px solid var(--bd);border-radius:12px;padding:10px;background:var(--bg);color:var(--fg)}.nc{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.nc button{border:1px solid var(--bd);background:none;border-radius:999px;padding:6px 12px;font-size:14px;color:inherit}.nc button.on{background:var(--ac);color:#fff;border-color:var(--ac)}#nmE .sh,#nrE .sh{display:block;color:var(--mut);font-size:12px;line-height:1.5;margin:4px 2px}#nmE .row,#nrE .row{display:flex;gap:8px;margin-top:10px}#nmE .row button,#nrE .row button{border:1px solid var(--bd);background:none;border-radius:10px;padding:8px 12px;color:inherit}#nmE .row button.p,#nrE .row button.p{background:var(--ac);color:#fff;border-color:var(--ac)}#nrE .nr{padding:8px 0;border-bottom:1px solid var(--bd)}#nmH button{border:1px solid var(--ac);background:none;color:var(--ac);border-radius:8px;padding:4px 10px;font-size:13px;margin-left:6px}
 #pkE{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:flex-end;z-index:75}#pkE .box{background:var(--card);width:100%;max-width:620px;margin:0 auto;border-radius:22px 22px 0 0;padding:12px 14px calc(14px + env(safe-area-inset-bottom,0px));max-height:90%;overflow:auto}#pkE .st{font-weight:700;margin-bottom:6px}#pkE h4{margin:12px 0 4px;font-size:14px}#pkE .sh{display:block;color:var(--mut);font-size:12px;line-height:1.5;margin:2px 2px 6px}#pkE label.pr{display:flex;gap:8px;align-items:center;padding:7px 2px;border-bottom:1px solid var(--bd);font-size:15px}#pkE label.pr input{width:20px;height:20px}#pkE .row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}#pkE .row button{border:1px solid var(--bd);background:none;border-radius:10px;padding:9px 12px;color:inherit;font-size:14px}#pkE .row button.p{background:var(--ac);color:#fff;border-color:var(--ac)}
 #xb #xbS{background:#fef3c7;color:#92400e}#xb #xbS.on{background:#f59e0b;color:#fff}#xb #xbAV,#xb #xbAH,#xb #xbAZ{background:#fff7ed;color:#9a3412}
-.xg{display:inline-flex;align-items:center;gap:3px;background:var(--card);border-radius:9px;padding:2px 4px;box-shadow:var(--sh)}#xb .xg b{font-size:12px;padding:0 4px;color:#5b21b6}#xb .xg button{box-shadow:none;background:#ede9fe;min-width:36px;padding:6px 8px;font-size:17px;font-weight:700;line-height:1}
+.xg{display:inline-flex;align-items:center;gap:3px;background:var(--card);border-radius:9px;padding:2px 4px;box-shadow:var(--sh)}#xb .xg b{font-size:12px;padding:0 4px;color:#5b21b6}#xb .xg button{box-shadow:none;background:#ede9fe;min-width:36px;padding:6px 8px;font-size:17px;font-weight:700;line-height:1}#ffE{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:12px}#ffE .box{background:var(--card,#fff);border-radius:16px;padding:14px;width:min(480px,100%);max-height:86vh;display:flex;flex-direction:column;gap:8px}#ffE .st{font-weight:700}#ffE input{padding:9px;border:1px solid #ccc;border-radius:9px;font-size:15px}#ffL{overflow:auto;display:flex;flex-direction:column;gap:4px;min-height:120px}#ffL .ffb{text-align:left;padding:9px 10px;font-size:17px;border-radius:9px;border:1px solid #ddd;background:#fff;color:#111}#ffE .row{display:flex;justify-content:flex-end}
+.szs{display:flex;gap:3px;align-self:flex-end}.szs button{padding:2px 9px;font-size:17px;font-weight:700;line-height:1.1;min-width:30px;border-radius:8px}
 </style></head><body>
 <svg style="display:none"><defs>
 <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
@@ -152,7 +153,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="custB" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;background:#ecfdf5;border:1.5px solid #34d399;border-radius:12px;padding:8px 10px;margin-bottom:8px"><b id="custBn" style="flex:1;color:#065f46;font-size:15px"></b><button id="custBs" style="border:0;border-radius:9px;padding:7px 12px;background:#059669;color:#fff;font-weight:700">保存</button><button id="custBx" style="border:1px solid #6ee7b7;border-radius:9px;padding:7px 10px;background:#fff;color:#065f46">閉じる</button></div><div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v158</small></div>
+<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v159</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -181,9 +182,9 @@ input[type=range]{accent-color:var(--ac)}
 <button class="col on" style="background:#111" data-c="#111111"></button><button class="col" style="background:#e11d48" data-c="#e11d48"></button><button class="col" style="background:#2563eb" data-c="#2563eb"></button><button class="col" style="background:#16a34a" data-c="#16a34a"></button><button class="col" style="background:#f59e0b" data-c="#f59e0b"></button><button class="col" style="background:#fff" data-c="#ffffff"></button>
 <button class="mkc" id="mkp" data-c="#ff9ec7" title="薄いピンクのマーカー" style="background:#ff9ec7"></button><button class="mkc" id="mky" data-c="#fff04d" title="黄色のマーカー" style="background:#fff04d"></button><button class="mkc" id="mkg" data-c="#9ff0b4" title="薄い緑のマーカー" style="background:#9ff0b4"></button><button class="mkc" id="mkb" data-c="#8fd3ff" title="水色のマーカー" style="background:#8fd3ff"></button><span id="mkt" style="font-size:12px;color:var(--mut)">←マーカー</span><input type="color" id="cc" value="#111111" style="width:28px;height:28px;padding:0;border:0;background:none"><span style="font-size:12px;color:var(--mut)">太さ</span><input id="wd" type="range" min="1" max="14" value="3" style="width:90px">
 </div>
-<div id="szp"><label>大きさ<input id="sz" type="range" min="1" max="100" value="20"></label><label>幅<input id="sx" type="range" min="20" max="300" value="100"></label><label>高さ<input id="sy" type="range" min="20" max="300" value="100"></label></div>
+<div id="szp"><label>大きさ<input id="sz" type="range" min="1" max="100" step="0.05" value="20"></label><span class="szs"><button data-z="sz" data-f="-1">−</button><button data-z="sz" data-f="1">＋</button></span><label>幅<input id="sx" type="range" min="20" max="300" step="0.1" value="100"></label><span class="szs"><button data-z="sx" data-f="-1">−</button><button data-z="sx" data-f="1">＋</button></span><label>高さ<input id="sy" type="range" min="20" max="300" step="0.1" value="100"></label><span class="szs"><button data-z="sy" data-f="-1">−</button><button data-z="sy" data-f="1">＋</button></span></div>
 <div class="ctx" id="op"><button id="bac">基準:左</button><button id="bfs">枠・文字サイズ</button><span id="opg" style="display:contents"><button id="bgz">サイズ変更</button>
-<button id="rl">↺</button><button id="rr">↻</button></span><button id="bsh">形変更</button><button id="bvd">頂点を減らす</button><button id="blk">固定</button><button id="bhl">白フチ</button><button id="bvt">縦書き</button><button id="bmv">移動</button><button id="bsz">枠サイズ</button><button id="bsc">全体拡大</button><button id="bfd">連投欄にする</button><button id="bloc">全体共通</button><button id="ex">入力</button><button id="dl">削除</button></div>
+<button id="rl">↺</button><button id="rr">↻</button></span><button id="bsh">形変更</button><button id="bvd">頂点を減らす</button><button id="blk">固定</button><button id="bhl">白フチ</button><button id="bvt">縦書き</button><button id="bff">字体</button><button id="bmv">移動</button><button id="bsz">枠サイズ</button><button id="bsc">全体拡大</button><button id="bfd">連投欄にする</button><button id="bloc">全体共通</button><button id="ex">入力</button><button id="dl">削除</button></div>
 <div class="ctx" id="shp" style="display:none;background:var(--ac2);border-radius:14px;padding:6px 10px;margin-top:6px">
 <button class="cdot" style="background:#e11d48" data-c="#e11d48"></button><button class="cdot" style="background:#111" data-c="#111111"></button><button class="cdot" style="background:#2563eb" data-c="#2563eb"></button><button class="cdot" style="background:#16a34a" data-c="#16a34a"></button><button class="cdot" style="background:#f59e0b" data-c="#f59e0b"></button><button class="cdot" style="background:#fff" data-c="#ffffff"></button>
 <input id="shw" type="range" min="1" max="10" value="4" style="width:70px"><button class="chip" data-sd="0">実線</button><button class="chip" data-sd="1">点線</button>
@@ -237,20 +238,36 @@ const ang=pg=>(pg.base+pg.r)%360;
 const bytesOf=(c,t="image/jpeg")=>new Promise(r=>c.toBlob(async b=>r(new Uint8Array(await b.arrayBuffer())),t,.9));
 
 function vertDims(it){const f=60,L=String(it.str).split("\n"),m=Math.max(1,...L.map(l=>Array.from(l).length));return{w:Math.ceil(L.length*f*1.25)+16,h:Math.ceil(m*f*1.1)+12}}
+// v159 字体選択(PCにあるフォント)
+const FF=it=>it&&it.ff?it.ff+",sans-serif":"sans-serif";
+const FF_BASE=[["標準(ゴシック)",null],["明朝",'"Yu Mincho","Hiragino Mincho ProN","MS PMincho","Noto Serif JP",serif'],["丸ゴシック",'"Hiragino Maru Gothic ProN","Yu Gothic UI","Meiryo","Noto Sans JP",sans-serif'],["太めのゴシック",'"Yu Gothic","Meiryo","Hiragino Kaku Gothic ProN",sans-serif'],["等幅",'"MS Gothic","Osaka-Mono",monospace']];
+function ffApply(L,ff){L.forEach(i=>{if(ff)i.ff=ff;else delete i.ff;i.key=null});syncPanel();paint();toast(L.length+"か所の字体を変えました",1800)}
+function ffTargets(){const L=(smOn&&smTg().length?smTg():sel?[sel]:[]).filter(i=>i&&i.k=="t"&&!i.ring);return L}
+async function ffMenu(){const L=ffTargets();if(!L.length)return toast("先に文字をタップして選んでください",2500);
+  const it=[...FF_BASE.map(q=>[q[0],()=>ffApply(L,q[1])])];
+  it.push(["PCのフォントから選ぶ(一覧)",()=>ffList(L)]);it.push(["フォント名を入力する(例: MS 明朝)",()=>{const v=prompt("PCにあるフォント名を入れてください(例: MS 明朝 / 游明朝 / HG丸ｺﾞｼｯｸM-PRO)",L[0].ff?L[0].ff.replace(/^"|",.*$|"$/g,""):"");if(v&&v.trim())ffApply(L,'"'+v.trim().replace(/"/g,"")+'"')}]);
+  sheet("字体を選ぶ",it)}
+async function ffList(L){
+  if(!window.queryLocalFonts)return toast("このブラウザは一覧を出せません(Edge・ChromeのPCで使えます)。「フォント名を入力する」を使ってください",5000);
+  let fl;try{fl=await window.queryLocalFonts()}catch(e){return toast("フォントの読み取りが許可されませんでした。「フォント名を入力する」を使ってください",5000)}
+  const fam=[...new Set(fl.map(f=>f.family))].sort((a,b)=>a.localeCompare(b,"ja"));if(!fam.length)return toast("フォントが見つかりませんでした",3000);
+  const ov=document.createElement("div");ov.id="ffE";ov.innerHTML="<div class='box'><div class='st'>字体を選ぶ("+fam.length+"種類)</div><input id='ffQ' placeholder='名前で絞り込み' autocomplete='off'><div id='ffL'></div><div class='row'><button id='ffX'>閉じる</button></div></div>";document.body.appendChild(ov);
+  const draw=()=>{const q=$("ffQ").value.trim().toLowerCase(),box=$("ffL");box.textContent="";fam.filter(n=>!q||n.toLowerCase().includes(q)).slice(0,300).forEach(n=>{const b=document.createElement("button");b.className="ffb";b.textContent=n+"  あいうABC123";b.style.fontFamily='"'+n+'",sans-serif';b.onclick=()=>{ffApply(L,'"'+n+'"');ov.remove()};box.appendChild(b)})};
+  $("ffQ").oninput=draw;$("ffX").onclick=()=>ov.remove();draw()}
 function drawVert(x,it,w){const f=60,L=String(it.str).split("\n"),ROT=/[ー—―－~〜～…‥(){}\[\]（）｛｝［］「」『』〈〉《》〔〕【】<>＜＞\-:：=＝]/,PUN=/[、。，．,.]/,SML=/[ぁぃぅぇぉっゃゅょゎァィゥェォッャュョヮ]/;
-  x.font=f+"px sans-serif";x.fillStyle=it.c;x.textAlign="center";x.textBaseline="middle";
+  x.font=f+"px "+FF(it);x.fillStyle=it.c;x.textAlign="center";x.textBaseline="middle";
   L.forEach((l,k)=>{const cx=w-8-(k+.5)*f*1.25;Array.from(l).forEach((ch,i)=>{if(ch==" "||ch=="\u3000")return;const cy=6+(i+.5)*f*1.1;let dx=0,dy=0,rt=false;if(ROT.test(ch))rt=true;else if(PUN.test(ch)){dx=f*.32;dy=-f*.32}else if(SML.test(ch)){dx=f*.12;dy=-f*.12}
       x.save();x.translate(cx+dx,cy+dy);if(rt)x.rotate(Math.PI/2);if(it.halo){x.lineWidth=12;x.strokeStyle="#fff";x.lineJoin="round";x.strokeText(ch,0,0)}x.fillText(ch,0,0);x.restore()})});x.textAlign="start"}
 function bmOf(it){
   if(it.k=="i")return it.bm;
-  const key=it.str+"|"+it.c+"|"+(it.halo?1:0)+(it.ring?"r":"")+(it.vert?"v":"");
+  const key=it.str+"|"+it.c+"|"+(it.halo?1:0)+(it.ring?"r":"")+(it.vert?"v":"")+(it.ff||"");
   if(it.key!==key){
     if(it.ring){const c=document.createElement("canvas");c.width=200;c.height=120;drawTxt(c.getContext("2d"),it);it.bmc=c;it.key=key;return c}
     if(it.vert){const d=vertDims(it),c=document.createElement("canvas");c.width=d.w;c.height=d.h;drawVert(c.getContext("2d"),it,d.w);it.bmc=c;it.key=key;return c}
     const L=it.str.split("\n"),f=60,c=document.createElement("canvas"),x=c.getContext("2d");
-    x.font=f+"px sans-serif";
+    x.font=f+"px "+FF(it);
     c.width=Math.ceil(Math.max(...L.map(l=>x.measureText(l).width)))+16;c.height=Math.ceil(L.length*f*1.25)+12;
-    x.font=f+"px sans-serif";x.fillStyle=it.c;x.textBaseline="middle";
+    x.font=f+"px "+FF(it);x.fillStyle=it.c;x.textBaseline="middle";
     L.forEach((l,k)=>{if(it.halo){x.lineWidth=12;x.strokeStyle="#fff";x.lineJoin="round";x.strokeText(l,8,6+(k+.5)*f*1.25)}x.fillText(l,8,6+(k+.5)*f*1.25)});
     it.bmc=c;it.key=key;
   }
@@ -364,7 +381,7 @@ async function imgToPdf(f){
 var xlTot=[0,0];
 
 // ---- v38.1: 文字をベクターで描く(小さくても読める)・欄(セル)に収まる文字サイズ
-function drawTxt(x,it,K){if(it.ring){x.strokeStyle=it.c;x.lineWidth=7;x.beginPath();x.ellipse(100,60,94,54,0,0,7);x.stroke();return}if(it.vert){drawVert(x,it,vertDims(it).w);return}const L=it.str.split("\n"),f=60;x.font=f+"px sans-serif";x.fillStyle=it.c;x.textBaseline="middle";L.forEach((l,k)=>{const y=6+(k+.5)*f*1.25;if(it.halo){x.lineWidth=12;x.strokeStyle="#fff";x.lineJoin="round";x.strokeText(l,8,y)}x.fillText(l,8,y)})}
+function drawTxt(x,it,K){if(it.ring){x.strokeStyle=it.c;x.lineWidth=7;x.beginPath();x.ellipse(100,60,94,54,0,0,7);x.stroke();return}if(it.vert){drawVert(x,it,vertDims(it).w);return}const L=it.str.split("\n"),f=60;x.font=f+"px "+FF(it);x.fillStyle=it.c;x.textBaseline="middle";L.forEach((l,k)=>{const y=6+(k+.5)*f*1.25;if(it.halo){x.lineWidth=12;x.strokeStyle="#fff";x.lineJoin="round";x.strokeText(l,8,y)}x.fillText(l,8,y)})}
 function vecText(x,it,bm,dw,dh){x.save();x.translate(-dw/2,-dh/2);x.scale(dw/bm.width,dh/bm.height);drawTxt(x,it);x.restore()}
 function hiBm(it){const bm=bmOf(it),K=3,c=document.createElement("canvas");c.width=bm.width*K;c.height=bm.height*K;const x=c.getContext("2d");x.scale(K,K);drawTxt(x,it);return c}
 function fitItem(it,pg){const c=it.cell;if(!c)return;const W=pg.W,H=pg.H,pad=2,bw=Math.max(4,(c.x1-c.x0)*W-pad*2),bh=Math.max(3,(c.y1-c.y0)*H-1);
@@ -485,7 +502,7 @@ let sArm=null,stArr=null;
 let _ls=null;function syncPanel(){$("ed").classList.toggle("mv",emode=="move"&&!!sel&&!sel.shape);sbAll();if(sel!==sArm)sArm=null;if(sel!==_ls){_ls=sel;if(sel)$("op").scrollLeft=0}
   if(!sel||sel.shape)szOpen=false;$("szp").style.display=szOpen?"flex":"none";$("bgz").classList.toggle("act",szOpen);
   $("op").style.display=sel?"flex":"none";prVis();$("shp").style.display=sel&&sel.shape?"flex":"none";if(!sel)return;
-  const t=sel.k=="t";$("ex").style.display=$("bmv").style.display=$("bsz").style.display=$("bsc").style.display=$("bfd").style.display=$("bac").style.display=t?"":"none";$("bac").textContent="基準:"+({l:"左",c:"中央",r:"右"}[sel.anc||"l"]);$("bfd").textContent=sel.field=="input"?"固定に戻す":"連投欄にする";$("bfd").classList.toggle("act",sel.field=="input");$("bloc").style.display=sel.field=="input"?"":"none";$("bloc").textContent=sel.local?"ページ専用(単品)":"全体共通";$("bloc").classList.toggle("act",!!sel.local);$("bsc").classList.toggle("act",emode=="scale");$("bmv").style.display=(t||(sel.k=="i"&&!sel.shape))?"":"none";$("blk").style.display=(sel.k=="i"&&!sel.shape)?"":"none";$("blk").textContent=sel.lock?"固定解除":"固定";$("bhl").style.display=t?"":"none";$("bvt").style.display=t?"":"none";$("bvt").classList.toggle("act",!!sel.vert);$("bfs").style.display=t?"":"none";$("bhl").classList.toggle("act",!!sel.halo);$("bvd").style.display=(sel.shape&&emode=="shape")?"":"none";$("bsh").style.display=sel.shape?"":"none";$("bsh").classList.toggle("act",emode=="shape");$("opg").style.display=sel.shape?"none":"contents";if(t){["ex","bmv","bsz","bsc","bgz"].forEach(i=>$(i).style.display="none")}if(sel.shape)shpUI();$("bmv").classList.toggle("act",emode=="move");$("bsz").classList.toggle("act",emode=="size");
+  const t=sel.k=="t";$("ex").style.display=$("bmv").style.display=$("bsz").style.display=$("bsc").style.display=$("bfd").style.display=$("bac").style.display=t?"":"none";$("bac").textContent="基準:"+({l:"左",c:"中央",r:"右"}[sel.anc||"l"]);$("bfd").textContent=sel.field=="input"?"固定に戻す":"連投欄にする";$("bfd").classList.toggle("act",sel.field=="input");$("bloc").style.display=sel.field=="input"?"":"none";$("bloc").textContent=sel.local?"ページ専用(単品)":"全体共通";$("bloc").classList.toggle("act",!!sel.local);$("bsc").classList.toggle("act",emode=="scale");$("bmv").style.display=(t||(sel.k=="i"&&!sel.shape))?"":"none";$("blk").style.display=(sel.k=="i"&&!sel.shape)?"":"none";$("blk").textContent=sel.lock?"固定解除":"固定";$("bhl").style.display=t?"":"none";$("bvt").style.display=t?"":"none";$("bff").style.display=t&&!sel.ring?"":"none";$("bvt").classList.toggle("act",!!sel.vert);$("bfs").style.display=t?"":"none";$("bhl").classList.toggle("act",!!sel.halo);$("bvd").style.display=(sel.shape&&emode=="shape")?"":"none";$("bsh").style.display=sel.shape?"":"none";$("bsh").classList.toggle("act",emode=="shape");$("opg").style.display=sel.shape?"none":"contents";if(t){["ex","bmv","bsz","bsc","bgz"].forEach(i=>$(i).style.display="none")}if(sel.shape)shpUI();$("bmv").classList.toggle("act",emode=="move");$("bsz").classList.toggle("act",emode=="size");
   $("sz").value=sel.k=="i"?sel.w*100:sel.s*700-4;$("sx").value=(sel.sx||1)*100;$("sy").value=(sel.sy||1)*100;
 }
 const pgList=()=>tplEdit?tplEdit.pgs:pages;
@@ -554,6 +571,7 @@ ec.onpointerdown=e=>{
     if(sel&&sel.k=="t"&&emode=="move"){const h=hit(e);if(h===sel){drag=[q[0]-sel.a,q[1]-sel.b];moved=false;dp={x:e.clientX,y:e.clientY};tapEdit=true;paint();return}}
     if(sel){sel=null;emode=null;setHint();syncPanel()}dimSt={c:col,w:.004,p:[q,q]};paint();return}
   if(mode=="pen"){
+    {const hT=!ruler.on?hit(e):null;if(hT&&hT.k=="t"&&!hT.field&&!(hT.k=="i")){clearTimeout(lpT);dp={x:e.clientX,y:e.clientY};moved=false;lpT=setTimeout(()=>{lpT=null;if(!st)return;st=null;if(navigator.vibrate)navigator.vibrate(12);setMode("text");sel=hT;setEmode("move");drag=[q[0]-hT.a,q[1]-hT.b];lift=hT;tapEdit=false;syncPanel();paint()},380)}}
     const A=ang(cur),dw=(A%180==0?baseW:baseW*ec.height/ec.width),z=ruler.on?rulerHit(e):null;
     if(z&&z.zone=="body"){rdrag=[q[0]-ruler.a,q[1]-ruler.b];paint();return}
     st={c:col,w:(+$("wd").value)*(hl?3.2:1)/dw,p:[q]};if(hl)st.hl=true;
@@ -714,6 +732,10 @@ $("pi").onchange=$("pf").onchange=async e=>{const f=e.target.files[0];e.target.v
 
 function vpCenter(){const r=ec.getBoundingClientRect(),w=wrap.getBoundingClientRect(),A=ang(cur),cx=clamp(((w.left+w.width/2)-r.left)/r.width,.05,.95),cy=clamp(((w.top+w.height/2)-r.top)/r.height,.05,.95);return toUnrot(cx,cy,A)}
 function newText(q){const z=Math.max(1,ec.getBoundingClientRect().width/baseW),it={k:"t",a:q[0],b:q[1],str:"テキスト",s:Math.max(.01,.03/z),c:col,rot:0,sx:1,sy:1};addItem(it);sel=it;syncPanel();emode="move";setHint();syncPanel();paint()}
+// v159 サイズの＋−(長押しで連続・細かく)
+(function(){const dof=(k,f)=>{if(!sel)return;if(k=="sz"){if(sel.k=="i")sel.w=Math.max(.01,sel.w*f);else sel.s=Math.max(.0012,sel.s*f)}else if(k=="sx")sel.sx=Math.max(.05,(sel.sx||1)*f);else if(k=="sy")sel.sy=Math.max(.05,(sel.sy||1)*f);if(sel.cell&&sel.k=="t"&&k=="sz"){}paint()};
+  document.querySelectorAll(".szs button").forEach(b=>{let t=null,iv=null;const k=b.dataset.z,f=b.dataset.f=="1"?1.01:1/1.01,stop=()=>{if(t==null&&iv==null)return;clearTimeout(t);clearInterval(iv);t=iv=null;syncPanel()};
+    b.onpointerdown=e=>{e.preventDefault();dof(k,f);t=setTimeout(()=>{t=null;iv=setInterval(()=>dof(k,f),45)},380);try{b.setPointerCapture(e.pointerId)}catch(_){}};["onpointerup","onpointercancel","onpointerleave"].forEach(ev=>b[ev]=stop)})})();
 $("sx").oninput=()=>{if(sel){sel.sx=+$("sx").value/100;paint()}};
 $("sy").oninput=()=>{if(sel){sel.sy=+$("sy").value/100;paint()}};
 $("cc").oninput=()=>{hl=false;mkSync();col=$("cc").value;colPick=true;document.querySelectorAll(".col").forEach(x=>x.classList.remove("on"));if(sel&&sel.k=="t"){sel.c=col;paint()}};
@@ -1075,7 +1097,7 @@ function clearText(){
   sheet("このページに追加した文字を全て消しますか?",[["消す",()=>{endEdit();cur.items=cur.items.filter(i=>i.k!="t");if(sel&&sel.k=="t"){sel=null;emode=null;setHint();syncPanel()}paint();toast("文字を全て消しました")}]])}
 
 let cT=null;
-const sigOf=pg=>pg.strokes.length+"|"+pg.items.map(i=>[i.a,i.b,i.rot,i.w,i.s,i.sx,i.sy,i.c,i.str,i.field,i.off,i.lock,i.halo,i.vert,i.s0,i.cell?[i.cell.x0,i.cell.x1,i.cell.y0,i.cell.y1].join():"",i.arr?i.arr.map(t=>t.t.join()).join("/"):"",i.shape?[i.shape.m,i.shape.c,i.shape.wd,i.shape.d,i.shape.rel.join()].join():""].join(",")).join(";");
+const sigOf=pg=>pg.strokes.length+"|"+pg.items.map(i=>[i.a,i.b,i.rot,i.w,i.s,i.sx,i.sy,i.c,i.str,i.field,i.off,i.lock,i.halo,i.vert,i.ff,i.s0,i.cell?[i.cell.x0,i.cell.x1,i.cell.y0,i.cell.y1].join():"",i.arr?i.arr.map(t=>t.t.join()).join("/"):"",i.shape?[i.shape.m,i.shape.c,i.shape.wd,i.shape.d,i.shape.rel.join()].join():""].join(",")).join(";");
 function snapOf(pg){return{sig:sigOf(pg),strokes:pg.strokes.slice(),items:pg.items.map(it=>({it,p:{...it,shape:it.shape?{...it.shape,rel:it.shape.rel.map(r=>r.slice())}:undefined}}))}}
 function commit(){
   if(!cur||editing)return;
@@ -1083,7 +1105,7 @@ function commit(){
   if(sigOf(cur)!==cur._base.sig){(cur._hist=cur._hist||[]).push(cur._base);if(cur._hist.length>80)cur._hist.shift();cur._base=snapOf(cur);cur._redo=[]}}
 function restoreSnap(sn){sel=null;emode=null;
   cur.strokes=sn.strokes.slice();
-  cur.items=sn.items.map(x=>{const p={...x.p};if(!p.shape)delete p.shape;Object.assign(x.it,p);x.it.field=p.field;x.it.lock=p.lock;x.it.halo=p.halo;x.it.vert=p.vert;if(!p.arr)delete x.it.arr;if(!p.cell)delete x.it.cell;return x.it});
+  cur.items=sn.items.map(x=>{const p={...x.p};if(!p.shape)delete p.shape;Object.assign(x.it,p);x.it.field=p.field;x.it.lock=p.lock;x.it.halo=p.halo;x.it.vert=p.vert;x.it.ff=p.ff;if(!p.arr)delete x.it.arr;if(!p.cell)delete x.it.cell;return x.it});
   cur._base=snapOf(cur);setHint();syncPanel();paint()}
 function undoLast(){
   if(xlC)return xlUndo();
@@ -1861,6 +1883,7 @@ $("bvd").onclick=()=>{
   if(R.length<=3)return toast("三角形より減らせません");
   R.splice(shLast>=0&&shLast<R.length?shLast:R.length-1,1);shLast=-1;bakeShape(sel,cur,R.map(v=>[sel.a+v[0],sel.b+v[1]]));paint();toast("頂点を減らしました")};
 $("blk").onclick=()=>{if(!sel)return;sel.lock=!sel.lock;if(sel.lock){sel=null;emode=null;setHint();toast("固定しました。解除は「その他」→「固定した画像を解除」")}syncPanel();paint()};
+$("bff").onclick=ffMenu;
 $("bvt").onclick=()=>{if(sel&&sel.k=="t"){sel.vert=!sel.vert;sel.key=null;syncPanel();paint()}};
 $("bhl").onclick=()=>{if(sel&&sel.k=="t"){sel.halo=!sel.halo;syncPanel();paint()}};
 let dimSt=null,dmL="出入口",dmD=null;
