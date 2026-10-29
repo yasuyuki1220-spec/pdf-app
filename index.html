@@ -158,7 +158,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="custB" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;background:#ecfdf5;border:1.5px solid #34d399;border-radius:12px;padding:8px 10px;margin-bottom:8px"><b id="custBn" style="flex:1;color:#065f46;font-size:15px"></b><button id="custBs" style="border:0;border-radius:9px;padding:7px 12px;background:#059669;color:#fff;font-weight:700">保存</button><button id="custBx" style="border:1px solid #6ee7b7;border-radius:9px;padding:7px 10px;background:#fff;color:#065f46">閉じる</button></div><div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v161</small></div>
+<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v162</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -728,7 +728,7 @@ function dropMenu(anchor,groups){let d=$("dd");if(!d){d=document.createElement("
   const r=anchor.getBoundingClientRect();d.style.display="block";d.style.right=Math.max(8,innerWidth-r.right-4)+"px";d.style.bottom=(innerHeight-r.top+8)+"px";d.scrollTop=0}
 $("eMore").onclick=()=>dropMenu($("eMore"),[
   ["ページ",[["ページを回転",()=>$("rt").click(),"⟳"],...(cur&&cur._undo?[["トリミングを元に戻す",undoCrop,"↶"]]:[]),["全消去(ペン・文字・囲い)…",()=>sheet("このページで全部消すもの",[["ペンの書き込み",()=>$("cl").click()],["テキスト",()=>clearText()],["範囲選択(モザイク・塗り)",()=>clearShapes()]]),"🗑"],...(cur&&cur.items.some(i=>i.lock)?[["固定した画像を解除",()=>{cur.items.forEach(i=>{delete i.lock});paint();toast("固定を解除しました")},"🔓"]]:[])]],
-  ["入力欄・フォーム",[["全空欄認識",()=>xlStart(),"▦"],["編集モード(欄を作る・整える)",()=>smStart(),"✎"],["◉フォーム…",()=>sheet("◉フォーム",[["◉フォーム設置",()=>tgMenu()],["自動認識フォーム",()=>xlStart({m:1})],["◉グループ編集",()=>tgEStart()]]),"◉"],
+  ["入力欄・フォーム",[["全空欄認識",()=>xlStart(),"▦"],["編集モード(欄を作る・整える)",()=>smStart(),"✎"],["フォームコントロール",()=>sheet("フォームコントロール",[["◉フォーム設置",()=>tgMenu()],["自動認識フォーム",()=>xlStart({m:1})],["◉グループ編集",()=>tgEStart()]]),"◉"],
     ...(cur&&files[cur.f]&&files[cur.f].tpl?[["テンプレートの名前を変える",()=>tplRename(files[cur.f].tpl),"🏷"],["テンプレートのPDFを差し替え",()=>{const i=document.createElement("input");i.type="file";i.accept="application/pdf,.pdf,.xlsx,.xlsm";i.onchange=()=>tplReplace2(i.files[0]);i.click()},"⇄"]]:[])]],
   ["設定・ヘルプ",[["Excel読み込み:"+(xlPS?"印刷設定どおり":"幅に合わせる")+" ⇄",()=>{xlPS=!xlPS;try{localStorage.setItem("pdfapp_xlps",xlPS?"1":"0")}catch(_){}toast(xlPS?"Excelは、印刷設定(用紙・倍率・余白)どおりに読み込みます。次に読み込むExcelから変わります":"Excelは、ページの幅に合わせて読み込みます(従来の方式)。次に読み込むExcelから変わります",5000)},"📊"],["説明書",()=>openManual(),"?"]]]]);
 async function addItemFile(f){
