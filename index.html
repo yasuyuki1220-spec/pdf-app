@@ -137,6 +137,16 @@ input[type=range]{accent-color:var(--ac)}
 #dd button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;border:0;background:none;padding:9px 10px;border-radius:9px;font-size:14px;color:inherit}#dd button:active,#dd button:hover{background:var(--ac2,#eef)}#dd .ic{width:20px;text-align:center;opacity:.8;flex:none}
 #sb{gap:4px;flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding:2px 2px}#sb button{padding:5px 9px;font-size:12px;border-radius:8px;white-space:nowrap;flex:none}
 #dab{gap:6px;margin:0 0 4px}#dab button{padding:3px 12px;font-size:20px;border-radius:9px;display:flex;align-items:center}#dab button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+/* v166: iPhone幅でのレイアウト崩れ対策(編集画面の上部バー・ホームの下部ドック) */
+.sub{text-wrap:balance}
+.top{gap:4px;flex-wrap:nowrap}.top>*{flex:none}.top .tb{white-space:nowrap}.top #ok{white-space:nowrap;margin-left:2px}
+@media(max-width:440px){
+.top>span{gap:3px!important}.top .tb{padding:8px 9px}#un,#re{padding:8px 8px}.pgn .tb{padding:6px 7px}#pgl{min-width:34px;font-size:12px}
+#zOut,#zIn{padding:8px 7px;font-size:13px}.top #ok{padding:8px 10px;font-size:13px}
+.dock:not(.ed){left:6px;right:6px;padding:4px}.dock:not(.ed) .d{font-size:9.5px;letter-spacing:-.04em;padding:8px 0;border-radius:14px}
+}
+@media(max-width:389px){#zOut,#zIn{padding:8px 5px}.top #ok{padding:8px 8px;font-size:12px}}
+@media(max-width:360px){#zOut,#zIn{display:none!important}}
 </style></head><body>
 <svg style="display:none"><defs>
 <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
@@ -158,7 +168,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="custB" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;background:#ecfdf5;border:1.5px solid #34d399;border-radius:12px;padding:8px 10px;margin-bottom:8px"><b id="custBn" style="flex:1;color:#065f46;font-size:15px"></b><button id="custBs" style="border:0;border-radius:9px;padding:7px 12px;background:#059669;color:#fff;font-weight:700">保存</button><button id="custBx" style="border:1px solid #6ee7b7;border-radius:9px;padding:7px 10px;background:#fff;color:#065f46">閉じる</button></div><div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v165</small></div>
+<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v166</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
