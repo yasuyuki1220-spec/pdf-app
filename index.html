@@ -147,6 +147,10 @@ input[type=range]{accent-color:var(--ac)}
 }
 @media(max-width:389px){#zOut,#zIn{padding:8px 5px}.top #ok{padding:8px 8px;font-size:12px}}
 @media(max-width:360px){#zOut,#zIn{display:none!important}}
+/* v168: 大きさパネルが狭い画面でつぶれてスライダーが見えなかったのを修正(1行に「名前・スライダー・−＋」) */
+#szp[style*="flex"]{display:grid!important;grid-template-columns:1fr auto;align-items:center;column-gap:8px;row-gap:6px}
+#szp label{display:grid!important;grid-template-columns:3.4em 1fr;align-items:center;gap:6px}#szp label input{min-width:60px}
+#szp .szs{display:flex;gap:6px}#szp .szs button{width:44px;height:36px;border:0;border-radius:10px;background:var(--card);box-shadow:var(--sh);font-size:18px;font-weight:700}
 /* v166: 下から出るシートに「つまみ」をつけて、閉じられる感じを出す */
 #sh::before,#tm .box::before,#fn .box::before,#bx .box::before,#tl .box::before,#cuL .box::before,#tf .box::before,#ts .box::before,#to .box::before,#dm .box::before,#cm .box::before{content:"";display:block;width:38px;height:5px;border-radius:3px;background:var(--bd);margin:-4px auto 10px}
 #dd .g{font-size:11px;letter-spacing:.04em}#dd button{min-height:42px}
@@ -173,7 +177,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="custB" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;background:#ecfdf5;border:1.5px solid #34d399;border-radius:12px;padding:8px 10px;margin-bottom:8px"><b id="custBn" style="flex:1;color:#065f46;font-size:15px"></b><button id="custBs" style="border:0;border-radius:9px;padding:7px 12px;background:#059669;color:#fff;font-weight:700">保存</button><button id="custBx" style="border:1px solid #6ee7b7;border-radius:9px;padding:7px 10px;background:#fff;color:#065f46">閉じる</button></div><div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v167</small></div>
+<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v168</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -327,7 +331,7 @@ function drawMarks(x,pg,cw,ch,extra){
     if(it.field=="toggle"&&it.off){const gd=onE&&(smOn||(fillInst&&!(it.grp&&pg.items.some(o=>o!==it&&o.field=="toggle"&&o.grp===it.grp&&!o.off))));if(it.ring&&gd){x.strokeStyle=smOn?"rgba(124,58,237,.7)":"rgba(124,58,237,.4)";x.lineWidth=Math.max(1,cwU/550);x.beginPath();x.ellipse(0,0,dw/2,dh/2,0,0,7);x.stroke()}else if(gd&&it===sel){x.strokeStyle="#7c3aed";x.lineWidth=Math.max(1.2,cwU/450);x.setLineDash([4,3]);const m=Math.min(dw,dh)*.7;x.strokeRect(-m/2,-m/2,m,m);x.setLineDash([])}}else if(cl&&it.ph){}else if(it.k=="t")vecText(x,it,bm,dw,dh);else x.drawImage(bm,-dw/2,-dh/2,dw,dh);
     if(isIn&&!cl&&!fl0&&(it.ph||smOn||tplEdit)){x.strokeStyle="rgba(217,119,6,.6)";x.lineWidth=pxr;x.setLineDash([4*pxr,3*pxr]);x.strokeRect(-dw/2-pd,-dh/2-pd,dw+2*pd,dh+2*pd);x.setLineDash([]);
       if(it.no){const rr=Math.max(4,cwU/125),bx=-dw/2-pd-rr*.15,by=-dh/2-pd-rr*.15;x.fillStyle="rgba(245,158,11,.5)";x.beginPath();x.arc(bx,by,rr,0,7);x.fill();x.fillStyle="#fff";x.font="bold "+rr*1.25+"px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText(LT(it.no),bx,by)}}
-    if(it===sel&&x.canvas.id=="ec"&&!cl&&!fl0){x.lineWidth=Math.max(2,cwU/250);x.strokeStyle=emode=="size"?"#16a34a":emode=="scale"?"#f59e0b":emode=="move"?"#e11d48":"#2563eb";x.setLineDash(emode?[]:[6,4]);x.strokeRect(-w/2,-h/2,w,h);if(emode=="size"||emode=="scale"){x.fillStyle=emode=="size"?"#16a34a":"#f59e0b";x.beginPath();x.arc(w/2,h/2,hr(),0,7);x.fill()}if(it.k=="t"&&!it.field&&!editing&&!it.cell){const rr=hr()*1.1;x.setLineDash([]);x.fillStyle="#16a34a";x.beginPath();x.arc(w/2,h/2,rr,0,7);x.fill()}}
+    if(it===sel&&x.canvas.id=="ec"&&!cl&&!fl0){x.lineWidth=Math.max(2,cwU/250);x.strokeStyle=emode=="size"?"#16a34a":emode=="scale"?"#f59e0b":emode=="move"?"#e11d48":"#2563eb";x.setLineDash(emode?[]:[6,4]);x.strokeRect(-w/2,-h/2,w,h);if(emode=="size"||emode=="scale"){x.fillStyle=emode=="size"?"#16a34a":"#f59e0b";x.beginPath();x.arc(w/2,h/2,hr(),0,7);x.fill()}if((it.k=="t"&&!it.field&&!editing&&!it.cell)||(it.k=="i"&&!it.lock&&!it.shape)){const rr=hr()*1.1;x.setLineDash([]);x.fillStyle="#16a34a";x.beginPath();x.arc(w/2,h/2,rr,0,7);x.fill()}}
     x.restore();
     if(cl&&!(smOn&&it.dg)&&(smOn?true:(it.ph&&it===sel)))LB.push(it);if(cl&&smOn&&!smTry&&it.ph)SM.push(it);
     if(it===sel&&x.canvas.id=="ec"&&it.k=="t"&&(!it.field||tplEdit)&&it.cell&&!editing){const b=cellBR(it,pg),rr=hr()*1.1;x.save();x.setLineDash([]);x.fillStyle="#16a34a";x.beginPath();x.arc(b.u*cw,b.v*ch,rr,0,7);x.fill();x.restore()}
@@ -602,6 +606,7 @@ ec.onpointerdown=e=>{
     moved=false;tapEdit=false;createTap=null;dp={x:e.clientX,y:e.clientY};
     if(emode=="shape"&&sel&&sel.shape&&(shI=shapeHit(e))>=0){shLast=shI;shOff=[q[0]-(sel.a+sel.shape.rel[shI][0]),q[1]-(sel.b+sel.shape.rel[shI][1])]}
     else if(emode=="shape"&&sel&&sel.shape&&addVertexAt(e,q)){}
+    else if(sel&&sel.k=="i"&&!sel.lock&&!sel.shape&&cornerHit(e,sel)){rz=sel;rzm="iscale";const L0=loc(e,sel);rz0={w:sel.w,d:Math.max(1,Math.hypot(L0.lx,L0.ly))}}// v168: 画像は右下の●をドラッグで拡大・縮小
     else if(sel&&sel.k=="t"&&(!sel.field||tplEdit)&&(rzm=cornerHit(e,sel))){rz=sel;if(!sel.field&&!sel.cell){const L0=loc(e,sel);rzm="scale";rz0={s:sel.s,d:Math.max(1,Math.hypot(L0.lx,L0.ly))}}else rz0=rzStart(sel,q)}
     else if((emode=="size"||emode=="scale")&&sel&&sel.k=="t"&&hitHandle(e,sel)){rz=sel;rz0=null;if(emode=="scale"){const L=loc(e,sel);rz0={s:sel.s,d:Math.max(1,Math.hypot(L.lx,L.ly))}}}
     else if(emode=="move"&&sel&&sel.k=="t"&&(!h||h===sel)){drag=[q[0]-sel.a,q[1]-sel.b];tapEdit=(h===sel);mvExit=true;}
@@ -764,8 +769,8 @@ function vpCenter(){const r=ec.getBoundingClientRect(),w=wrap.getBoundingClientR
 function newText(q){const z=Math.max(1,ec.getBoundingClientRect().width/baseW),it={k:"t",a:q[0],b:q[1],str:"テキスト",s:Math.max(.01,.03/z),c:col,rot:0,sx:1,sy:1};addItem(it);sel=it;syncPanel();emode="move";setHint();syncPanel();paint()}
 // v159 サイズの＋−(長押しで連続・細かく)
 (function(){const dof=(k,f)=>{if(!sel)return;if(k=="sz"){if(sel.k=="i")sel.w=Math.max(.01,sel.w*f);else sel.s=Math.max(.0012,sel.s*f)}else if(k=="sx")sel.sx=Math.max(.05,(sel.sx||1)*f);else if(k=="sy")sel.sy=Math.max(.05,(sel.sy||1)*f);if(sel.cell&&sel.k=="t"&&k=="sz"){}paint()};
-  document.querySelectorAll(".szs button").forEach(b=>{let t=null,iv=null;const k=b.dataset.z,f=b.dataset.f=="1"?1.01:1/1.01,stop=()=>{if(t==null&&iv==null)return;clearTimeout(t);clearInterval(iv);t=iv=null;syncPanel()};
-    b.onpointerdown=e=>{e.preventDefault();dof(k,f);t=setTimeout(()=>{t=null;iv=setInterval(()=>dof(k,f),45)},380);try{b.setPointerCapture(e.pointerId)}catch(_){}};["onpointerup","onpointercancel","onpointerleave"].forEach(ev=>b[ev]=stop)})})();
+  document.querySelectorAll(".szs button").forEach(b=>{let t=null,iv=null;const k=b.dataset.z,f=b.dataset.f=="1"?1.05:1/1.05,f2=b.dataset.f=="1"?1.015:1/1.015,stop=()=>{if(t==null&&iv==null)return;clearTimeout(t);clearInterval(iv);t=iv=null;syncPanel()};
+    b.onpointerdown=e=>{e.preventDefault();dof(k,f);t=setTimeout(()=>{t=null;iv=setInterval(()=>dof(k,f2),45)},380);try{b.setPointerCapture(e.pointerId)}catch(_){}};["onpointerup","onpointercancel","onpointerleave"].forEach(ev=>b[ev]=stop)})})();
 $("sx").oninput=()=>{if(sel){sel.sx=+$("sx").value/100;paint()}};
 $("sy").oninput=()=>{if(sel){sel.sy=+$("sy").value/100;paint()}};
 $("cc").oninput=()=>{hl=false;mkSync();col=$("cc").value;colPick=true;document.querySelectorAll(".col").forEach(x=>x.classList.remove("on"));if(sel&&sel.k=="t"){sel.c=col;paint()}};
@@ -860,6 +865,7 @@ function cornerHit(e,it){
 function rzStart(it,q){ensureCell(it,cur);const b=cellBR(it,cur);return{cell:1,c:{...it.cell},s0:it.s0||it.s,q0:q,hx:b.hx,hy:b.hy,W:cur.W,H:cur.H,A:ang(cur)}}
 function hitHandle(e,it){const L=loc(e,it);return Math.hypot(L.lx-L.bw*(it.sx||1)/2,L.ly-L.bh*(it.sy||1)/2)<hitR()+8}
 function resizeBy(e){const it=rz;
+  if(rzm=="iscale"&&rz0&&rz0.w){const L=loc(e,it);it.w=clamp(rz0.w*Math.hypot(L.lx,L.ly)/rz0.d,.02,1.5);moved=true;syncPanel();paint();return}
   if(rz0&&rz0.cell){const q=pt(e),c=rz0.c,W=rz0.W,H=rz0.H,A=rz0.A,w0=(c.x1-c.x0)*W,h0=(c.y1-c.y0)*H,gw=(q[0]-rz0.q0[0])*W*(rz0.hx?1:-1),gh=(q[1]-rz0.q0[1])*H*(rz0.hy?1:-1),sw=A%180==0,ax=Math.abs(sw?gw:gh),ay=Math.abs(sw?gh:gw);
     let md="d";if(ay<ax*.42)md=sw?"w":"h";else if(ax<ay*.42)md=sw?"h":"w";
     let w=w0,h=h0,s0=rz0.s0;if(md=="w")w=Math.max(8,w0+gw);else if(md=="h")h=Math.max(5,h0+gh);else{const f=clamp(((w0+gw)/w0+(h0+gh)/h0)/2,.15,8);w=w0*f;h=h0*f;s0=rz0.s0*f}
