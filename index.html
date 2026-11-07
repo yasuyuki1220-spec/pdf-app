@@ -199,7 +199,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="custB" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;background:#ecfdf5;border:1.5px solid #34d399;border-radius:12px;padding:8px 10px;margin-bottom:8px"><b id="custBn" style="flex:1;color:#065f46;font-size:15px"></b><button id="custBs" style="border:0;border-radius:9px;padding:7px 12px;background:#059669;color:#fff;font-weight:700">保存</button><button id="custBx" style="border:1px solid #6ee7b7;border-radius:9px;padding:7px 10px;background:#fff;color:#065f46">閉じる</button></div><div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v172</small></div>
+<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v173</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -2263,6 +2263,9 @@ function xlDvMake(pgs,xm){let n=0,no=0;const inst="xd"+Date.now(),LB={};
       if(c.val!=null&&c.val!==""){it.str=String(c.val);it.ph=false}
       fitItem(it,pg);pg.items.push(it);n++})}));if(xlDvMake.nf){fxOn=true;try{fxRecalc()}catch(_){}}return n}
 function xlLabel(c,texts){
+  // v173: 薄い「印」の文字だけが入った印鑑欄は、すぐ上の見出し(「担当者」「店長」など)を名前にする
+  {const own=texts.find(t=>/^[印㊞]$/.test(t.s)&&t.x+t.w/2>c.x0&&t.x+t.w/2<c.x1&&t.y+t.h/2>c.y0&&t.y+t.h/2<c.y1);
+   if(own){let up=null,ud=60;texts.forEach(t=>{const tx=t.x+t.w/2,ty=t.y+t.h/2;if(t!==own&&tx>c.x0&&tx<c.x1&&ty>=c.y1-1){const d=ty-c.y1;if(d<ud){ud=d;up=t}}});return up?up.s.slice(0,12):"印"}}
   const cy=(c.y0+c.y1)/2;let best=null,bd=1e9;
   texts.forEach(t=>{const tcx=t.x+t.w/2,tcy=t.y+t.h/2;if(tcy>c.y0&&tcy<c.y1&&t.x+t.w<=c.x0+2){const d=c.x0-(t.x+t.w);if(d<160&&d<bd){bd=d;best=t}}});
   if(!best){texts.forEach(t=>{const tcx=t.x+t.w/2,tcy=t.y+t.h/2;if(tcx>c.x0&&tcx<c.x1&&tcy>=c.y1-1){const d=tcy-c.y1;if(d<60&&d<bd){bd=d;best=t}}})}
@@ -2531,7 +2534,7 @@ async function xlStart(o){
   const cells=[];
   if(!f.xl&&RC&&RC.cells.length)RC.cells.forEach(c=>cells.push(c));else r.cells.filter(c=>c.empty).forEach(c=>cells.push({x0:c.x0,y0:c.y0,x1:c.x1,y1:c.y1,on:true,lbl:xlLabel(c,r.texts),ch:c.dv,val:c.val,ad:c.ad,sh:c.sh,calc:c.calc}));
   // v172: Excelでも画像で枠を探し、表の情報で拾えなかった枠(図形で描いた印鑑欄など)だけを足す
-  if(f.xl&&RC&&RC.cells.length){const MC=r.cells.filter(c=>c.empty),TX=r.texts||[];RC.cells.forEach(c=>{const cx=(c.x0+c.x1)/2,cy=(c.y0+c.y1)/2;if(MC.some(q=>cx>q.x0-1&&cx<q.x1+1&&cy>q.y0-1&&cy<q.y1+1))return;if(TX.some(t=>{const tx=t.x+t.w/2,ty=t.y+t.h/2;return tx>c.x0&&tx<c.x1&&ty>c.y0&&ty<c.y1}))return;cells.push(c)})}
+  if(f.xl&&RC&&RC.cells.length){const MC=r.cells.filter(c=>c.empty),TX=r.texts||[],SH=r.shapes||[];RC.cells.forEach(c=>{const cx=(c.x0+c.x1)/2,cy=(c.y0+c.y1)/2;if(!c.dg&&!SH.some(q=>cx>=q.x0&&cx<=q.x1&&cy>=q.y0&&cy<=q.y1))return;if(MC.some(q=>cx>q.x0-1&&cx<q.x1+1&&cy>q.y0-1&&cy<q.y1+1))return;if(TX.some(t=>{const tx=t.x+t.w/2,ty=t.y+t.h/2;return tx>c.x0&&tx<c.x1&&ty>c.y0&&ty<c.y1}))return;cells.push(c)})}
   r.widgets.filter(w=>w.kind=="tx").forEach(w=>cells.push({x0:w.x0,y0:w.y0,x1:w.x1,y1:w.y1,on:true,lbl:(w.name||"").slice(0,12)}));
   const marks=r.marks.map(m=>({kind:m.kind,cx:m.cx,cy:m.cy,size:m.size,on:!!m.on}));if(RC)RC.marks.forEach(m=>{if(!marks.some(q=>Math.hypot(q.cx-m.cx,q.cy-m.cy)<m.size))marks.push(m)});
   r.widgets.filter(w=>w.kind=="btn").forEach(w=>marks.push({kind:w.radio?"c":"s",cx:(w.x0+w.x1)/2,cy:(w.y0+w.y1)/2,size:Math.max(w.x1-w.x0,w.y1-w.y0),on:w.on}));
@@ -2796,9 +2799,13 @@ async function xShapes(zip,rd,d,sp,cxAt,ryAt,thClr){
       const x0=cxAt(n(fr,"xdr:col"),n(fr,"xdr:colOff")),y0=ryAt(n(fr,"xdr:row"),n(fr,"xdr:rowOff"));let x1,y1;
       if(to){x1=cxAt(n(to,"xdr:col"),n(to,"xdr:colOff"));y1=ryAt(n(to,"xdr:row"),n(to,"xdr:rowOff"))}else{const ex=ch(an,"xdr:ext");if(!ex)continue;x1=x0+(+ex.getAttribute("cx"))/12700;y1=y0+(+ex.getAttribute("cy"))/12700}
       const o={x0,y0,x1,y1,nodeName:el.nodeName};const spPr=g(el,"xdr:spPr"),xf=spPr&&g(spPr,"a:xfrm");o.flipH=xf&&xf.getAttribute("flipH")=="1";o.flipV=xf&&xf.getAttribute("flipV")=="1";
-      if(el.nodeName=="xdr:pic"){const bl=g(el,"a:blip"),id=bl&&(bl.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships","embed")||bl.getAttribute("r:embed")),tg=drel[id];if(!tg)continue;
-        const mp=tg.startsWith("/")?tg.slice(1):"xl/"+tg.replace(/^\.\.\//,""),f=zip.file(mp);if(!f)continue;const ext=(mp.split(".").pop()||"").toLowerCase();if(!/^(png|jpe?g|gif|bmp|webp)$/.test(ext))continue;
-        try{o.img=await createImageBitmap(new Blob([await f.async("uint8array")],{type:"image/"+(ext=="jpg"?"jpeg":ext)}))}catch(e){continue}out.push(o);continue}
+      if(el.nodeName=="xdr:pic"){const bl=g(el,"a:blip"),id=bl&&(bl.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships","embed")||bl.getAttribute("r:embed")),tg=drel[id];
+        // v173: 「カメラ機能」(他シートの範囲を画像として貼ったもの)は、元の範囲を覚えておく(EMFなど読めない画像でも、元の範囲から描き直す)
+        {const ce=[...el.getElementsByTagName("*")].find(e=>e.localName=="cameraTool"),cr=ce&&ce.getAttribute("cellRange"),m=cr&&/^(?:'((?:[^']|'')+)'|([^!]+))!\$?([A-Z]+)\$?(\d+)(?::\$?([A-Z]+)\$?(\d+))?$/.exec(cr.trim());
+          if(m){const a=xRef(m[3]+m[4]),b=m[5]?xRef(m[5]+m[6]):a;if(a&&b)o.cam={sheet:(m[1]||m[2]).replace(/''/g,"'"),r0:Math.min(a[0],b[0]),c0:Math.min(a[1],b[1]),r1:Math.max(a[0],b[0]),c1:Math.max(a[1],b[1])}}}
+        if(!tg){if(o.cam)out.push(o);continue}
+        const mp=tg.startsWith("/")?tg.slice(1):"xl/"+tg.replace(/^\.\.\//,""),f=zip.file(mp);if(!f){if(o.cam)out.push(o);continue}const ext=(mp.split(".").pop()||"").toLowerCase();if(!/^(png|jpe?g|gif|bmp|webp)$/.test(ext)){if(o.cam)out.push(o);continue}
+        try{o.img=await createImageBitmap(new Blob([await f.async("uint8array")],{type:"image/"+(ext=="jpg"?"jpeg":ext)}))}catch(e){if(o.cam)out.push(o);continue}out.push(o);continue}
       const geom=spPr&&g(spPr,"a:prstGeom");o.prst=geom?geom.getAttribute("prst"):"rect";
       const st=g(el,"xdr:style");let fill=undefined,ln=undefined,lw=1;
       if(spPr)[...spPr.children].forEach(c=>{if(c.nodeName=="a:solidFill")fill=clr(c);else if(c.nodeName=="a:noFill")fill=null;else if(c.nodeName=="a:ln"){const w=c.getAttribute("w");if(w)lw=+w/12700;const f=ch(c,"a:solidFill");ln=ch(c,"a:noFill")?null:f?clr(f):undefined}});
@@ -2846,6 +2853,53 @@ async function xlsxToPdf(file){
   const dvRead=async d=>{const R=[];for(const e of [...d.getElementsByTagName("*")].filter(e=>e.localName=="dataValidation")){if(e.getAttribute("type")!="list")continue;
       const f1=[...e.getElementsByTagName("*")].find(x=>x.localName=="formula1"),sq=e.getAttribute("sqref")||([...e.getElementsByTagName("*")].find(x=>x.localName=="sqref")||{}).textContent||"";if(!f1||!sq)continue;
       const list=await dvList(f1.textContent,d);if(!list||!list.length)continue;const rg=sq.trim().split(/\s+/).map(t=>{const [a,b]=t.split(":"),p=xRef(a),q=xRef(b||a);return p&&q?[Math.min(p[0],q[0]),Math.min(p[1],q[1]),Math.max(p[0],q[0]),Math.max(p[1],q[1])]:null}).filter(Boolean);R.push({rg,list})}return R};
+  // v173: 他シートの範囲を、そのまま(罫線・塗り・文字つきで)描く。カメラ機能の画像の代わりに使う
+  const camCache={};
+  const camSheet=async n=>{if(n in camCache)return camCache[n];camCache[n]=null;const dd=await dvDoc(n);if(!dd)return null;
+    const fmt=dd.getElementsByTagName("sheetFormatPr")[0],dcw=parseFloat(xAttr(fmt,"defaultColWidth"))||8.43,drh=parseFloat(xAttr(fmt,"defaultRowHeight"))||15,cw={},rh={},cells=new Map();
+    [...dd.getElementsByTagName("col")].forEach(c=>{const a=+c.getAttribute("min")-1,b=Math.min(+c.getAttribute("max")-1,200),w=parseFloat(c.getAttribute("width"))||dcw,hid=c.getAttribute("hidden")=="1";for(let i=a;i<=b;i++)cw[i]=hid?0:w});
+    [...dd.getElementsByTagName("row")].forEach(r=>{const ri=+r.getAttribute("r")-1;if(r.getAttribute("ht"))rh[ri]=parseFloat(r.getAttribute("ht"));if(r.getAttribute("hidden")=="1")rh[ri]=0;
+      [...r.getElementsByTagName("c")].forEach(c=>{const p=xRef(c.getAttribute("r"));if(!p)return;const t=c.getAttribute("t"),st=+c.getAttribute("s")||0,vE=c.getElementsByTagName("v")[0];let v="";
+        if(t=="s")v=ss[+xTxt(vE)]||"";else if(t=="inlineStr")v=[...c.getElementsByTagName("t")].map(e=>e.textContent).join("");else if(t=="b")v=xTxt(vE)=="1"?"TRUE":"FALSE";else if(vE){v=xTxt(vE);if(t!="str"&&t!="e")v=xFmt(v,xfs[st]||dflt,fm)}
+        cells.set(p[0]+","+p[1],{v,s:st,ad:c.getAttribute("r")})})});
+    const merges=[...dd.getElementsByTagName("mergeCell")].map(m=>{const [a,b]=(m.getAttribute("ref")||"").split(":"),p=xRef(a),q=xRef(b||a);return p&&q?{r0:p[0],c0:p[1],r1:q[0],c1:q[1]}:null}).filter(Boolean);
+    return camCache[n]={cw,rh,dcw,drh,cells,merges}};
+  const CAMLW={thin:.5,hair:.3,medium:1.3,thick:2.2,double:1.3,dashed:.6,dotted:.6,dashDot:.6,mediumDashed:1.3};
+  const camDraw=async(cam,dw,dh,T)=>{const Sx=await camSheet(cam.sheet);if(!Sx||!(dw>=2&&dh>=2))return null;
+    const colW=c=>((Sx.cw[c]!==undefined?Sx.cw[c]:Sx.dcw)*7+5)*.75,rowHt=r=>Sx.rh[r]!==undefined?Sx.rh[r]:Sx.drh,xs=[0],ys=[0];
+    for(let c=cam.c0;c<=cam.c1;c++)xs.push(xs[xs.length-1]+colW(c));for(let r=cam.r0;r<=cam.r1;r++)ys.push(ys[ys.length-1]+rowHt(r));
+    const nw=xs[xs.length-1],nh=ys[ys.length-1];if(!(nw>0&&nh>0))return null;const fx=dw/nw,fy=dh/nh,f=Math.min(fx,fy),PX=c=>xs[c-cam.c0]*fx,PY=r=>ys[r-cam.r0]*fy;
+    const cv=document.createElement("canvas");cv.width=Math.max(2,Math.round(dw*T));cv.height=Math.max(2,Math.round(dh*T));const x=cv.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,cv.width,cv.height);
+    const mAt=new Map(),skip=new Set();Sx.merges.forEach(m=>{if(m.r1<cam.r0||m.r0>cam.r1||m.c1<cam.c0||m.c0>cam.c1)return;mAt.set(m.r0+","+m.c0,m);for(let r=m.r0;r<=m.r1;r++)for(let c=m.c0;c<=m.c1;c++)if(r!=m.r0||c!=m.c0)skip.add(r+","+c)});
+    const bdOf=(r,c)=>{const q=Sx.cells.get(r+","+c);return q?((xfs[q.s]||dflt).border||{}):{}},on=v=>!!v&&v!="none",boxes=[];
+    for(let r=cam.r0;r<=cam.r1;r++)for(let c=cam.c0;c<=cam.c1;c++){const key=r+","+c;if(skip.has(key))continue;const m=mAt.get(key),cell=Sx.cells.get(key)||{v:"",s:0};boxes.push({r0:r,c0:c,r1:m?Math.min(m.r1,cam.r1):r,c1:m?Math.min(m.c1,cam.c1):c,cell,xf:xfs[cell.s]||dflt})}
+    boxes.forEach(b=>{if(b.xf.fill){x.fillStyle=b.xf.fill;x.fillRect(PX(b.c0)*T,PY(b.r0)*T,(PX(b.c1+1)-PX(b.c0))*T,(PY(b.r1+1)-PY(b.r0))*T)}});
+    const texts=[],cells=[],ff="'Hiragino Sans','Yu Gothic','Noto Sans CJK JP','Noto Sans JP',sans-serif";
+    boxes.forEach(b=>{const v=b.cell.v,x0=PX(b.c0)*T,y0=PY(b.r0)*T,w=(PX(b.c1+1)-PX(b.c0))*T,h=(PY(b.r1+1)-PY(b.r0))*T;if(v==="")return;
+      const fo=b.xf.font;let fs=fo.sz*f*T;const pad=2*f*T;let wc=w;if(!b.xf.wrap&&(!b.xf.h||b.xf.h=="general"||b.xf.h=="left")){for(let c=b.c1+1;c<=cam.c1;c++){const o=Sx.cells.get(b.r0+","+c);if(o&&o.v!=="")break;wc=PX(c+1)*T-x0}}x.save();x.beginPath();x.rect(x0,y0,Math.max(1,wc),Math.max(1,h));x.clip();
+      x.font=(fo.b?"bold ":"")+fs+"px "+ff;x.fillStyle=fo.c;x.textBaseline="alphabetic";
+      let lines=String(v).split(/\r?\n/);
+      if(b.xf.wrap){const out=[];lines.forEach(l=>{let cur="";for(const ch of l){if(cur&&x.measureText(cur+ch).width>w-2*pad){out.push(cur);cur=ch}else cur+=ch}out.push(cur)});lines=out}
+      else if(b.xf.shrink){const tw=Math.max(...lines.map(l=>x.measureText(l).width)),av=w-2*pad;if(tw>av&&av>0){fs*=Math.max(.2,av/tw);x.font=(fo.b?"bold ":"")+fs+"px "+ff}}
+      const lh=fs*1.2,tot=lines.length*lh,va=b.xf.v;let al=b.xf.h;if(!al||al=="general")al=/^-?[\d,.]+$/.test(String(v).trim())?"right":"left";
+      const top=va=="top"?y0+pad:va=="center"?y0+(h-tot)/2:y0+h-pad-tot;
+      lines.forEach((l,i)=>{const tw=x.measureText(l).width,tx=(al=="center"||al=="centerContinuous")?x0+(w-tw)/2:al=="right"?x0+w-pad-tw:x0+pad;x.fillText(l,tx,top+i*lh+fs*.95)});
+      x.restore();texts.push({x:x0/T,y:y0/T,w:w/T,h:h/T,s:String(v).replace(/\s+/g," ").trim()})});
+    boxes.forEach(b=>{const x0=PX(b.c0)*T,x1=PX(b.c1+1)*T,y0=PY(b.r0)*T,y1=PY(b.r1+1)*T,B=bdOf(b.r0,b.c0),L=B.left||bdOf(b.r0,b.c0-1).right,Rt=bdOf(b.r0,b.c1).right||bdOf(b.r0,b.c1+1).left,Tp=B.top||bdOf(b.r0-1,b.c0).bottom,Bt=bdOf(b.r1,b.c0).bottom||bdOf(b.r1+1,b.c0).top;
+      const edge=(sty,a,b2,c2,d2)=>{if(!on(sty))return;x.save();x.strokeStyle="#000";x.lineWidth=(CAMLW[sty]||.6)*f*T*1.15;x.setLineDash(/dash|dot/i.test(sty)&&sty!="mediumDashed"?[3*T,2*T]:[]);x.beginPath();x.moveTo(a,b2);x.lineTo(c2,d2);x.stroke();x.restore()};
+      edge(L,x0,y0,x0,y1);edge(Tp,x0,y0,x1,y0);edge(Rt,x1,y0,x1,y1);edge(Bt,x0,y1,x1,y1);
+    });
+    // 線で囲まれた空きの面(役員印の枠など)を探す。線のないセルどうしはつなげて1つの面にする
+    {const own=new Map();boxes.forEach(b=>{for(let r=b.r0;r<=b.r1;r++)for(let c=b.c0;c<=b.c1;c++)own.set(r+","+c,b)});
+     const em=b=>b&&(b.cell.v===""||/^[印㊞]$/.test(String(b.cell.v).trim())),lineR=(r,c)=>own.get(r+","+c)!==own.get(r+","+(c+1))&&(on(bdOf(r,c).right)||on(bdOf(r,c+1).left)),lineB=(r,c)=>own.get(r+","+c)!==own.get((r+1)+","+c)&&(on(bdOf(r,c).bottom)||on(bdOf(r+1,c).top)),seen=new Set();
+     for(let r=cam.r0;r<=cam.r1;r++)for(let c=cam.c0;c<=cam.c1;c++){const k=r+","+c;if(seen.has(k)||!em(own.get(k)))continue;const st=[[r,c]],reg=[];seen.add(k);
+       while(st.length){const [a,b0]=st.pop();reg.push([a,b0]);for(const [na,nc,ln] of [[a,b0+1,lineR(a,b0)],[a,b0-1,lineR(a,b0-1)],[a+1,b0,lineB(a,b0)],[a-1,b0,lineB(a-1,b0)]]){const nk=na+","+nc;if(ln||na<cam.r0||na>cam.r1||nc<cam.c0||nc>cam.c1||seen.has(nk)||!em(own.get(nk)))continue;seen.add(nk);st.push([na,nc])}}
+       let a0=1e9,a1=-1,c0=1e9,c1=-1;reg.forEach(([a,b0])=>{a0=Math.min(a0,a);a1=Math.max(a1,a);c0=Math.min(c0,b0);c1=Math.max(c1,b0)});if(reg.length!=(a1-a0+1)*(c1-c0+1))continue;
+       const w=PX(c1+1)-PX(c0),h=PY(a1+1)-PY(a0);if(w<10||h<7)continue;let nl=0,nr=0,nt=0,nb=0;
+       for(let a=a0;a<=a1;a++){if(on(bdOf(a,c0).left)||on(bdOf(a,c0-1).right))nl++;if(lineR(a,c1))nr++}for(let b0=c0;b0<=c1;b0++){if(on(bdOf(a0,b0).top)||on(bdOf(a0-1,b0).bottom))nt++;if(lineB(a1,b0))nb++}
+       const hh=a1-a0+1,ww=c1-c0+1,Lf=nl>=hh*.8,Rf=nr>=hh*.8,Tf=nt>=ww*.8,Bf=nb>=ww*.8;
+       if(Lf+Rf+Tf+Bf>=3||(Bf&&!Lf&&!Rf&&!Tf&&w>=40))cells.push({x0:PX(c0),y0:PY(a0),x1:PX(c1+1),y1:PY(a1+1),ad:xCol2(c0)+(a0+1)})}}
+    return{canvas:cv,texts,cells}};
   // v172: 他のシートを参照する式を読む準備(シートの番号・表示/非表示、他シートから参照されているセル)
   const SHL=[...wb.getElementsByTagName("sheet")],shIdx={},shVis={},XREF=new Set(),PROXY=new Map();SHL.forEach((e,i)=>{const n=e.getAttribute("name");shIdx[n]=i;shVis[n]=!(xAttr(e,"state")&&xAttr(e,"state")!="visible")});
   for(const e of SHL){let dd=null;try{dd=await dvDoc(e.getAttribute("name"))}catch(_){}if(!dd)continue;const SF2={};
@@ -2899,6 +2953,7 @@ async function xlsxToPdf(file){
     const mAt=new Map(),skip=new Set();merges.forEach(m=>{mAt.set(m.r0+","+m.c0,m);for(let r=m.r0;r<=m.r1;r++)for(let c=m.c0;c<=m.c1;c++)if(r!=m.r0||c!=m.c0)skip.add(r+","+c)});
     const cxAt=(c,o)=>{let v=c<cx.length?cx[c]:cx[cx.length-1];if(c>=cx.length)for(let i=cx.length-1;i<c;i++)v+=colW(i);return v+o/12700},ryAt=(r,o)=>{let v=r<ry.length?ry[r]:ry[ry.length-1];if(r>=ry.length)for(let i=ry.length-1;i<r;i++)v+=rowHt(i);return v+o/12700};
     const shapes=(await xShapes(zip,rd,d,sp,cxAt,ryAt,thClr)).filter(s=>s.x1>0&&s.y1>0&&s.x0<cx[maxC+1]&&s.y0<ry[maxR+1]);
+    for(const s of shapes)if(s.cam){try{const cr=await camDraw(s.cam,s.x1-s.x0,s.y1-s.y0,4);if(cr){s.camR=cr;s.img=cr.canvas}}catch(e){}}
     // ページ分割
     const cwid=cx[maxC+1];let M=28,ML=28,MT=28,MB=28,ls=cwid>595-2*M,pw=ls?842:595,ph=ls?595:842,k=Math.min((pw-2*M)/cwid,1.3,pa?(ph-2*M)/ry[maxR+1]:9);
     {const PS=d.getElementsByTagName("pageSetup")[0],PM=d.getElementsByTagName("pageMargins")[0];
@@ -2942,10 +2997,13 @@ async function xlsxToPdf(file){
       const edge=(sty,x1,y1,x2,y2)=>{if(!sty)return;x.save();x.strokeStyle="#000";x.lineWidth=(LW[sty]||.6)*k*S*1.15;x.setLineDash(/dash|dot/i.test(sty)&&sty!="mediumDashed"?[3*S,2*S]:[]);x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();x.restore()};
       boxes.forEach(b=>{const x0=X(b.c0),x1=X(b.c1+1),y0=Y(b.r0),y1=Y(b.r1+1),B=b.xf.border||{},Br=(cells.get(b.r0+","+b.c1)&&(xfs[cells.get(b.r0+","+b.c1).s]||dflt).border)||B,Bb=(cells.get(b.r1+","+b.c0)&&(xfs[cells.get(b.r1+","+b.c0).s]||dflt).border)||B;
         edge(B.left,x0,y0,x0,y1);edge(B.top,x0,y0,x1,y0);edge(Br.right||B.right,x1,y0,x1,y1);edge(Bb.bottom||B.bottom,x0,y1,x1,y1);
-        const sd=sides(b.r0,b.c0,b.r1,b.c1),bordered=sd.n>=3||sd.B0||(sd.B&&sd.n>=2);
-        if((bordered||b.cell.isdv||b.cell.isref||b.cell.calc)&&b.cell.v===""&&b.xf.h!=="centerContinuous"&&(x1-x0)/S>=10&&(y1-y0)/S>=7)pgM.cells.push({x0:x0/S,y0:pdfY(y1/S),x1:x1/S,y1:pdfY(y0/S),empty:true,val:b.cell.dvv,ref:b.cell.isref||undefined,dv:dvAt(b.r0,b.c0)||undefined,ad:b.cell.ad,sh:String([...wb.getElementsByTagName("sheet")].indexOf(sh)),calc:b.cell.calc||undefined,proxy:b.cell.proxy||undefined})});
-      shapes.forEach(s=>{const X0=(ML+s.x0*k)*S,Y0=(MT+(s.y0-ry[ra])*k)*S,W=(s.x1-s.x0)*k*S,Hh=(s.y1-s.y0)*k*S;if(Y0+Hh<0||Y0>ph*S)return;
-        x.save();if(s.img){x.drawImage(s.img,X0,Y0,W,Hh);x.restore();return}
+        const sd=sides(b.r0,b.c0,b.r1,b.c1),bordered=sd.n>=3||(sd.B&&sd.n>=2)||(sd.B0&&(x1-x0)/S>=40);
+        if((bordered||b.cell.isdv||b.cell.isref||b.cell.calc)&&(b.cell.v===""||/^[印㊞]$/.test(String(b.cell.v).trim()))&&b.xf.h!=="centerContinuous"&&(x1-x0)/S>=10&&(y1-y0)/S>=7)pgM.cells.push({x0:x0/S,y0:pdfY(y1/S),x1:x1/S,y1:pdfY(y0/S),empty:true,val:b.cell.dvv,ref:b.cell.isref||undefined,dv:dvAt(b.r0,b.c0)||undefined,ad:b.cell.ad,sh:String([...wb.getElementsByTagName("sheet")].indexOf(sh)),calc:b.cell.calc||undefined,proxy:b.cell.proxy||undefined})});
+      pgM.shapes=[];shapes.forEach(s=>{const X0=(ML+s.x0*k)*S,Y0=(MT+(s.y0-ry[ra])*k)*S,W=(s.x1-s.x0)*k*S,Hh=(s.y1-s.y0)*k*S;if(Y0+Hh<0||Y0>ph*S)return;if(W>S*12&&Hh>S*8)pgM.shapes.push({x0:X0/S,x1:(X0+W)/S,y0:pdfY((Y0+Hh)/S),y1:pdfY(Y0/S)});
+        x.save();if(s.img){x.drawImage(s.img,X0,Y0,W,Hh);
+          if(s.camR){const kk=k*S,shn=String(shIdx[s.cam.sheet]);s.camR.texts.forEach(t=>pgM.texts.push({x:(X0+t.x*kk)/S,y:pdfY((Y0+(t.y+t.h)*kk)/S),w:t.w*kk/S,h:t.h*kk/S,s:t.s}));s.camR.cells.forEach(c=>pgM.cells.push({x0:(X0+c.x0*kk)/S,y0:pdfY((Y0+c.y1*kk)/S),x1:(X0+c.x1*kk)/S,y1:pdfY((Y0+c.y0*kk)/S),empty:true,ad:c.ad,sh:shn}))}
+          x.restore();return}
+        if(s.nodeName=="xdr:pic"){x.restore();return}
         const lines=/line|Connector/i.test(s.prst);
         if(lines){if(s.ln){x.strokeStyle=s.ln;x.lineWidth=s.lw*k*S;x.beginPath();x.moveTo(s.flipH?X0+W:X0,s.flipV?Y0+Hh:Y0);x.lineTo(s.flipH?X0:X0+W,s.flipV?Y0:Y0+Hh);x.stroke()}x.restore();return}
         x.beginPath();if(s.prst=="ellipse")x.ellipse(X0+W/2,Y0+Hh/2,W/2,Hh/2,0,0,7);else if(s.prst=="roundRect"){const r=Math.min(W,Hh)*.16;x.moveTo(X0+r,Y0);x.arcTo(X0+W,Y0,X0+W,Y0+Hh,r);x.arcTo(X0+W,Y0+Hh,X0,Y0+Hh,r);x.arcTo(X0,Y0+Hh,X0,Y0,r);x.arcTo(X0,Y0,X0+W,Y0,r);x.closePath()}else x.rect(X0,Y0,W,Hh);
