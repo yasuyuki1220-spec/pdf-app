@@ -147,10 +147,12 @@ input[type=range]{accent-color:var(--ac)}
 }
 @media(max-width:389px){#zOut,#zIn{padding:8px 5px}.top #ok{padding:8px 8px;font-size:12px}}
 @media(max-width:360px){#zOut,#zIn{display:none!important}}
-/* v168: 大きさパネルが狭い画面でつぶれてスライダーが見えなかったのを修正(1行に「名前・スライダー・−＋」) */
-#szp[style*="flex"]{display:grid!important;grid-template-columns:1fr auto;align-items:center;column-gap:8px;row-gap:6px}
-#szp label{display:grid!important;grid-template-columns:3.4em 1fr;align-items:center;gap:6px}#szp label input{min-width:60px}
-#szp .szs{display:flex;gap:6px}#szp .szs button{width:44px;height:36px;border:0;border-radius:10px;background:var(--card);box-shadow:var(--sh);font-size:18px;font-weight:700}
+/* v169: 大きさパネルをExcel風の1行に(文字はpt、画像は%で数字入力・−＋) */
+#szp[style*="flex"]{display:flex!important;flex-wrap:wrap;align-items:center;gap:6px 8px;padding:6px 8px}
+#szp .szg{display:flex;align-items:center;gap:3px}#szp .szg b{font-size:12px;color:var(--mut);font-weight:700}#szp .szg i{font-style:normal;font-size:11px;color:var(--mut)}
+#szp input{width:52px;height:32px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--fg);font:inherit;font-size:16px;font-weight:700;text-align:center;padding:0 2px;width:48px}#szp #sx,#szp #sy{width:44px}
+#szp .szs{display:flex;gap:3px;margin-left:2px}#szp .szs button{width:32px;height:32px;border:0;border-radius:8px;background:var(--card);box-shadow:var(--sh);font-size:17px;font-weight:700;padding:0}
+#szp .szr{height:32px;border:0;border-radius:8px;background:transparent;color:var(--ac);font-size:12px;padding:0 4px;margin-left:auto}
 /* v166: 下から出るシートに「つまみ」をつけて、閉じられる感じを出す */
 #sh::before,#tm .box::before,#fn .box::before,#bx .box::before,#tl .box::before,#cuL .box::before,#tf .box::before,#ts .box::before,#to .box::before,#dm .box::before,#cm .box::before{content:"";display:block;width:38px;height:5px;border-radius:3px;background:var(--bd);margin:-4px auto 10px}
 #dd .g{font-size:11px;letter-spacing:.04em}#dd button{min-height:42px}
@@ -177,7 +179,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="custB" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;background:#ecfdf5;border:1.5px solid #34d399;border-radius:12px;padding:8px 10px;margin-bottom:8px"><b id="custBn" style="flex:1;color:#065f46;font-size:15px"></b><button id="custBs" style="border:0;border-radius:9px;padding:7px 12px;background:#059669;color:#fff;font-weight:700">保存</button><button id="custBx" style="border:1px solid #6ee7b7;border-radius:9px;padding:7px 10px;background:#fff;color:#065f46">閉じる</button></div><div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v168</small></div>
+<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v169</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -206,7 +208,7 @@ input[type=range]{accent-color:var(--ac)}
 <button class="col on" style="background:#111" data-c="#111111"></button><button class="col" style="background:#e11d48" data-c="#e11d48"></button><button class="col" style="background:#2563eb" data-c="#2563eb"></button><button class="col" style="background:#16a34a" data-c="#16a34a"></button><button class="col" style="background:#f59e0b" data-c="#f59e0b"></button><button class="col" style="background:#fff" data-c="#ffffff"></button>
 <button class="mkc" id="mkp" data-c="#ff9ec7" title="薄いピンクのマーカー" style="background:#ff9ec7"></button><button class="mkc" id="mky" data-c="#fff04d" title="黄色のマーカー" style="background:#fff04d"></button><button class="mkc" id="mkg" data-c="#9ff0b4" title="薄い緑のマーカー" style="background:#9ff0b4"></button><button class="mkc" id="mkb" data-c="#8fd3ff" title="水色のマーカー" style="background:#8fd3ff"></button><span id="mkt" style="font-size:12px;color:var(--mut)">←マーカー</span><input type="color" id="cc" value="#111111" style="width:28px;height:28px;padding:0;border:0;background:none"><span style="font-size:12px;color:var(--mut)">太さ</span><input id="wd" type="range" min="1" max="14" value="3" style="width:90px">
 </div>
-<div id="szp"><label>大きさ<input id="sz" type="range" min="1" max="100" step="0.05" value="20"></label><span class="szs"><button data-z="sz" data-f="-1">−</button><button data-z="sz" data-f="1">＋</button></span><label>幅<input id="sx" type="range" min="20" max="300" step="0.1" value="100"></label><span class="szs"><button data-z="sx" data-f="-1">−</button><button data-z="sx" data-f="1">＋</button></span><label>高さ<input id="sy" type="range" min="20" max="300" step="0.1" value="100"></label><span class="szs"><button data-z="sy" data-f="-1">−</button><button data-z="sy" data-f="1">＋</button></span></div>
+<div id="szp"><span class="szg"><b id="szL">文字</b><input id="sz" type="text" inputmode="decimal" enterkeyhint="done" autocomplete="off"><i id="szU">pt</i><span class="szs"><button data-z="sz" data-f="-1" aria-label="小さく">−</button><button data-z="sz" data-f="1" aria-label="大きく">＋</button></span></span><span class="szg"><b>幅</b><input id="sx" type="text" inputmode="numeric" enterkeyhint="done" autocomplete="off" aria-label="幅(%)"></span><span class="szg"><b>高</b><input id="sy" type="text" inputmode="numeric" enterkeyhint="done" autocomplete="off" aria-label="高さ(%)"></span><button id="szR" class="szr" title="幅・高さ(画像は大きさも)を100%に戻す">戻す</button></div>
 <div class="ctx" id="op"><button id="bac">基準:左</button><button id="bfs">枠・文字サイズ</button><span id="opg" style="display:contents"><button id="bgz">サイズ変更</button>
 <button id="rl">↺</button><button id="rr">↻</button></span><button id="bsh">形変更</button><button id="bvd">頂点を減らす</button><button id="blk">固定</button><button id="bhl">白フチ</button><button id="bvt">縦書き</button><button id="bff">字体</button><button id="bmv">移動</button><button id="bsz">枠サイズ</button><button id="bsc">全体拡大</button><button id="bfd">連投欄にする</button><button id="bloc">全体共通</button><button id="ex">入力</button><button id="dl">削除</button></div>
 <div class="ctx" id="shp" style="display:none;background:var(--ac2);border-radius:14px;padding:6px 10px;margin-top:6px">
@@ -527,7 +529,7 @@ let _ls=null;function syncPanel(){if(sel&&sel.k=="t"&&!sel.field&&sel.cell&&!tpl
   if(!sel||sel.shape)szOpen=false;$("szp").style.display=szOpen?"flex":"none";$("bgz").classList.toggle("act",szOpen);
   $("op").style.display=sel?"flex":"none";prVis();$("shp").style.display=sel&&sel.shape?"flex":"none";if(!sel)return;
   const t=sel.k=="t";$("ex").style.display=$("bmv").style.display=$("bsz").style.display=$("bsc").style.display=$("bfd").style.display=$("bac").style.display=t?"":"none";$("bac").textContent="基準:"+({l:"左",c:"中央",r:"右"}[sel.anc||"l"]);$("bfd").textContent=sel.field=="input"?"固定に戻す":"連投欄にする";$("bfd").classList.toggle("act",sel.field=="input");$("bloc").style.display=sel.field=="input"?"":"none";$("bloc").textContent=sel.local?"ページ専用(単品)":"全体共通";$("bloc").classList.toggle("act",!!sel.local);$("bsc").classList.toggle("act",emode=="scale");$("bmv").style.display=(t||(sel.k=="i"&&!sel.shape))?"":"none";$("blk").style.display=(sel.k=="i"&&!sel.shape)?"":"none";$("blk").textContent=sel.lock?"固定解除":"固定";$("bhl").style.display=t?"":"none";$("bvt").style.display=t?"":"none";$("bff").style.display=t&&!sel.ring?"":"none";$("bvt").classList.toggle("act",!!sel.vert);$("bfs").style.display=t?"":"none";$("bhl").classList.toggle("act",!!sel.halo);$("bvd").style.display=(sel.shape&&emode=="shape")?"":"none";$("bsh").style.display=sel.shape?"":"none";$("bsh").classList.toggle("act",emode=="shape");$("opg").style.display=sel.shape?"none":"contents";if(t){["ex","bmv","bsz","bsc","bgz"].forEach(i=>$(i).style.display="none")}if(sel.shape)shpUI();$("bmv").classList.toggle("act",emode=="move");$("bsz").classList.toggle("act",emode=="size");
-  $("sz").value=sel.k=="i"?sel.w*100:sel.s*700-4;$("sx").value=(sel.sx||1)*100;$("sy").value=(sel.sy||1)*100;
+  szShow();
 }
 const pgList=()=>tplEdit?tplEdit.pgs:pages;
 function pgLabel(){const L=pgList();$("pgl").textContent=(L.indexOf(cur)+1)+" / "+L.length}
@@ -672,7 +674,18 @@ document.querySelectorAll(".col").forEach(b=>b.onclick=()=>{
   if(sel&&sel.k=="t"){sel.c=col;paint()}
 });
 $("bgz").onclick=()=>{szOpen=!szOpen;syncPanel()};
-$("sz").oninput=()=>{if(!sel)return;const v=+$("sz").value;if(sel.k=="i")sel.w=Math.max(.03,v/100);else sel.s=(v+4)/700;paint()};
+// v169: 大きさを数字で。文字はpt(Excelの文字サイズと同じ考え方)、画像は追加したときの大きさを100%とした比率
+const SZL=[6,7,8,9,10,10.5,11,12,14,16,18,20,22,24,26,28,36,48,72,96];
+const ptOf=it=>it.s*cur.W,r1=v=>Math.round(v*10)/10;
+function szShow(){if(!sel)return;const i=sel.k=="i";if(i&&!sel.w0)sel.w0=sel.w;$("szL").textContent=i?"大きさ":"文字";$("szU").textContent=i?"%":"pt";
+  const a=document.activeElement;if(a!==$("sz"))$("sz").value=i?Math.round(sel.w/sel.w0*100):r1(ptOf(sel));if(a!==$("sx"))$("sx").value=Math.round((sel.sx||1)*100);if(a!==$("sy"))$("sy").value=Math.round((sel.sy||1)*100)}
+var szLastPt=null;try{szLastPt=+localStorage.getItem("pdfapp_lastpt")||null}catch(_){}
+function szSet(v){if(!sel||!isFinite(v)||v<=0)return;if(sel.k=="t"&&!sel.field){szLastPt=v;try{localStorage.setItem("pdfapp_lastpt",String(v))}catch(_){}}if(sel.k=="i"){if(!sel.w0)sel.w0=sel.w;sel.w=clamp(sel.w0*v/100,.02,1.5)}else{const s2=clamp(v/cur.W,.0012,.4);if(sel.cell){sel.s0=s2;sel.s=s2;fitItem(sel,cur)}else sel.s=s2}paint()}
+function szStep(dir,fine){if(!sel)return;if(sel.k=="i"){if(!sel.w0)sel.w0=sel.w;const p=sel.w/sel.w0*100,st=fine?1:10,n=dir>0?Math.floor(p/st+1e-6)*st+st:Math.ceil(p/st-1e-6)*st-st;szSet(Math.max(5,n))}
+  else{const p=r1(ptOf(sel));let n;if(fine)n=r1(p+dir*.5);else n=dir>0?(SZL.find(q=>q>p+.05)||r1(p*1.25)):([...SZL].reverse().find(q=>q<p-.05)||r1(Math.max(1,p*.8)));szSet(Math.max(1,n))}szShow()}
+["sz","sx","sy"].forEach(id=>{const el=$(id),ap=()=>{const v=parseFloat(String(el.value).replace(/[^0-9.．]/g,"").replace("．","."));if(!sel||!isFinite(v)||v<=0)return;if(id=="sz")szSet(v);else{sel[id]=clamp(v/100,.05,8);paint()}};
+  el.oninput=ap;el.onchange=()=>{ap();szShow()};el.onfocus=()=>{try{el.select()}catch(_){}};el.onkeydown=e=>{if(e.key=="Enter"){e.preventDefault();el.blur()}else if(e.key=="ArrowUp"||e.key=="ArrowDown"){e.preventDefault();if(id=="sz")szStep(e.key=="ArrowUp"?1:-1,e.shiftKey);else{sel[id]=clamp((sel[id]||1)+(e.key=="ArrowUp"?.05:-.05),.05,8);paint();szShow()}}};el.onblur=()=>szShow()});
+$("szR").onclick=()=>{if(!sel)return;if(sel.k=="i"){if(sel.w0)sel.w=sel.w0}sel.sx=1;sel.sy=1;paint();szShow();syncPanel()};
 const selSpin=d=>{if(sel){sel.rot+=d;rotShow(sel.a,sel.b,sel.rot);paint()}};holdRot($("rl"),-1,()=>selSpin(-15),selSpin);holdRot($("rr"),1,()=>selSpin(15),selSpin);
 $("ex").onclick=()=>{if(sel&&sel.k=="t")startEdit(sel)};
 $("dl").onclick=()=>{if(sel){cur.items=cur.items.filter(i=>i!==sel);sel=null;syncPanel();paint()}};
@@ -766,13 +779,10 @@ async function addItemFile(f){
 $("pi").onchange=$("pf").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(f)await addItemFile(f)};
 
 function vpCenter(){const r=ec.getBoundingClientRect(),w=wrap.getBoundingClientRect(),A=ang(cur),cx=clamp(((w.left+w.width/2)-r.left)/r.width,.05,.95),cy=clamp(((w.top+w.height/2)-r.top)/r.height,.05,.95);return toUnrot(cx,cy,A)}
-function newText(q){const z=Math.max(1,ec.getBoundingClientRect().width/baseW),it={k:"t",a:q[0],b:q[1],str:"テキスト",s:Math.max(.01,.03/z),c:col,rot:0,sx:1,sy:1};addItem(it);sel=it;syncPanel();emode="move";setHint();syncPanel();paint()}
-// v159 サイズの＋−(長押しで連続・細かく)
-(function(){const dof=(k,f)=>{if(!sel)return;if(k=="sz"){if(sel.k=="i")sel.w=Math.max(.01,sel.w*f);else sel.s=Math.max(.0012,sel.s*f)}else if(k=="sx")sel.sx=Math.max(.05,(sel.sx||1)*f);else if(k=="sy")sel.sy=Math.max(.05,(sel.sy||1)*f);if(sel.cell&&sel.k=="t"&&k=="sz"){}paint()};
-  document.querySelectorAll(".szs button").forEach(b=>{let t=null,iv=null;const k=b.dataset.z,f=b.dataset.f=="1"?1.05:1/1.05,f2=b.dataset.f=="1"?1.015:1/1.015,stop=()=>{if(t==null&&iv==null)return;clearTimeout(t);clearInterval(iv);t=iv=null;syncPanel()};
-    b.onpointerdown=e=>{e.preventDefault();dof(k,f);t=setTimeout(()=>{t=null;iv=setInterval(()=>dof(k,f2),45)},380);try{b.setPointerCapture(e.pointerId)}catch(_){}};["onpointerup","onpointercancel","onpointerleave"].forEach(ev=>b[ev]=stop)})})();
-$("sx").oninput=()=>{if(sel){sel.sx=+$("sx").value/100;paint()}};
-$("sy").oninput=()=>{if(sel){sel.sy=+$("sy").value/100;paint()}};
+function newText(q){const z=Math.max(1,ec.getBoundingClientRect().width/baseW),p0=Math.max(.01,.03/z)*cur.W,pt=szLastPt||[6,7,8,9,10,10.5,11,12,14,16,18,20,22,24,26,28,36,48,72].reduce((a,b)=>Math.abs(b-p0)<Math.abs(a-p0)?b:a),it={k:"t",a:q[0],b:q[1],str:"テキスト",s:pt/cur.W,c:col,rot:0,sx:1,sy:1};/* v169: 新しい文字は前回のサイズ(なければ近い標準サイズ) */addItem(it);sel=it;syncPanel();emode="move";setHint();syncPanel();paint()}
+// v169 サイズの＋−: 1回押すと次の標準サイズ(文字)/10%(画像)、長押しで細かく連続
+(function(){document.querySelectorAll(".szs button").forEach(b=>{let t=null,iv=null;const d=b.dataset.f=="1"?1:-1,stop=()=>{if(t==null&&iv==null)return;clearTimeout(t);clearInterval(iv);t=iv=null;syncPanel()};
+    b.onpointerdown=e=>{e.preventDefault();szStep(d,false);t=setTimeout(()=>{t=null;iv=setInterval(()=>szStep(d,true),110)},420);try{b.setPointerCapture(e.pointerId)}catch(_){}};["onpointerup","onpointercancel","onpointerleave"].forEach(ev=>b[ev]=stop)})})();
 $("cc").oninput=()=>{hl=false;mkSync();col=$("cc").value;colPick=true;document.querySelectorAll(".col").forEach(x=>x.classList.remove("on"));if(sel&&sel.k=="t"){sel.c=col;paint()}};
 if(window.visualViewport){const fit=()=>{const v=visualViewport;if(v.scale>1.02)return;for(const id of["ed","fn","tm","tf","ts","dm","cm"]){const e=$(id);e.style.top=v.offsetTop+"px";e.style.height=v.height+"px";e.style.bottom="auto"}};visualViewport.addEventListener("resize",fit);visualViewport.addEventListener("scroll",fit)}
 
