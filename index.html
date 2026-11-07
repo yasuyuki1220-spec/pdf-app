@@ -199,7 +199,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="custB" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;background:#ecfdf5;border:1.5px solid #34d399;border-radius:12px;padding:8px 10px;margin-bottom:8px"><b id="custBn" style="flex:1;color:#065f46;font-size:15px"></b><button id="custBs" style="border:0;border-radius:9px;padding:7px 12px;background:#059669;color:#fff;font-weight:700">保存</button><button id="custBx" style="border:1px solid #6ee7b7;border-radius:9px;padding:7px 10px;background:#fff;color:#065f46">閉じる</button></div><div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v171</small></div>
+<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v172</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -2254,13 +2254,14 @@ async function xlDetect(bytes,pi,pjPage){
 // ---- v36: 表の空欄を連投欄に / ○□をタップで切替
 var xlC=null,xlTap=null,tgT=null;
 function xlDvMake(pgs,xm){let n=0,no=0;const inst="xd"+Date.now(),LB={};
-  pgs.forEach(pg=>{const r=xm&&xm.pages&&xm.pages[pg.i];if(!r||!r.cells)return;const W=pg.W,H=pg.H,vx=r.view?r.view[0]:0,vy=r.view?r.view[1]:0;
-    r.cells.filter(c=>c.empty&&((c.dv&&c.dv.length)||c.calc||c.ref)).forEach(c=>{const isD=!!(c.dv&&c.dv.length);let up=null,bd=1e9;if(isD)(r.texts||[]).forEach(t=>{const tcx=t.x+t.w/2,tcy=t.y+t.h/2;if(tcx>c.x0&&tcx<c.x1&&tcy>c.y1-1){const d=tcy-c.y1;if(d<bd){bd=d;up=t}}});
-      let base=((up&&up.s)||xlLabel(c,r.texts||[])||"").replace(/[○◯〇⭕⚪□☐◻◽▫▢⬜❏❐❑❒⎕☑☒〼]/g,"").slice(0,12).trim()||((isD?"選択欄":c.calc?"計算":"入力欄")+(n+1));const k=(LB[base]=(LB[base]||0)+1),lbl=k>1?base+k:base,fs=Math.max(6,Math.min(14,(c.y1-c.y0)*.55));
+  // v172: 先に入力する欄、あとで自動計算の欄に名前を付ける(入力欄が「氏名」、計算で写す欄が「氏名2」になるように)
+  [0,1].forEach(pass=>pgs.forEach(pg=>{const r=xm&&xm.pages&&xm.pages[pg.i];if(!r||!r.cells)return;const W=pg.W,H=pg.H,vx=r.view?r.view[0]:0,vy=r.view?r.view[1]:0;
+    r.cells.filter(c=>c.empty&&((c.dv&&c.dv.length)||c.calc||c.ref)&&(!!c.calc)===(pass==1)).forEach(c=>{const isD=!!(c.dv&&c.dv.length);let up=null,bd=1e9;if(isD)(r.texts||[]).forEach(t=>{const tcx=t.x+t.w/2,tcy=t.y+t.h/2;if(tcx>c.x0&&tcx<c.x1&&tcy>c.y1-1){const d=tcy-c.y1;if(d<bd){bd=d;up=t}}});
+      let base=((up&&up.s)||xlLabel(c,r.texts||[])||(c.proxy&&c.proxy.lb)||"").replace(/[○◯〇⭕⚪□☐◻◽▫▢⬜❏❐❑❒⎕☑☒〼]/g,"").slice(0,12).trim()||((isD?"選択欄":c.calc?"計算":"入力欄")+(n+1));const k=(LB[base]=(LB[base]||0)+1),lbl=k>1?base+k:base,fs=Math.max(6,Math.min(14,(c.y1-c.y0)*.55));
       const it={k:"t",a:(c.x0+3-vx)/W,b:1-(((c.y0+c.y1)/2)-vy)/H,str:lbl,s:fs/W,c:"#111111",rot:0,sx:1,sy:1,anc:"l",field:"input",no:++no,ph:true,lbl,inst,xlc:true,s0:fs/W,cell:{x0:(c.x0-vx)/W,x1:(c.x1-vx)/W,y0:1-(c.y1-vy)/H,y1:1-(c.y0-vy)/H}};if(isD)it.choices=c.dv.slice(0,100);
-      if(c.ad&&c.sh){it.ad=c.ad;it.sh=c.sh+"@"+pg.f;if(c.calc){it.fx=c.calc.f;it.lit=c.calc.lit;it.nid=c.calc.nid;it.nfc=c.calc.nfc;it.auto=true;xlDvMake.nf=(xlDvMake.nf||0)+1}}
+      if(c.ad&&c.sh){it.ad=c.ad;it.sh=c.sh+"@"+pg.f;if(c.proxy){it.ad=c.proxy.ad;it.sh=c.proxy.sh+"@"+pg.f}if(c.calc){it.fx=c.calc.f;it.lit=c.calc.lit;it.nid=c.calc.nid;it.nfc=c.calc.nfc;if(c.calc.shx)it.shx=c.calc.shx;it.auto=true;xlDvMake.nf=(xlDvMake.nf||0)+1}}
       if(c.val!=null&&c.val!==""){it.str=String(c.val);it.ph=false}
-      fitItem(it,pg);pg.items.push(it);n++})});if(xlDvMake.nf){fxOn=true;try{fxRecalc()}catch(_){}}return n}
+      fitItem(it,pg);pg.items.push(it);n++})}));if(xlDvMake.nf){fxOn=true;try{fxRecalc()}catch(_){}}return n}
 function xlLabel(c,texts){
   const cy=(c.y0+c.y1)/2;let best=null,bd=1e9;
   texts.forEach(t=>{const tcx=t.x+t.w/2,tcy=t.y+t.h/2;if(tcy>c.y0&&tcy<c.y1&&t.x+t.w<=c.x0+2){const d=c.x0-(t.x+t.w);if(d<160&&d<bd){bd=d;best=t}}});
@@ -2525,10 +2526,12 @@ async function xlStart(o){
   if(!cur)return;const f=files[cur.f];if(!f)return;
   say("表を解析中…");let r;
   try{if(f.xl&&f.xl.pages[cur.i])r=f.xl.pages[cur.i];else{const pj=await f.doc.getPage(cur.i+1);r=await xlDetect(f.bytes,cur.i,pj)}}catch(e){say("");return toast("検出に失敗しました")}
-  let RC=null;if(!f.xl){say("書式を解析中…");try{RC=await rasterDetect(f,cur.i,r)}catch(e){RC=null}}
+  let RC=null;say("書式を解析中…");try{RC=await rasterDetect(f,cur.i,r)}catch(e){RC=null}
   say("");
   const cells=[];
-  if(RC&&RC.cells.length)RC.cells.forEach(c=>cells.push(c));else r.cells.filter(c=>c.empty).forEach(c=>cells.push({x0:c.x0,y0:c.y0,x1:c.x1,y1:c.y1,on:true,lbl:xlLabel(c,r.texts),ch:c.dv,val:c.val,ad:c.ad,sh:c.sh,calc:c.calc}));
+  if(!f.xl&&RC&&RC.cells.length)RC.cells.forEach(c=>cells.push(c));else r.cells.filter(c=>c.empty).forEach(c=>cells.push({x0:c.x0,y0:c.y0,x1:c.x1,y1:c.y1,on:true,lbl:xlLabel(c,r.texts),ch:c.dv,val:c.val,ad:c.ad,sh:c.sh,calc:c.calc}));
+  // v172: Excelでも画像で枠を探し、表の情報で拾えなかった枠(図形で描いた印鑑欄など)だけを足す
+  if(f.xl&&RC&&RC.cells.length){const MC=r.cells.filter(c=>c.empty),TX=r.texts||[];RC.cells.forEach(c=>{const cx=(c.x0+c.x1)/2,cy=(c.y0+c.y1)/2;if(MC.some(q=>cx>q.x0-1&&cx<q.x1+1&&cy>q.y0-1&&cy<q.y1+1))return;if(TX.some(t=>{const tx=t.x+t.w/2,ty=t.y+t.h/2;return tx>c.x0&&tx<c.x1&&ty>c.y0&&ty<c.y1}))return;cells.push(c)})}
   r.widgets.filter(w=>w.kind=="tx").forEach(w=>cells.push({x0:w.x0,y0:w.y0,x1:w.x1,y1:w.y1,on:true,lbl:(w.name||"").slice(0,12)}));
   const marks=r.marks.map(m=>({kind:m.kind,cx:m.cx,cy:m.cy,size:m.size,on:!!m.on}));if(RC)RC.marks.forEach(m=>{if(!marks.some(q=>Math.hypot(q.cx-m.cx,q.cy-m.cy)<m.size))marks.push(m)});
   r.widgets.filter(w=>w.kind=="btn").forEach(w=>marks.push({kind:w.radio?"c":"s",cx:(w.x0+w.x1)/2,cy:(w.y0+w.y1)/2,size:Math.max(w.x1-w.x0,w.y1-w.y0),on:w.on}));
@@ -2744,8 +2747,8 @@ function fxRecalc(){
   const memo=new Map(),run=e=>{const it=e.it;if(memo.has(it))return memo.get(it);memo.set(it,{v:null,any:false,sym:false,err:true});
     let ast;try{ast=it._ast||(it._ast=fxCompile(it.fx))}catch(x){const o={v:null,any:false,sym:false,err:true};memo.set(it,o);return o}
     const o={v:null,any:false,sym:false,err:false};
-    const one=(r,r0,c0)=>{const ad=xColL(c0)+(r0+1);if(r.sh){const k=r.sh+"!"+ad,v=it.lit&&it.lit[k];return v===undefined?null:v}
-      const e2=M.get(it.sh+"|"+ad);if(e2){o.sym=true;if(e2.it.fx){const q=run(e2);if(q.err){throw new Error("ref")}if(q.v!==null&&!(q.sym&&!q.any)){o.any=true;return q.v}return null}
+    const one=(r,r0,c0)=>{const ad=xColL(c0)+(r0+1);let key=it.sh+"|"+ad;if(r.sh){const ix=it.shx&&it.shx[r.sh];if(ix==null||!M.has(ix+"@"+String(it.sh).split("@")[1]+"|"+ad)){const k=r.sh+"!"+ad,v=it.lit&&it.lit[k];return v===undefined?null:v}key=ix+"@"+String(it.sh).split("@")[1]+"|"+ad}
+      const e2=M.get(key);if(e2){o.sym=true;if(e2.it.fx){const q=run(e2);if(q.err){throw new Error("ref")}if(q.v!==null&&!(q.sym&&!q.any)){o.any=true;return q.v}return null}
         if(e2.it.ph||String(e2.it.str).trim()==="")return null;o.any=true;return fxCvt(e2.it.str)}
       const v=it.lit&&it.lit[ad];return v===undefined?null:v};
     const get=(r,isRg)=>{if(!isRg)return one(r,r.r0,r.c0);const out=[];for(let a=r.r0;a<=r.r1;a++)for(let b=r.c0;b<=r.c1;b++){if(out.length>2000)break;out.push(one(r,a,b))}return out};
@@ -2843,8 +2846,17 @@ async function xlsxToPdf(file){
   const dvRead=async d=>{const R=[];for(const e of [...d.getElementsByTagName("*")].filter(e=>e.localName=="dataValidation")){if(e.getAttribute("type")!="list")continue;
       const f1=[...e.getElementsByTagName("*")].find(x=>x.localName=="formula1"),sq=e.getAttribute("sqref")||([...e.getElementsByTagName("*")].find(x=>x.localName=="sqref")||{}).textContent||"";if(!f1||!sq)continue;
       const list=await dvList(f1.textContent,d);if(!list||!list.length)continue;const rg=sq.trim().split(/\s+/).map(t=>{const [a,b]=t.split(":"),p=xRef(a),q=xRef(b||a);return p&&q?[Math.min(p[0],q[0]),Math.min(p[1],q[1]),Math.max(p[0],q[0]),Math.max(p[1],q[1])]:null}).filter(Boolean);R.push({rg,list})}return R};
+  // v172: 他のシートを参照する式を読む準備(シートの番号・表示/非表示、他シートから参照されているセル)
+  const SHL=[...wb.getElementsByTagName("sheet")],shIdx={},shVis={},XREF=new Set(),PROXY=new Map();SHL.forEach((e,i)=>{const n=e.getAttribute("name");shIdx[n]=i;shVis[n]=!(xAttr(e,"state")&&xAttr(e,"state")!="visible")});
+  for(const e of SHL){let dd=null;try{dd=await dvDoc(e.getAttribute("name"))}catch(_){}if(!dd)continue;const SF2={};
+    for(const c of dd.getElementsByTagName("c")){const fE=c.getElementsByTagName("f")[0];if(!fE)continue;const p=xRef(c.getAttribute("r"));if(!p)continue;let tx=xTxt(fE);const ft=xAttr(fE,"t"),si=xAttr(fE,"si");
+      if(ft=="shared"){if(tx)SF2[si]={f:tx,r:p[0],c:p[1]};else if(SF2[si])tx=fxShift(SF2[si].f,p[0]-SF2[si].r,p[1]-SF2[si].c)}if(!tx||tx.indexOf("!")<0)continue;
+      try{fxRefs(fxCompile(tx)).forEach(q=>{if(q.sh&&q.r0==q.r1&&q.c0==q.c1)XREF.add(q.sh+"|"+q.r0+","+q.c0)})}catch(_){}}}
+  const xVal=async(n,r,c)=>{const dd=await dvDoc(n);if(!dd)return undefined;if(!dd._m){dd._m=new Map();[...dd.getElementsByTagName("c")].forEach(e=>dd._m.set(e.getAttribute("r"),e))}const e=dd._m.get(xCol2(c)+(r+1));if(!e)return undefined;const t=e.getAttribute("t"),vE=e.getElementsByTagName("v")[0];
+    if(t=="s")return ss[+xTxt(vE)]||"";if(t=="inlineStr")return[...e.getElementsByTagName("t")].map(x=>x.textContent).join("");if(!vE)return undefined;const v=xTxt(vE);if(t=="b")return v=="1";if(t=="str"||t=="e")return v;const nv=parseFloat(v);return isNaN(nv)?v:nv};
+  const xLbl=async(n,r,c)=>{for(let k=c-1;k>=Math.max(0,c-6);k--){const v=await xVal(n,r,k);if(typeof v=="string"&&v.trim()&&!/^[0-9０-９.,\-]+$/.test(v.trim()))return v.replace(/\s+/g,"").slice(0,12)}return""};
   for(const sh of wb.getElementsByTagName("sheet")){
-    if(xAttr(sh,"state")&&xAttr(sh,"state")!="visible")continue;
+    if(xAttr(sh,"state")&&xAttr(sh,"state")!="visible")continue;const shName=sh.getAttribute("name");
     const rid=sh.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships","id")||sh.getAttribute("r:id"),tg=rel[rid];if(!tg)continue;
     const sp=tg.startsWith("/")?tg.slice(1):"xl/"+tg,sx=await rd(sp);if(!sx)continue;
     const d=xParse(sx),fmt=d.getElementsByTagName("sheetFormatPr")[0],dcw=parseFloat(xAttr(fmt,"defaultColWidth"))||8.43,drh=parseFloat(xAttr(fmt,"defaultRowHeight"))||15;
@@ -2858,10 +2870,15 @@ async function xlsxToPdf(file){
         let fT="";{const fE=c.getElementsByTagName("f")[0];if(fE){const ft=xAttr(fE,"t"),si=xAttr(fE,"si"),tx=xTxt(fE);if(ft=="shared"){if(tx){SF[si]={f:tx,r:p[0],c:p[1]};fT=tx}else if(SF[si])fT=fxShift(SF[si].f,p[0]-SF[si].r,p[1]-SF[si].c)}else if(tx&&ft!="array"&&ft!="dataTable")fT=tx}}
         cells.set(p[0]+","+p[1],{v,s,num:!t||t=="n",rv,ad:c.getAttribute("r"),fT});if(ink(v,s))upd(p[0],p[1])})});
     {const rvAt=(r,c)=>{const q=cells.get(r+","+c);return q&&q.rv!==undefined&&q.rv!==""&&!(typeof q.rv=="number"&&isNaN(q.rv))?q.rv:undefined};
-     cells.forEach(cl=>{if(!cl.fT)return;try{const ast=fxCompile(cl.fT),RF=fxRefs(ast);if(RF.some(q=>q.sh))return;const o=xfs[cl.s]||dflt;const lit={};
-       RF.forEach(q=>{let n=0;for(let a=q.r0;a<=q.r1&&n<2000;a++)for(let b=q.c0;b<=q.c1&&n<2000;b++,n++){const v=rvAt(a,b);if(v!==undefined)lit[xColL(b)+(a+1)]=v}});
-       const id=+o.numFmtId||0;cl.calc={f:cl.fT,lit,nid:id,nfc:fm[id]||""};cl.v="";cl.rv=undefined;cl.RF=RF}catch(e){}});
-     cells.forEach(cl=>{if(!cl.RF)return;cl.RF.forEach(q=>{if((q.r1-q.r0+1)*(q.c1-q.c0+1)>60)return;for(let a=q.r0;a<=q.r1;a++)for(let b=q.c0;b<=q.c1;b++){const t=cells.get(a+","+b);if(!t||t.fT||t.calc)continue;if(t.v!==""&&!(typeof t.rv=="number"&&!isNaN(t.rv)))continue;t.isref=true;if(t.v!==""){t.dvv=String(t.v);t.v=""}}});delete cl.RF})}
+     for(const cl of cells.values()){if(!cl.fT)continue;try{const ast=fxCompile(cl.fT),RF=fxRefs(ast);const o=xfs[cl.s]||dflt;const lit={},shx={};
+       // v172: 非表示シートの1セルだけを指す式(=データ!B2)は、最初の1か所をそのセルの代わりの入力欄にする
+       const one=/^\s*=?\s*(?:'[^']+'|[^'!=&+\-*\/(),]+)!\$?[A-Z]{1,3}\$?\d+\s*$/.test(cl.fT)&&RF.length==1&&RF[0].sh&&RF[0].r0==RF[0].r1&&RF[0].c0==RF[0].c1?RF[0]:null;
+       if(one&&shIdx[one.sh]!=null&&!shVis[one.sh]){const pk=one.sh+"|"+one.r0+","+one.c0;if(!PROXY.has(pk)){PROXY.set(pk,1);const sv=await xVal(one.sh,one.r0,one.c0);cl.proxy={ad:xColL(one.c0)+(one.r0+1),sh:String(shIdx[one.sh]),lb:await xLbl(one.sh,one.r0,one.c0)};cl.isref=true;cl.v="";cl.rv=undefined;if(sv!==undefined&&sv!==""&&typeof sv!="boolean")cl.dvv=String(sv);continue}}
+       for(const q of RF){let n=0;for(let a=q.r0;a<=q.r1&&n<2000;a++)for(let b=q.c0;b<=q.c1&&n<2000;b++,n++){if(q.sh){if(shIdx[q.sh]==null)continue;shx[q.sh]=String(shIdx[q.sh]);const v=await xVal(q.sh,a,b);if(v!==undefined&&v!==""&&!(typeof v=="number"&&isNaN(v)))lit[q.sh+"!"+xColL(b)+(a+1)]=v}else{const v=rvAt(a,b);if(v!==undefined)lit[xColL(b)+(a+1)]=v}}}
+       const id=+o.numFmtId||0;cl.calc={f:cl.fT,lit,nid:id,nfc:fm[id]||""};if(Object.keys(shx).length)cl.calc.shx=shx;cl.v="";cl.rv=undefined;cl.RF=RF.filter(q=>!q.sh)}catch(e){}}
+     cells.forEach(cl=>{if(!cl.RF)return;cl.RF.forEach(q=>{if((q.r1-q.r0+1)*(q.c1-q.c0+1)>60)return;for(let a=q.r0;a<=q.r1;a++)for(let b=q.c0;b<=q.c1;b++){const t=cells.get(a+","+b);if(!t||t.fT||t.calc)continue;if(t.v!==""&&!(typeof t.rv=="number"&&!isNaN(t.rv)))continue;t.isref=true;if(t.v!==""){t.dvv=String(t.v);t.v=""}}});delete cl.RF});
+     // v172: 他のシートから1セルで参照されているセル(入力用シートの欄など)も入力欄にする
+     cells.forEach((t,key)=>{if(t.fT||t.calc||t.isref||!XREF.has(shName+"|"+key))return;t.isref=true;if(t.v!==""){t.dvv=String(t.v);t.v=""}})}
     let DVs=[];try{DVs=await dvRead(d)}catch(e){}
     const dvAt=(r,c)=>{for(const v of DVs)if(v.rg.some(q=>r>=q[0]&&r<=q[2]&&c>=q[1]&&c<=q[3]))return v.list;return null};
     {let n=0;DVs.forEach(v=>v.rg.forEach(q=>{for(let a=q[0];a<=q[2]&&n<3000;a++)for(let b=q[1];b<=q[3]&&n<3000;b++,n++){const cl=cells.get(a+","+b);if(!cl)continue;cl.isdv=true;if(cl.v!==""&&cl.v!=null&&!cl.calc){cl.dvv=String(cl.v);cl.v=""}}}))}
@@ -2901,7 +2918,10 @@ async function xlsxToPdf(file){
       const S=4,cv=document.createElement("canvas");cv.width=Math.round(pw*S);cv.height=Math.round(ph*S);const x=cv.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,cv.width,cv.height);
       const X=c=>(ML+cx[c]*k)*S,Y=r=>(MT+(ry[r]-ry[ra])*k)*S,pdfY=ypt=>ph-ypt,pgM={view:[0,0,pw,ph],cells:[],marks:[],widgets:[],texts:[]};
       const boxes=[];
-      for(let r=ra;r<=rb;r++)for(let c=minC;c<=maxC;c++){const key=r+","+c;if(skip.has(key))continue;const cell=cells.get(key),m=mAt.get(key);if(!cell&&!m)continue;boxes.push({r0:r,c0:c,r1:m?Math.min(m.r1,rb):r,c1:m?m.c1:c,cell:cell||{v:"",s:0},xf:xfs[(cell||{}).s]||dflt})}
+      // v172: 罫線は、となりのセル側に引かれていることも多い(役員印の枠など)。となりの線も数えて「枠」かどうかを決める
+      const bdOf=(r,c)=>{const q=cells.get(r+","+c);return q?((xfs[q.s]||dflt).border||{}):{}},on=v=>!!v&&v!="none";
+      const sides=(r0,c0,r1,c1)=>{const L=on(bdOf(r0,c0).left)||on(bdOf(r0,c0-1).right),R=on(bdOf(r0,c1).right)||on(bdOf(r0,c1+1).left),T=on(bdOf(r0,c0).top)||on(bdOf(r0-1,c0).bottom),B0=on(bdOf(r1,c0).bottom),B=B0||on(bdOf(r1+1,c0).top);return{n:L+R+T+B,B,B0}};
+      for(let r=ra;r<=rb;r++)for(let c=minC;c<=maxC;c++){const key=r+","+c;if(skip.has(key))continue;const cell=cells.get(key),m=mAt.get(key);if(!cell&&!m){if(sides(r,c,r,c).n>=3)boxes.push({r0:r,c0:c,r1:r,c1:c,cell:{v:"",s:0},xf:dflt,virt:true});continue}boxes.push({r0:r,c0:c,r1:m?Math.min(m.r1,rb):r,c1:m?m.c1:c,cell:cell||{v:"",s:0},xf:xfs[(cell||{}).s]||dflt})}
       boxes.forEach(b=>{if(b.xf.fill){x.fillStyle=b.xf.fill;x.fillRect(X(b.c0),Y(b.r0),X(b.c1+1)-X(b.c0),Y(b.r1+1)-Y(b.r0))}});
       boxes.forEach(b=>{const v=b.cell.v;if(v==="")return;
         const f=b.xf.font;let fs=f.sz*k;const x0=X(b.c0),y0=Y(b.r0),h=Y(b.r1+1)-y0,pad=2*k*S;let w=X(b.c1+1)-x0;const ccA=b.xf.h=="centerContinuous";if(ccA){for(let c=b.c1+1;c<=maxC;c++){const o=cells.get(b.r0+","+c);if(!o||o.v!=="")break;const xo=xfs[o.s]||dflt;if(xo.h!=="centerContinuous")break;w=X(c+1)-x0}}
@@ -2922,8 +2942,8 @@ async function xlsxToPdf(file){
       const edge=(sty,x1,y1,x2,y2)=>{if(!sty)return;x.save();x.strokeStyle="#000";x.lineWidth=(LW[sty]||.6)*k*S*1.15;x.setLineDash(/dash|dot/i.test(sty)&&sty!="mediumDashed"?[3*S,2*S]:[]);x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();x.restore()};
       boxes.forEach(b=>{const x0=X(b.c0),x1=X(b.c1+1),y0=Y(b.r0),y1=Y(b.r1+1),B=b.xf.border||{},Br=(cells.get(b.r0+","+b.c1)&&(xfs[cells.get(b.r0+","+b.c1).s]||dflt).border)||B,Bb=(cells.get(b.r1+","+b.c0)&&(xfs[cells.get(b.r1+","+b.c0).s]||dflt).border)||B;
         edge(B.left,x0,y0,x0,y1);edge(B.top,x0,y0,x1,y0);edge(Br.right||B.right,x1,y0,x1,y1);edge(Bb.bottom||B.bottom,x0,y1,x1,y1);
-        const bordered=[B.left,B.top,B.right,B.bottom,Br.right,Bb.bottom].some(Boolean);
-        if((bordered||b.cell.isdv||b.cell.isref||b.cell.calc)&&b.cell.v===""&&b.xf.h!=="centerContinuous"&&(x1-x0)/S>=10&&(y1-y0)/S>=7)pgM.cells.push({x0:x0/S,y0:pdfY(y1/S),x1:x1/S,y1:pdfY(y0/S),empty:true,val:b.cell.dvv,ref:b.cell.isref||undefined,dv:dvAt(b.r0,b.c0)||undefined,ad:b.cell.ad,sh:String([...wb.getElementsByTagName("sheet")].indexOf(sh)),calc:b.cell.calc||undefined})});
+        const sd=sides(b.r0,b.c0,b.r1,b.c1),bordered=sd.n>=3||sd.B0||(sd.B&&sd.n>=2);
+        if((bordered||b.cell.isdv||b.cell.isref||b.cell.calc)&&b.cell.v===""&&b.xf.h!=="centerContinuous"&&(x1-x0)/S>=10&&(y1-y0)/S>=7)pgM.cells.push({x0:x0/S,y0:pdfY(y1/S),x1:x1/S,y1:pdfY(y0/S),empty:true,val:b.cell.dvv,ref:b.cell.isref||undefined,dv:dvAt(b.r0,b.c0)||undefined,ad:b.cell.ad,sh:String([...wb.getElementsByTagName("sheet")].indexOf(sh)),calc:b.cell.calc||undefined,proxy:b.cell.proxy||undefined})});
       shapes.forEach(s=>{const X0=(ML+s.x0*k)*S,Y0=(MT+(s.y0-ry[ra])*k)*S,W=(s.x1-s.x0)*k*S,Hh=(s.y1-s.y0)*k*S;if(Y0+Hh<0||Y0>ph*S)return;
         x.save();if(s.img){x.drawImage(s.img,X0,Y0,W,Hh);x.restore();return}
         const lines=/line|Connector/i.test(s.prst);
