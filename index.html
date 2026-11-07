@@ -179,7 +179,7 @@ input[type=range]{accent-color:var(--ac)}
 <div class="sub">結合・分割・回転・手書き・文字・画像。端末内だけで処理されます</div>
 <div id="custB" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;background:#ecfdf5;border:1.5px solid #34d399;border-radius:12px;padding:8px 10px;margin-bottom:8px"><b id="custBn" style="flex:1;color:#065f46;font-size:15px"></b><button id="custBs" style="border:0;border-radius:9px;padding:7px 12px;background:#059669;color:#fff;font-weight:700">保存</button><button id="custBx" style="border:1px solid #6ee7b7;border-radius:9px;padding:7px 10px;background:#fff;color:#065f46">閉じる</button></div><div id="msg"></div>
 <div id="grid"></div>
-<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v169</small></div>
+<div id="empty"><div class="hero"><b>このアプリでできること</b><ul id="heroL"></ul><button id="heroM">説明書を見る</button></div><svg><use href="#i-img"/></svg><br>PDFや写真・Excelを「追加」して始めましょう<br>カードをタップで選択、長押ししてドラッグで順番を入替、✎で編集<br><small style="opacity:.5">ビルド v170</small></div>
 <input id="fi" type="file" accept="application/pdf,.pdf,.tif,.tiff,.xlsx,.xlsm,.xls,.xdw,.xbd" multiple hidden>
 <input id="phi" type="file" accept="image/*,.tif,.tiff" multiple hidden>
 <div class="dock">
@@ -747,7 +747,12 @@ async function printGo(sc,paper){
     fr.onload=()=>setTimeout(()=>{try{fr.contentWindow.focus();fr.contentWindow.print();say("")}catch(_){window.open(u);say("")}},400);document.body.appendChild(fr);setTimeout(()=>{fr.remove();URL.revokeObjectURL(u)},300000);
     toast((sl.length?"選んだ"+list.length+"ページ":"すべての"+list.length+"ページ")+"を印刷します。プリンターを選んでください",4000)}catch(e){say("印刷の準備に失敗しました")}}
 $("bSave").onclick=saveOver;$("eSave").onclick=saveOver;$("bPrint").onclick=printPages;
-$("bAdd").onclick=()=>sheet("追加",[["ファイルから",()=>openPick()],["写真から",()=>$("phi").click()]]);
+$("bAdd").onclick=()=>sheet("追加",[["ファイルから",()=>openPick()],["写真から",()=>$("phi").click()],["白紙を作る(A4など)",()=>blankPick()]]);
+// v170: 白紙のページを作る(用紙サイズと向きを選ぶ → そのまま編集画面へ)
+const PAPER=[["A4",595.28,841.89],["A3",841.89,1190.55],["B4",728.5,1031.81],["B5",515.91,728.5],["A5",419.53,595.28],["はがき",283.46,419.53],["レター",612,792]];
+function blankPick(){sheet("白紙の用紙サイズ",PAPER.map(([n,w,h])=>[n+"("+Math.round(w/72*25.4)+"×"+Math.round(h/72*25.4)+"mm)",()=>sheet(n+" の向き",[["縦",()=>blankAdd(n,w,h)],["横",()=>blankAdd(n+"横",h,w)]])]))}
+async function blankAdd(n,w,h){try{snap();const d=await PDFLib.PDFDocument.create();d.addPage([w,h]);const bytes=await d.save(),doc=await pdfjsLib.getDocument({data:bytes.slice()}).promise;
+  const fi=files.push({name:"白紙 "+n,bytes,doc})-1,po={f:fi,i:0,r:0,base:0,W:w,H:h,sel:false,strokes:[],items:[]};pages.push(po);draw();openEd(po);toast("白紙を作りました。ペン・文字・スタンプなどで記入できます",3000)}catch(e){say("白紙を作れませんでした")}}
 function xdwGuide(name){say("");sheet("「"+name+"」は読めません。PDFにしてから追加してください",[["DocuWorks Viewerで開き、印刷→Microsoft Print to PDFで保存したPDFを追加します",()=>{}]])}
 $("bMan").onclick=()=>openManual();$("heroM").onclick=e=>{e.stopPropagation();openManual("key")};
 {const TIPS=["書類の空欄を、全部の書類で共通の入力欄にできます。氏名・住所は1回入れれば全書類に入ります","お客様ごとに、書類一式と入力した内容を保存・呼び出しできます","お客様を開いたまま書類を足すと、同じ名前の欄には入力済みの内容がすぐ入ります","「その他」→「全空欄認識」で、書類の空欄を自動で入力欄にできます","Excelを読み込むと、プルダウンや簡単な数式もそのまま使えます","よく使う書類はテンプレートにして、何度でも呼び出せます","どの欄の名前を同じものとして扱うかは「お客様」→「⚙ 自動入力の設定」で変えられます","連投モードで日付欄に来たら「今日」ボタンで今日の日付が入ります","テンプレート・お客様の一覧は、長押しで並べ替えできます","PDFの結合・分割・回転・手書き・文字・写真の追加もできます"];
