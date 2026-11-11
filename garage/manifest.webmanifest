@@ -1,6 +1,6 @@
 {
- "name": "車庫証明 配置図",
- "short_name": "車庫証明",
+ "name": "PDF編集",
+ "short_name": "PDF編集",
  "start_url": "./",
  "scope": "./",
  "display": "standalone",
