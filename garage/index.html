@@ -6,16 +6,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="PDF編集"><meta name="theme-color" content="#4f5bd5">
 <style>body{margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:-apple-system,system-ui,"Hiragino Sans","Noto Sans JP",sans-serif;color:#6b7280;background:#f4f5f7}</style>
 </head><body><div id="ld">読み込み中…</div>
-<script id="gcss" type="text/plain">#bTpl,#bCust,#bMan,#bfd,#bloc,#ex{display:none!important}.dock.ed button[data-m="move"]{display:none!important}#dmn{width:100%;font:inherit;font-size:16px;border:1px solid var(--bd);border-radius:12px;padding:10px;background:var(--bg);color:var(--fg)}</script>
+<script id="gcss" type="text/plain">#dmn{width:100%;font:inherit;font-size:16px;border:1px solid var(--bd);border-radius:12px;padding:10px;background:var(--bg);color:var(--fg)}</script>
 <script id="govr" type="text/plain">
-/* 車庫証明版: 本体を読み込んだあとに、スタンプ・寸法・メニューを書き換える */
+/* 友達用: 本体のアプリはそのまま。車庫証明に関わる「寸法」と「スタンプ」だけを書き換える */
 try{
-const q=s=>document.querySelector(s);
-q(".h1").textContent="PDF編集";q(".sub").textContent="地図や写真に、寸法・スタンプ・文字を書き込めます。端末内だけで処理されます";
-{const h=q("#empty .hero");h.querySelector("b").textContent="こんなときに";$("heroM").style.display="none";
- $("heroL").innerHTML=["保管場所の地図や写真に、縦・横の寸法(m)を矢印つきで書き込めます","「スタンプ」で、好きな文字のスタンプを置き、オレンジの丸から矢印を伸ばして場所を指せます","「スタンプ」タブで、なぞると寸法線、ちょんとタップすると文字だけを置けます"].map(t=>"<li>"+t+"</li>").join("");
- const em=$("empty");while(h.nextSibling)em.removeChild(h.nextSibling);em.insertAdjacentHTML("beforeend",'<svg><use href="#i-img"/></svg><br>「追加」から、地図の写真・スクリーンショットを選ぶか、「白紙を作る」で始めましょう<br>カードの ✎ を押すと書き込めます<br><small style="opacity:.5">車庫証明版</small>')}
-packRemote=async function(){};
+packRemote=async function(){};/* 会社の共通パックは取り込まない */
 // 寸法: 縦 / 横 / 自由入力
 $("dmc").innerHTML='<button class="chip on" data-l="縦">縦</button><button class="chip" data-l="横">横</button><button class="chip" data-l="*">自由入力</button>';
 $("dmc").insertAdjacentHTML("afterend",'<div style="display:none;gap:8px;align-items:center;margin:6px 0"><input id="dmn" type="text" placeholder="名前を入力(例: 出入口・道路幅)" autocomplete="off"></div>');
@@ -44,19 +39,16 @@ dimMake=function(d,label,val){
 $("sS").onclick=()=>{const r=ec.getBoundingClientRect(),w=wrap.getBoundingClientRect(),A=ang(cur),cx=clamp(((w.left+w.width/2)-r.left)/r.width,.15,.85),cy=clamp(((w.top+w.height/2)-r.top)/r.height,.15,.85),[a,b]=toUnrot(cx,cy,A);
   const it={k:"t",a,b,str:"テキスト",s:.022,c:col,rot:-A,sx:1,sy:1,anc:"c",halo:true};addItem(it);selR=null;sel=it;emode="move";sArm=it;setHint();syncPanel();paint();
   toast("スタンプを置きました。文字を入力してください(あとで、オレンジの丸から引くと矢印が伸びます)",4200);setTimeout(()=>{try{startEdit(it,true)}catch(_){}},80)};
-// メニューは使うものだけ
-$("bShare").onclick=()=>sheet("共有・書き出し・印刷",[["選択したページ",()=>exp(true)],["すべてのページ",()=>exp(false)],["印刷",printPages]]);
-$("eMore").onclick=()=>dropMenu($("eMore"),[["ページ",[["ページを回転",()=>$("rt").click(),"⟳"],...(cur&&cur._undo?[["トリミングを元に戻す",undoCrop,"↶"]]:[]),["全消去(ペン・文字・囲い)…",()=>sheet("このページで全部消すもの",[["ペンの書き込み",()=>$("cl").click()],["テキスト",()=>clearText()],["範囲選択(モザイク・塗り)",()=>clearShapes()]]),"🗑"]]]]);
 }catch(err){console.error("garage override failed",err)}
 </script>
 <script>
-// 車庫証明 配置図(友達用)。本体のアプリ(../index.html)を読み込み、車庫証明に使う機能だけにして表示します。
+// 友達用。本体のアプリ(../index.html)をそのまま読み込み、車庫証明に関わる「寸法」「スタンプ」だけを自由入力にして表示します。
 (async()=>{
   try{
     const r=await fetch("../index.html",{cache:"no-cache"});if(!r.ok)throw new Error("HTTP "+r.status);let s=await r.text();
     const rep=(a,b)=>{s=s.split(a).join(b)},T=id=>document.getElementById(id).textContent;
     rep("<title>PDFまとめ編集</title>","<title>PDF編集</title>");
-    rep('content="PDF編集"','content="PDF編集"');
+    rep('<div class="h1">PDFまとめ編集</div>','<div class="h1">PDF編集</div>');
     ["apple-touch-icon.png","favicon.ico","icon-32.png","icon-192.png"].forEach(f=>rep('href="'+f+'"','href="../'+f+'"'));
     rep("</style></head>",T("gcss")+"</style></head>");
     const k=s.lastIndexOf("</body>");if(k<0)throw new Error("body");
