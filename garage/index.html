@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>車庫証明 配置図</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="../apple-touch-icon.png"><link rel="icon" href="../favicon.ico" sizes="any">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="車庫証明"><meta name="theme-color" content="#4f5bd5">
+<style>body{margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:-apple-system,system-ui,"Hiragino Sans","Noto Sans JP",sans-serif;color:#6b7280;background:#f4f5f7}</style>
+</head><body><div id="ld">読み込み中…</div>
+<script id="gcss" type="text/plain">#bTpl,#bCust,#bMan,#bfd,#bloc,#ex{display:none!important}.dock.ed button[data-m="move"]{display:none!important}#dmn{width:100%;font:inherit;font-size:16px;border:1px solid var(--bd);border-radius:12px;padding:10px;background:var(--bg);color:var(--fg)}</script>
+<script id="govr" type="text/plain">
+/* 車庫証明版: 本体を読み込んだあとに、スタンプ・寸法・メニューを書き換える */
+try{
+const q=s=>document.querySelector(s);
+q(".h1").textContent="車庫証明 配置図";q(".sub").textContent="地図や写真に、寸法・スタンプ・文字を書き込めます。端末内だけで処理されます";
+{const h=q("#empty .hero");h.querySelector("b").textContent="こんなときに";$("heroM").style.display="none";
+ $("heroL").innerHTML=["保管場所の地図や写真に、縦・横の寸法(m)を矢印つきで書き込めます","「スタンプ」で、好きな文字のスタンプを置き、オレンジの丸から矢印を伸ばして場所を指せます","「スタンプ」タブで、なぞると寸法線、ちょんとタップすると文字だけを置けます"].map(t=>"<li>"+t+"</li>").join("");
+ const em=$("empty");while(h.nextSibling)em.removeChild(h.nextSibling);em.insertAdjacentHTML("beforeend",'<svg><use href="#i-img"/></svg><br>「追加」から、地図の写真・スクリーンショットを選ぶか、「白紙を作る」で始めましょう<br>カードの ✎ を押すと書き込めます<br><small style="opacity:.5">車庫証明版</small>')}
+packRemote=async function(){};
+// 寸法: 縦 / 横 / 自由入力
+$("dmc").innerHTML='<button class="chip on" data-l="縦">縦</button><button class="chip" data-l="横">横</button><button class="chip" data-l="*">自由入力</button>';
+$("dmc").insertAdjacentHTML("afterend",'<div style="display:none;gap:8px;align-items:center;margin:6px 0"><input id="dmn" type="text" placeholder="名前を入力(例: 出入口・道路幅)" autocomplete="off"></div>');
+dmL="縦";
+const FREE=()=>dmL=="*",TAP=()=>dmL=="*"&&!!(dmD&&dmD.tap);
+dimEnd=function(){const d=dimSt;dimSt=null;paint();const r=ec.getBoundingClientRect(),A=ang(cur),u0=toDisp(...d.p[0],A),u1=toDisp(...d.p[1],A);
+  if(Math.hypot((u1[0]-u0[0])*r.width,(u1[1]-u0[1])*r.height)<24){d.p[1]=d.p[0];d.tap=true;dmL="*"}
+  dmD=d;dmUI();$("dmv").value="";$("dmn").value="";document.querySelectorAll("#dmc .chip").forEach(b=>b.classList.toggle("on",b.dataset.l==dmL));$("dm").style.display="flex";(FREE()?$("dmn"):$("dmv")).focus()};
+dmUI=function(){const fr=FREE(),tap=TAP();$("dmn").parentNode.style.display=fr?"flex":"none";$("dmv").parentNode.style.display=tap?"none":"flex";$("dmt").textContent=tap?"文字だけを置きます(寸法線なし)":fr?"名前は自由入力。数字(m)は空でもOK":"単位:m"};
+document.querySelectorAll("#dmc .chip").forEach(b=>b.onclick=()=>{dmL=b.dataset.l;document.querySelectorAll("#dmc .chip").forEach(x=>x.classList.toggle("on",x==b));dmUI();(FREE()?$("dmn"):$("dmv")).focus()});
+$("dmok").onclick=()=>{const fr=FREE(),nm=fr?$("dmn").value.trim():dmL,v=$("dmv").value.replace(/[０-９]/g,c=>String.fromCharCode(c.charCodeAt(0)-65248)).replace(/[．。]/g,".").replace(/[^0-9.]/g,"");
+  if(TAP()){if(!nm)return toast("文字を入力してください");$("dm").style.display="none";return dimMake(dmD,nm,"")}
+  if(fr&&!v&&!nm)return toast("名前か数字を入力してください");if(!fr&&!v)return toast("数字を入力してください");$("dm").style.display="none";dimMake(dmD,nm,v)};
+$("dmn").addEventListener("keydown",e=>{if(e.key=="Enter")$("dmok").click()});
+dimMake=function(d,label,val){
+  if(!val){const mid=[(d.p[0][0]+d.p[1][0])/2,(d.p[0][1]+d.p[1][1])/2],A0=ang(cur),it={k:"t",a:mid[0],b:mid[1],str:label,s:.026,c:d.c,rot:-A0,sx:1,sy:1,anc:"c",halo:true};addItem(it);sel=it;emode="move";setHint();syncPanel();paint();toast("「"+label+"」を置きました。ドラッグで動かせます");return}
+  const A=ang(cur),W=cur.W,H=cur.H,P0=d.p[0],P1=d.p[1],col=d.c,sw=.0035,mk=p=>[p[0]/W,p[1]/H];
+  const x0=P0[0]*W,y0=P0[1]*H,x1=P1[0]*W,y1=P1[1]*H,dx=x1-x0,dy=y1-y0,L=Math.hypot(dx,dy)||1,ux=dx/L,uy=dy/L,ah=Math.min(14,L*.25),aw=ah*.4;
+  const arrow=(tx,ty,vx,vy)=>{const bx=tx-vx*ah,by=ty-vy*ah,nx=-vy,ny=vx;return[mk([bx+nx*aw,by+ny*aw]),mk([tx,ty]),mk([bx-nx*aw,by-ny*aw])]};
+  addStroke({c:col,w:sw,p:[mk([x0,y0]),mk([x1,y1])]});addStroke({c:col,w:sw,p:arrow(x0,y0,-ux,-uy)});addStroke({c:col,w:sw,p:arrow(x1,y1,ux,uy)});
+  const [ua,va]=toDisp(...P0,A),[ub,vb]=toDisp(...P1,A),dW=(A%180==0?W:H),dH=(A%180==0?H:W),horiz=Math.abs(ub-ua)*dW>=Math.abs(vb-va)*dH;
+  const str=(label?label+" ":"")+val+"m",fp=.024*W,tw=str.length*fp*.6,off=horiz?[0,-(fp*.9+4)/dH]:[(10+tw/2)/dW,0];
+  const [a,b]=toUnrot((ua+ub)/2+off[0],(va+vb)/2+off[1],A),it={k:"t",a,b,str,s:.024,c:col,rot:-A,sx:1,sy:1,anc:"c",halo:true};
+  addItem(it);sel=it;emode="move";setHint();syncPanel();paint();toast("寸法を入れました。文字はすぐドラッグで動かせます")};
+// スタンプ: 文字は自由入力(置くとすぐ入力できる)
+$("sS").onclick=()=>{const r=ec.getBoundingClientRect(),w=wrap.getBoundingClientRect(),A=ang(cur),cx=clamp(((w.left+w.width/2)-r.left)/r.width,.15,.85),cy=clamp(((w.top+w.height/2)-r.top)/r.height,.15,.85),[a,b]=toUnrot(cx,cy,A);
+  const it={k:"t",a,b,str:"テキスト",s:.022,c:col,rot:-A,sx:1,sy:1,anc:"c",halo:true};addItem(it);selR=null;sel=it;emode="move";sArm=it;setHint();syncPanel();paint();
+  toast("スタンプを置きました。文字を入力してください(あとで、オレンジの丸から引くと矢印が伸びます)",4200);setTimeout(()=>{try{startEdit(it,true)}catch(_){}},80)};
+// メニューは使うものだけ
+$("bShare").onclick=()=>sheet("共有・書き出し・印刷",[["選択したページ",()=>exp(true)],["すべてのページ",()=>exp(false)],["印刷",printPages]]);
+$("eMore").onclick=()=>dropMenu($("eMore"),[["ページ",[["ページを回転",()=>$("rt").click(),"⟳"],...(cur&&cur._undo?[["トリミングを元に戻す",undoCrop,"↶"]]:[]),["全消去(ペン・文字・囲い)…",()=>sheet("このページで全部消すもの",[["ペンの書き込み",()=>$("cl").click()],["テキスト",()=>clearText()],["範囲選択(モザイク・塗り)",()=>clearShapes()]]),"🗑"]]]]);
+}catch(err){console.error("garage override failed",err)}
+</script>
+<script>
+// 車庫証明 配置図(友達用)。本体のアプリ(../index.html)を読み込み、車庫証明に使う機能だけにして表示します。
+(async()=>{
+  try{
+    const r=await fetch("../index.html",{cache:"no-cache"});if(!r.ok)throw new Error("HTTP "+r.status);let s=await r.text();
+    const rep=(a,b)=>{s=s.split(a).join(b)},T=id=>document.getElementById(id).textContent;
+    rep("<title>PDFまとめ編集</title>","<title>車庫証明 配置図</title>");
+    rep('content="PDF編集"','content="車庫証明"');
+    ["apple-touch-icon.png","favicon.ico","icon-32.png","icon-192.png"].forEach(f=>rep('href="'+f+'"','href="../'+f+'"'));
+    rep("</style></head>",T("gcss")+"</style></head>");
+    const k=s.lastIndexOf("</body>");if(k<0)throw new Error("body");
+    s=s.slice(0,k)+"<scr"+"ipt>"+T("govr")+"</scr"+"ipt>"+s.slice(k);
+    document.open();document.write(s);document.close();
+  }catch(e){document.getElementById("ld").textContent="読み込めませんでした。通信を確認して、ページを開き直してください("+e.message+")"}
+})();
+</script></body></html>
